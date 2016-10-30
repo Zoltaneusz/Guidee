@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+        <tab
+            id="@+id/tab_favorites"
+            icon="@drawable/ic_favorites"
+            title="Favorites"
+            barColorWhenSelected="#FF6565" />
+        <tab
+            id="@+id/tab_nearby"
+            icon="@drawable/ic_nearby"
+            title="Nearby"
+            barColorWhenSelected="#34B1E3"/>
+        <tab
+            id="@+id/tab_friends"
+            icon="@drawable/ic_friends"
+            title="Friends"
+            barColorWhenSelected="#90D499"/>
+    </tabs>
