@@ -2,17 +2,13 @@
 <tabs>
         <tab
             id="@+id/tab_favorites"
-            icon="@drawable/ic_favorites"
-            title="Favorites"
+            icon="@drawable/ic_explore"
+            title="Explore"
             barColorWhenSelected="#FF6565" />
-        <tab
-            id="@+id/tab_nearby"
-            icon="@drawable/ic_nearby"
-            title="Nearby"
-            barColorWhenSelected="#34B1E3"/>
+
         <tab
             id="@+id/tab_friends"
             icon="@drawable/ic_friends"
-            title="Friends"
+            title="Profile"
             barColorWhenSelected="#90D499"/>
     </tabs>
