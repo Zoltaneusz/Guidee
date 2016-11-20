@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Shader;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,9 +32,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class ExploreFragment extends Fragment {
 
 
-    int j = 1;
-    Handler h = new Handler();
-    Marker myMarker2;
     MapView mMapView;
     private GoogleMap googleMap;
 
@@ -84,98 +80,13 @@ public class ExploreFragment extends Fragment {
                         marker.remove();
 
                         // Animating marker implementation =================================================
-
-                        for(int i = 0; i < 40; i++) {
-                            if(j==5) j-=4;
-
-                            h.postDelayed(new Runnable(){
-                                @Override
-                                public void run() {
-                                    pulseMarker(j);
-                                    myMarker2 =mMap.addMarker(new MarkerOptions().position(sydney)
-                                            .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
-                                            .title("Zollie")
-                                            .snippet("Journey to Sydney")
-                                            // Specifies the anchor to be at a particular point in the marker image.
-                                            .anchor(0.4f, 1));
-
-                                    myMarker2.setIcon(BitmapDescriptorFactory.fromBitmap(circleBitmap));
-                                    j += 1;
-                                }
-                            }, 100);
-                            try{
-                                myMarker2.remove();
-                            }
-                            catch(Exception e)
-                            {
-                                break;
-                            }
-
-                      //      myMarker2.remove();
-                         /*   h2.postDelayed(new Runnable(){
-                                @Override
-                                public void run() {
-
-
-                                    myMarker2.remove();
-                                }
-
-                            }, 100);*/
-
-                        }
-
-                       // j = 1;
-
-
-                        //myMarker2.remove();
-
-      /*                  pulseMarker(8);
-                        mMap.addMarker(new MarkerOptions().position(sydney)
+                        pulseMarker(1);
+                        Marker myMarker2 = mMap.addMarker(new MarkerOptions().position(sydney)
                                 .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
                                 .title("Zollie")
                                 .snippet("Journey to Sydney")
                                 // Specifies the anchor to be at a particular point in the marker image.
                                 .anchor(0.4f, 1));
-                        h.postDelayed(r, 1000);
-                     //   myMarker3.remove();
-
-                        pulseMarker(6);
-                        mMap.addMarker(new MarkerOptions().position(sydney)
-                                .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
-                                .title("Zollie")
-                                .snippet("Journey to Sydney")
-                                // Specifies the anchor to be at a particular point in the marker image.
-                                .anchor(0.4f, 1));
-                        h.postDelayed(r, 1000);
-                   //     myMarker4.remove();
-
-                        pulseMarker(4);
-                        mMap.addMarker(new MarkerOptions().position(sydney)
-                                .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
-                                .title("Zollie")
-                                .snippet("Journey to Sydney")
-                                // Specifies the anchor to be at a particular point in the marker image.
-                                .anchor(0.4f, 1));
-                        h.postDelayed(r, 1000);
-                       // myMarker5.remove();
-
-                        pulseMarker(2);
-                        mMap.addMarker(new MarkerOptions().position(sydney)
-                                .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
-                                .title("Zollie")
-                                .snippet("Journey to Sydney")
-                                // Specifies the anchor to be at a particular point in the marker image.
-                                .anchor(0.4f, 1));
-                        h.postDelayed(r, 1000);
-*/
-                        pulseMarker(0);
-                        mMap.addMarker(new MarkerOptions().position(sydney)
-                                .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
-                                .title("Zollie")
-                                .snippet("Journey to Sydney")
-                                // Specifies the anchor to be at a particular point in the marker image.
-                                .anchor(0.4f, 1));
-//                        h.postDelayed(r, 1000);
 
                         //==================================================================================
 
@@ -248,7 +159,7 @@ public class ExploreFragment extends Fragment {
 
         // modify canvas
         canvas1.drawBitmap(BitmapFactory.decodeResource(getResources(),
-                R.drawable.profile_pic), 10,10, color);
+                R.drawable.profile_pic), 0,0, color);
         //canvas1.drawText("Zollie", 30, 40, color);
 
 
@@ -263,12 +174,12 @@ public class ExploreFragment extends Fragment {
         Paint circleFrame = new Paint();
         circleFrame.setColor(Color.GRAY);
 
-        c.drawCircle((int)(bitmap.getWidth()/2.5+10), (int)(bitmap.getHeight()/2.5+10),(int) (bitmap.getWidth()/2.5)-4+step*1, circleFrame);
+        c.drawCircle((int)(bitmap.getWidth()/2.5), (int)(bitmap.getHeight()/2.5),(int) (bitmap.getWidth()/2.5)-1+step*10, circleFrame);
         circleFrame.setColor(Color.LTGRAY);
         circleFrame.setStyle(Paint.Style.STROKE);
-        c.drawCircle((int)(bitmap.getWidth()/2.5+10), (int)(bitmap.getHeight()/2.5+10),(int) (bitmap.getWidth()/2.5)-7+step*1, circleFrame);
-        c.drawCircle((int)(bitmap.getWidth()/2.5+10), (int)(bitmap.getHeight()/2.5+10),(int) (bitmap.getWidth()/2.5)-3+step*1, circleFrame);
-        c.drawCircle((int)(bitmap.getWidth()/2.5+10), (int)(bitmap.getHeight()/2.5+10), (int)(bitmap.getWidth()/2.5)-8+step*1, profilePic);
+        c.drawCircle((int)(bitmap.getWidth()/2.5), (int)(bitmap.getHeight()/2.5),(int) (bitmap.getWidth()/2.5)-4+step*10, circleFrame);
+        c.drawCircle((int)(bitmap.getWidth()/2.5), (int)(bitmap.getHeight()/2.5),(int) (bitmap.getWidth()/2.5)+step*10, circleFrame);
+        c.drawCircle((int)(bitmap.getWidth()/2.5), (int)(bitmap.getHeight()/2.5), (int)(bitmap.getWidth()/2.5)-5+step*10, profilePic);
 
     }
 
