@@ -33,9 +33,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class ExploreFragment extends Fragment {
 
 
-    int j = 1;
     Handler h = new Handler();
+
     Marker myMarker2;
+    Marker myMarker3;
+    Marker myMarker4;
+    Marker myMarker5;
+    Marker myMarker6;
     MapView mMapView;
     private GoogleMap googleMap;
 
@@ -65,6 +69,7 @@ public class ExploreFragment extends Fragment {
         }
 
 
+
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(final GoogleMap mMap) {
@@ -85,99 +90,96 @@ public class ExploreFragment extends Fragment {
 
                         // Animating marker implementation =================================================
 
-                        for(int i = 0; i < 40; i++) {
-                            if(j==5) j-=4;
 
-                            h.postDelayed(new Runnable(){
-                                @Override
-                                public void run() {
-                                    pulseMarker(j);
-                                    myMarker2 =mMap.addMarker(new MarkerOptions().position(sydney)
+                            pulseMarker(4);
+                            myMarker2 = mMap.addMarker(new MarkerOptions().position(sydney)
+                                .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
+                                .title("Zollie")
+                                .snippet("Journey to Sydney")
+                                // Specifies the anchor to be at a particular point in the marker image.
+                                .anchor(0.4f, 1));
+
+
+
+                        h.postDelayed(new Runnable(){  // Csak a legutolsót törli ki...a többi marker korábbról ott marad
+                            @Override
+                            public void run() {
+
+                                try{
+
+                                    pulseMarker(6);
+                                    myMarker4 = mMap.addMarker(new MarkerOptions().position(sydney)
                                             .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
                                             .title("Zollie")
                                             .snippet("Journey to Sydney")
                                             // Specifies the anchor to be at a particular point in the marker image.
                                             .anchor(0.4f, 1));
-
-                                    myMarker2.setIcon(BitmapDescriptorFactory.fromBitmap(circleBitmap));
-                                    j += 1;
                                 }
-                            }, 100);
-                            try{
-                                myMarker2.remove();
-                            }
-                            catch(Exception e)
-                            {
-                                break;
-                            }
-
-                      //      myMarker2.remove();
-                         /*   h2.postDelayed(new Runnable(){
-                                @Override
-                                public void run() {
-
-
-                                    myMarker2.remove();
+                                catch(Exception e)
+                                {
+                                    //  break;
                                 }
 
-                            }, 100);*/
+                            }
+                        }, 100);
 
-                        }
+                        h.postDelayed(new Runnable(){  // Csak a legutolsót törli ki...a többi marker korábbról ott marad
+                            @Override
+                            public void run() {
 
-                       // j = 1;
+                                try{
+                                    myMarker4.remove();
 
+                                }
+                                catch(Exception e)
+                                {
+                                    //  break;
+                                }
 
-                        //myMarker2.remove();
+                            }
+                        }, 300);
 
-      /*                  pulseMarker(8);
-                        mMap.addMarker(new MarkerOptions().position(sydney)
-                                .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
-                                .title("Zollie")
-                                .snippet("Journey to Sydney")
-                                // Specifies the anchor to be at a particular point in the marker image.
-                                .anchor(0.4f, 1));
-                        h.postDelayed(r, 1000);
-                     //   myMarker3.remove();
+                        h.postDelayed(new Runnable(){  // Csak a legutolsót törli ki...a többi marker korábbról ott marad
+                            @Override
+                            public void run() {
 
-                        pulseMarker(6);
-                        mMap.addMarker(new MarkerOptions().position(sydney)
-                                .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
-                                .title("Zollie")
-                                .snippet("Journey to Sydney")
-                                // Specifies the anchor to be at a particular point in the marker image.
-                                .anchor(0.4f, 1));
-                        h.postDelayed(r, 1000);
-                   //     myMarker4.remove();
+                                try{
 
-                        pulseMarker(4);
-                        mMap.addMarker(new MarkerOptions().position(sydney)
-                                .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
-                                .title("Zollie")
-                                .snippet("Journey to Sydney")
-                                // Specifies the anchor to be at a particular point in the marker image.
-                                .anchor(0.4f, 1));
-                        h.postDelayed(r, 1000);
-                       // myMarker5.remove();
+                                    pulseMarker(6);
+                                    myMarker5 = mMap.addMarker(new MarkerOptions().position(sydney)
+                                            .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
+                                            .title("Zollie")
+                                            .snippet("Journey to Sydney")
+                                            // Specifies the anchor to be at a particular point in the marker image.
+                                            .anchor(0.4f, 1));
+                                }
+                                catch(Exception e)
+                                {
+                                    //  break;
+                                }
 
-                        pulseMarker(2);
-                        mMap.addMarker(new MarkerOptions().position(sydney)
-                                .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
-                                .title("Zollie")
-                                .snippet("Journey to Sydney")
-                                // Specifies the anchor to be at a particular point in the marker image.
-                                .anchor(0.4f, 1));
-                        h.postDelayed(r, 1000);
-*/
-                        pulseMarker(0);
-                        mMap.addMarker(new MarkerOptions().position(sydney)
-                                .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
-                                .title("Zollie")
-                                .snippet("Journey to Sydney")
-                                // Specifies the anchor to be at a particular point in the marker image.
-                                .anchor(0.4f, 1));
-//                        h.postDelayed(r, 1000);
+                            }
+                        }, 400);
+
+                        h.postDelayed(new Runnable(){  // Csak a legutolsót törli ki...a többi marker korábbról ott marad
+                            @Override
+                            public void run() {
+
+                                try{
+                                    myMarker5.remove();
+
+                                }
+                                catch(Exception e)
+                                {
+                                    //  break;
+                                }
+
+                            }
+                        },500);
 
                         //==================================================================================
+
+
 
                         return false;
                     }
@@ -188,7 +190,7 @@ public class ExploreFragment extends Fragment {
                /*Creating custom map markers here */
                 // =================================================================================
 
-                pulseMarker(0);
+                pulseMarker(4);
 
                 // add marker to Map
                 Marker myMarker = mMap.addMarker(new MarkerOptions().position(sydney)
@@ -219,14 +221,12 @@ public class ExploreFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mMapView.onResume();
-        //MarkerAnimation.resume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mMapView.onPause();
-        //MarkerAnimation.pause();
     }
 
     @Override
@@ -244,7 +244,7 @@ public class ExploreFragment extends Fragment {
 
 
         color.setTextSize(35);
-        color.setColor(Color.GRAY);
+        color.setColor(Color.BLACK);
 
         // modify canvas
         canvas1.drawBitmap(BitmapFactory.decodeResource(getResources(),
@@ -261,10 +261,10 @@ public class ExploreFragment extends Fragment {
         profilePic.setAntiAlias(true);
         Canvas c = new Canvas(circleBitmap);
         Paint circleFrame = new Paint();
-        circleFrame.setColor(Color.GRAY);
+        circleFrame.setColor(Color.BLACK);
 
-        c.drawCircle((int)(bitmap.getWidth()/2.5+10), (int)(bitmap.getHeight()/2.5+10),(int) (bitmap.getWidth()/2.5)-4+step*1, circleFrame);
-        circleFrame.setColor(Color.LTGRAY);
+        c.drawCircle((int)(bitmap.getWidth()/2.5+10), (int)(bitmap.getHeight()/2.5+10),(int) (bitmap.getWidth()/2.5)-3+step*1, circleFrame);
+        circleFrame.setColor(Color.GRAY);
         circleFrame.setStyle(Paint.Style.STROKE);
         c.drawCircle((int)(bitmap.getWidth()/2.5+10), (int)(bitmap.getHeight()/2.5+10),(int) (bitmap.getWidth()/2.5)-7+step*1, circleFrame);
         c.drawCircle((int)(bitmap.getWidth()/2.5+10), (int)(bitmap.getHeight()/2.5+10),(int) (bitmap.getWidth()/2.5)-3+step*1, circleFrame);
