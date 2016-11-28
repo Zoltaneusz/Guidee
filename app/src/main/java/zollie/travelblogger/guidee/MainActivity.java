@@ -19,7 +19,8 @@ import com.roughike.bottombar.OnTabSelectListener;
 
 public class MainActivity extends Activity {
 
-    private ExploreFragment _exploreMap = new ExploreFragment();
+    private ExploreFragment _exploreMapFrag = new ExploreFragment();
+    private ProfileFragment _profileFrag = new ProfileFragment();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,8 +38,21 @@ public class MainActivity extends Activity {
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
-                FragmentManager fm = getFragmentManager();
-                fm.beginTransaction().replace(R.id.contentContainer, _exploreMap).commit();
+                FragmentManager fm;
+                switch(tabId)
+                {
+                    case R.id.tab_explore:
+                        fm = getFragmentManager();
+                        fm.beginTransaction().replace(R.id.contentContainer, _exploreMapFrag).commit();
+                        break;
+
+                    case R.id.tab_profile:
+                        fm = getFragmentManager();
+                        fm.beginTransaction().replace(R.id.contentContainer, _profileFrag).commit();
+                        break;
+
+                }
+
 
             }
         });

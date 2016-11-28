@@ -54,9 +54,6 @@ public class ExploreFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
 
-
-
-
         mMapView = (MapView) rootView.findViewById(R.id.exploreMap);
         mMapView.onCreate(savedInstanceState);
 
@@ -68,8 +65,6 @@ public class ExploreFragment extends Fragment {
             e.printStackTrace();
         }
 
-
-
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(final GoogleMap mMap) {
@@ -77,7 +72,6 @@ public class ExploreFragment extends Fragment {
 
                 // For showing a move to my location button
                 googleMap.setMyLocationEnabled(true);
-
 
                 // For dropping a marker at a point on the Map
                 final LatLng sydney = new LatLng(-34, 151);
@@ -89,8 +83,6 @@ public class ExploreFragment extends Fragment {
                         marker.remove();
 
                         // Animating marker implementation =================================================
-
-
                             pulseMarker(4);
                             myMarker2 = mMap.addMarker(new MarkerOptions().position(sydney)
                                 .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
@@ -99,14 +91,10 @@ public class ExploreFragment extends Fragment {
                                 // Specifies the anchor to be at a particular point in the marker image.
                                 .anchor(0.4f, 1));
 
-
-
                         h.postDelayed(new Runnable(){  // Csak a legutolsót törli ki...a többi marker korábbról ott marad
                             @Override
                             public void run() {
-
                                 try{
-
                                     pulseMarker(6);
                                     myMarker4 = mMap.addMarker(new MarkerOptions().position(sydney)
                                             .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
@@ -119,10 +107,8 @@ public class ExploreFragment extends Fragment {
                                 {
                                     //  break;
                                 }
-
                             }
                         }, 100);
-
                         h.postDelayed(new Runnable(){  // Csak a legutolsót törli ki...a többi marker korábbról ott marad
                             @Override
                             public void run() {
@@ -135,10 +121,8 @@ public class ExploreFragment extends Fragment {
                                 {
                                     //  break;
                                 }
-
                             }
                         }, 300);
-
                         h.postDelayed(new Runnable(){  // Csak a legutolsót törli ki...a többi marker korábbról ott marad
                             @Override
                             public void run() {
@@ -157,7 +141,6 @@ public class ExploreFragment extends Fragment {
                                 {
                                     //  break;
                                 }
-
                             }
                         }, 400);
 
@@ -173,14 +156,9 @@ public class ExploreFragment extends Fragment {
                                 {
                                     //  break;
                                 }
-
                             }
                         },500);
-
                         //==================================================================================
-
-
-
                         return false;
                     }
                 });
@@ -189,9 +167,7 @@ public class ExploreFragment extends Fragment {
 
                /*Creating custom map markers here */
                 // =================================================================================
-
                 pulseMarker(4);
-
                 // add marker to Map
                 Marker myMarker = mMap.addMarker(new MarkerOptions().position(sydney)
                         .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
@@ -201,10 +177,6 @@ public class ExploreFragment extends Fragment {
                         .anchor(0.4f, 1));
 
                 //==================================================================================
-
-
-
-
                 // For zooming automatically to the location of the marker
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
