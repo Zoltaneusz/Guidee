@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "120656251800",
+    "firebase_url": "https://guidee-1477751448919.firebaseio.com",
+    "project_id": "guidee-1477751448919",
+    "storage_bucket": "guidee-1477751448919.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:120656251800:android:6500eb2f2ed803b7",
+        "android_client_info": {
+          "package_name": "zollie.travelblogger.guidee"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "120656251800-th4m8bancrssqu44ukddu3nt70ohog4a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "zollie.travelblogger.guidee",
+            "certificate_hash": "694BEEEB7971B9C648D5CF2F31EAB6B67AC9EF91"
+          }
+        },
+        {
+          "client_id": "120656251800-hm5vbrh3svnqea6mvta4c6vemr1f3dia.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzkS6JNUrIpt3wvOa7wxRPjN4uZM9n1DI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "120656251800-hm5vbrh3svnqea6mvta4c6vemr1f3dia.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
