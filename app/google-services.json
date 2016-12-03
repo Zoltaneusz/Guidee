@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "120656251800",
-    "firebase_url": "https://guidee-1477751448919.firebaseio.com",
-    "project_id": "guidee-1477751448919",
-    "storage_bucket": "guidee-1477751448919.appspot.com"
+    "project_number": "457148042769",
+    "firebase_url": "https://guidee-f0453.firebaseio.com",
+    "project_id": "guidee-f0453",
+    "storage_bucket": "guidee-f0453.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:120656251800:android:6500eb2f2ed803b7",
+        "mobilesdk_app_id": "1:457148042769:android:6500eb2f2ed803b7",
         "android_client_info": {
           "package_name": "zollie.travelblogger.guidee"
         }
       },
       "oauth_client": [
         {
-          "client_id": "120656251800-th4m8bancrssqu44ukddu3nt70ohog4a.apps.googleusercontent.com",
+          "client_id": "457148042769-utb8iall6pd9tr2fml56spu10hama0c0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "zollie.travelblogger.guidee",
@@ -23,13 +23,13 @@
           }
         },
         {
-          "client_id": "120656251800-hm5vbrh3svnqea6mvta4c6vemr1f3dia.apps.googleusercontent.com",
+          "client_id": "457148042769-olsj1qqjut0hrbqrl48liki1uch4oqi5.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAzkS6JNUrIpt3wvOa7wxRPjN4uZM9n1DI"
+          "current_key": "AIzaSyDL-jmbd2AB4Ze5EixYaSptHMrjq1-wID4"
         }
       ],
       "services": {
@@ -40,8 +40,15 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "120656251800-hm5vbrh3svnqea6mvta4c6vemr1f3dia.apps.googleusercontent.com",
+              "client_id": "457148042769-olsj1qqjut0hrbqrl48liki1uch4oqi5.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "457148042769-eahkontv96k939ltuuurq5hkigqk3aq1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "Zsombor.Fuszenecker.Guidee"
+              }
             }
           ]
         },

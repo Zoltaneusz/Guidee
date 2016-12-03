@@ -13,6 +13,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Shader;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,6 +33,18 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Map;
 
 /**
  * Created by zoltanfuszenecker on 10/29/16.
@@ -53,7 +66,6 @@ public class ExploreFragment extends Fragment {
 
     private GoogleMap googleMap;
 
-
     // paint defines the text color, stroke width and size
     Paint color = new Paint();
     Bitmap circleBitmap;
@@ -68,6 +80,7 @@ public class ExploreFragment extends Fragment {
         final Canvas canvas1 = new Canvas(bmp);
         mMapView = (MapView) rootView.findViewById(R.id.exploreMap);
         mMapView.onCreate(savedInstanceState);
+
 
 
         try {
@@ -97,6 +110,14 @@ public class ExploreFragment extends Fragment {
                 @Override
                 public void onMapReady(final GoogleMap mMap) {
                     googleMap = mMap;
+
+                    DataHandler.getInstance().getJourneys(new DataHandlerListener() {
+                        @Override
+                        public void onJourneyData(Map<String, Object> rawJourneyData) {
+                            Map<String, Object> annotationModel = (Map<String, Object>) (rawJourneyData.get("annotationModel"));
+                            addMapMarker(annotationModel);
+                        }
+                    });
 
                     // For showing a move to my location button
 
@@ -227,6 +248,23 @@ public class ExploreFragment extends Fragment {
         return rootView;
     }
 
+    private void addMapMarker(Map<String, Object> mapMarkerData) {
+
+        Map<String, Object> locationData = (Map<String, Object>) mapMarkerData.get("location");
+        double markerLat = (double) locationData.get("latitude");
+        double markerLng = (double) locationData.get("longitude");
+        String markerImageSource = (String) mapMarkerData.get("imageURL");
+        String markerTitle = (String) mapMarkerData.get("title");
+//        String markerSubtitle = (String) mapMarkerData.get("subtitle");
+        long markerLikes = (long) mapMarkerData.get("likes");
+
+        googleMap.addMarker(new MarkerOptions().position(new LatLng(markerLat, markerLng))
+                .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
+                .title(markerTitle)
+                // Specifies the anchor to be at a particular point in the marker image.
+                .anchor(0.4f, 1));
+    }
+
     //================================================
 
 
@@ -294,6 +332,7 @@ public class ExploreFragment extends Fragment {
         super.onLowMemory();
         mMapView.onLowMemory();
     }
+
     public void pulseMarker(int step, Bitmap bitm, Canvas canv, float scale){
 
 

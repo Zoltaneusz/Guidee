@@ -14,18 +14,23 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 /**
  * Created by FuszeneckerZ on 2016.11.27..
  */
 
 public class ProfileFragment extends Fragment {
-    @Nullable
 
+
+    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
-
-
 
         return rootView;
     }
@@ -45,7 +50,7 @@ public class ProfileFragment extends Fragment {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
             // finally change the color
-            window.setStatusBarColor(getActivity().getResources().getColor(R.color.lightGreen));
+            window.setStatusBarColor(getActivity().getResources().getColor(R.color.pastellRed));
         }
         //========================================================
 
@@ -76,8 +81,6 @@ public class ProfileFragment extends Fragment {
                     //      Log.e("Tag",""+imageView.getTag());
                 }
             });
-
-
         }
 //       horitontalLayout.setLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT);
         super.onResume();
