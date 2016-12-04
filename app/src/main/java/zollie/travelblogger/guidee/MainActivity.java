@@ -3,6 +3,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
@@ -35,6 +36,8 @@ public class MainActivity extends Activity {
 
 
         BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+      //  bottomBar.setHovered(true);
+      //  if (Build.VERSION.SDK_INT >= 21)      bottomBar.setElevation(100);
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {

@@ -38,8 +38,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
+
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -70,14 +69,14 @@ public class ExploreFragment extends Fragment {
     Paint color = new Paint();
     Bitmap circleBitmap;
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_map, container, false);
-
         final float scale = getResources().getDisplayMetrics().density;
-        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
-        final Bitmap bmp = Bitmap.createBitmap((int)(60*scale),(int) (60*scale), conf);
-        final Canvas canvas1 = new Canvas(bmp);
+        final Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+
         mMapView = (MapView) rootView.findViewById(R.id.exploreMap);
         mMapView.onCreate(savedInstanceState);
 
@@ -110,12 +109,15 @@ public class ExploreFragment extends Fragment {
                 @Override
                 public void onMapReady(final GoogleMap mMap) {
                     googleMap = mMap;
-
+                    Bitmap bmp = Bitmap.createBitmap((int)(60*scale),(int) (60*scale), conf);
+                    Canvas canvas1 = new Canvas(bmp);
+                    pulseMarker(4, bmp, canvas1, scale);
                     DataHandler.getInstance().getJourneys(new DataHandlerListener() {
                         @Override
                         public void onJourneyData(Map<String, Object> rawJourneyData) {
                             Map<String, Object> annotationModel = (Map<String, Object>) (rawJourneyData.get("annotationModel"));
-                            addMapMarker(annotationModel);
+
+                            addMapMarker(annotationModel, mMap);
                         }
                     });
 
@@ -123,93 +125,16 @@ public class ExploreFragment extends Fragment {
 
                     //           googleMap.setMyLocationEnabled(true);
 
-                    // For dropping a marker at a point on the Map
+                    // For dropping a ,,marker at a point on the Map
                     final LatLng sydney = new LatLng(-34, 151);
 
                     googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
                         public boolean onMarkerClick(Marker marker) {
+                            Bitmap bmp = Bitmap.createBitmap((int)(60*scale),(int) (60*scale), conf);
+                            Canvas canvas1 = new Canvas(bmp);
+                            animateMarker(marker, bmp, canvas1, scale, mMap);
 
-                            marker.remove();
-
-                            // Animating marker implementation =================================================
-                            pulseMarker(4, bmp, canvas1, scale);
-                            myMarker2 = mMap.addMarker(new MarkerOptions().position(sydney)
-                                    .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
-                                    .title("Zollie")
-                                    .snippet("Journey to Sydney")
-                                    // Specifies the anchor to be at a particular point in the marker image.
-                                    .anchor(0.4f, 1));
-
-                            h.postDelayed(new Runnable(){  // Csak a legutolsót törli ki...a többi marker korábbról ott marad
-                                @Override
-                                public void run() {
-                                    try{
-                                        pulseMarker(6, bmp, canvas1, scale);
-                                        myMarker4 = mMap.addMarker(new MarkerOptions().position(sydney)
-                                                .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
-                                                .title("Zollie")
-                                                .snippet("Journey to Sydney")
-                                                // Specifies the anchor to be at a particular point in the marker image.
-                                                .anchor(0.4f, 1));
-                                    }
-                                    catch(Exception e)
-                                    {
-                                        //  break;
-                                    }
-                                }
-                            }, 100);
-                            h.postDelayed(new Runnable(){  // Csak a legutolsót törli ki...a többi marker korábbról ott marad
-                                @Override
-                                public void run() {
-
-                                    try{
-                                        myMarker4.remove();
-
-                                    }
-                                    catch(Exception e)
-                                    {
-                                        //  break;
-                                    }
-                                }
-                            }, 300);
-                            h.postDelayed(new Runnable(){  // Csak a legutolsót törli ki...a többi marker korábbról ott marad
-                                @Override
-                                public void run() {
-
-                                    try{
-
-                                        pulseMarker(6, bmp, canvas1, scale);
-                                        myMarker5 = mMap.addMarker(new MarkerOptions().position(sydney)
-                                                .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
-                                                .title("Zollie")
-                                                .snippet("Journey to Sydney")
-                                                // Specifies the anchor to be at a particular point in the marker image.
-                                                .anchor(0.4f, 1));
-                                    }
-                                    catch(Exception e)
-                                    {
-                                        //  break;
-                                    }
-                                }
-                            }, 400);
-
-                            h.postDelayed(new Runnable(){  // Csak a legutolsót törli ki...a többi marker korábbról ott marad
-                                @Override
-                                public void run() {
-
-                                    try{
-                                        myMarker5.remove();
-
-                                    }
-                                    catch(Exception e)
-                                    {
-                                        //  break;
-                                    }
-                                }
-                            },500);
-                            //==================================================================================
-                            myMarker2.showInfoWindow();
                             return false;
                         }
                     });
@@ -226,20 +151,10 @@ public class ExploreFragment extends Fragment {
                     //       googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_friends)));
 
                /*Creating custom map markers here */
-                    // =================================================================================
-                    pulseMarker(4, bmp, canvas1, scale);
-                    // add marker to Map
-                    Marker myMarker = mMap.addMarker(new MarkerOptions().position(sydney)
-                            .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
-                            .title("Zollie")
-                            .snippet("Journey to Sydney")
-                            // Specifies the anchor to be at a particular point in the marker image.
-                            .anchor(0.4f, 1));
 
-                    //==================================================================================
                     // For zooming automatically to the location of the marker
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
-                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    //CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
+                   // googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                 }
             });
@@ -248,7 +163,7 @@ public class ExploreFragment extends Fragment {
         return rootView;
     }
 
-    private void addMapMarker(Map<String, Object> mapMarkerData) {
+    private void addMapMarker(Map<String, Object> mapMarkerData, GoogleMap mMap) {
 
         Map<String, Object> locationData = (Map<String, Object>) mapMarkerData.get("location");
         double markerLat = (double) locationData.get("latitude");
@@ -258,7 +173,7 @@ public class ExploreFragment extends Fragment {
 //        String markerSubtitle = (String) mapMarkerData.get("subtitle");
         long markerLikes = (long) mapMarkerData.get("likes");
 
-        googleMap.addMarker(new MarkerOptions().position(new LatLng(markerLat, markerLng))
+        mMap.addMarker(new MarkerOptions().position(new LatLng(markerLat, markerLng))
                 .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
                 .title(markerTitle)
                 // Specifies the anchor to be at a particular point in the marker image.
@@ -331,6 +246,91 @@ public class ExploreFragment extends Fragment {
     public void onLowMemory() {
         super.onLowMemory();
         mMapView.onLowMemory();
+    }
+
+    public void animateMarker(Marker marker, final Bitmap bmp, final Canvas canvas1, final float scale, final GoogleMap mMap){
+
+        final LatLng markerLatLng = marker.getPosition();
+        final String markerTitle = marker.getTitle();
+      //  String markerImage = marker.get
+        marker.remove();
+
+        // Animating marker implementation =================================================
+        pulseMarker(4, bmp, canvas1, scale);
+        myMarker2 = mMap.addMarker(new MarkerOptions().position(markerLatLng)
+                .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
+                .title(markerTitle)
+                // Specifies the anchor to be at a particular point in the marker image.
+                .anchor(0.4f, 1));
+
+        h.postDelayed(new Runnable(){  // Csak a legutolsót törli ki...a többi marker korábbról ott marad
+            @Override
+            public void run() {
+                try{
+                    pulseMarker(6, bmp, canvas1, scale);
+                    myMarker4 = mMap.addMarker(new MarkerOptions().position(markerLatLng)
+                            .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
+                            .title(markerTitle)
+                            // Specifies the anchor to be at a particular point in the marker image.
+                            .anchor(0.4f, 1));
+                }
+                catch(Exception e)
+                {
+                    //  break;
+                }
+            }
+        }, 100);
+        h.postDelayed(new Runnable(){  // Csak a legutolsót törli ki...a többi marker korábbról ott marad
+            @Override
+            public void run() {
+
+                try{
+                    myMarker4.remove();
+
+                }
+                catch(Exception e)
+                {
+                    //  break;
+                }
+            }
+        }, 300);
+        h.postDelayed(new Runnable(){  // Csak a legutolsót törli ki...a többi marker korábbról ott marad
+            @Override
+            public void run() {
+
+                try{
+
+                    pulseMarker(6, bmp, canvas1, scale);
+                    myMarker5 = mMap.addMarker(new MarkerOptions().position(markerLatLng)
+                            .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
+                            .title(markerTitle)
+                            // Specifies the anchor to be at a particular point in the marker image.
+                            .anchor(0.4f, 1));
+                }
+                catch(Exception e)
+                {
+                    //  break;
+                }
+            }
+        }, 400);
+
+        h.postDelayed(new Runnable(){  // Csak a legutolsót törli ki...a többi marker korábbról ott marad
+            @Override
+            public void run() {
+
+                try{
+                    myMarker5.remove();
+
+                }
+                catch(Exception e)
+                {
+                    //  break;
+                }
+            }
+        },500);
+        //==================================================================================
+        myMarker2.showInfoWindow();
+
     }
 
     public void pulseMarker(int step, Bitmap bitm, Canvas canv, float scale){

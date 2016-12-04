@@ -50,7 +50,7 @@ public class ProfileFragment extends Fragment {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
             // finally change the color
-            window.setStatusBarColor(getActivity().getResources().getColor(R.color.pastellRed));
+            window.setStatusBarColor(getActivity().getResources().getColor(R.color.lightGreen));
         }
         //========================================================
 
