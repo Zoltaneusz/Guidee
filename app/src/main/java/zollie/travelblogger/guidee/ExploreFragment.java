@@ -4,6 +4,7 @@ import android.*;
 import android.Manifest;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -14,6 +15,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -38,6 +41,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 
 import java.io.IOException;
@@ -63,7 +67,7 @@ public class ExploreFragment extends Fragment {
     Marker myMarker6;
     MapView mMapView;
 
-    private GoogleMap googleMap;
+    public GoogleMap googleMap;
 
     // paint defines the text color, stroke width and size
     Paint color = new Paint();
@@ -114,10 +118,10 @@ public class ExploreFragment extends Fragment {
                     pulseMarker(4, bmp, canvas1, scale);
                     DataHandler.getInstance().getJourneys(new DataHandlerListener() {
                         @Override
-                        public void onJourneyData(Map<String, Object> rawJourneyData) {
+                        public void onJourneyData(final Map<String, Object> rawJourneyData) {
                             Map<String, Object> annotationModel = (Map<String, Object>) (rawJourneyData.get("annotationModel"));
-
-                            addMapMarker(annotationModel, mMap);
+                            //addMapMarker(annotationModel, mMap);
+                            new AsyncMarkerLoader().execute(annotationModel, mMap);
                         }
                     });
 
@@ -163,22 +167,35 @@ public class ExploreFragment extends Fragment {
         return rootView;
     }
 
-    private void addMapMarker(Map<String, Object> mapMarkerData, GoogleMap mMap) {
+    private void addMapMarker(Map<String, Object> mapMarkerData, GoogleMap mMap){
 
         Map<String, Object> locationData = (Map<String, Object>) mapMarkerData.get("location");
-        double markerLat = (double) locationData.get("latitude");
-        double markerLng = (double) locationData.get("longitude");
-        String markerImageSource = (String) mapMarkerData.get("imageURL");
-        String markerTitle = (String) mapMarkerData.get("title");
+        final double markerLat = (double) locationData.get("latitude");
+        final double markerLng = (double) locationData.get("longitude");
+        final String markerImageSource = (String) mapMarkerData.get("imageURL");
+        final String markerTitle = (String) mapMarkerData.get("title");
 //        String markerSubtitle = (String) mapMarkerData.get("subtitle");
         long markerLikes = (long) mapMarkerData.get("likes");
 
-        mMap.addMarker(new MarkerOptions().position(new LatLng(markerLat, markerLng))
-                .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
-                .title(markerTitle)
-                // Specifies the anchor to be at a particular point in the marker image.
-                .anchor(0.4f, 1));
+        boolean asynchTaskFinished = false;
+        while(!asynchTaskFinished) {
+            try {
+                URL markerImageUrl = new URL(markerImageSource);
+                Bitmap markerImage = BitmapFactory.decodeStream(markerImageUrl.openConnection().getInputStream());
+                googleMap.addMarker(new MarkerOptions().position(new LatLng(markerLat, markerLng))
+                        .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
+                        .title(markerTitle)
+                        // Specifies the anchor to be at a particular point in the marker image.
+                        .anchor(0.4f, 1))
+;
+                asynchTaskFinished = true;
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
+
 
     //================================================
 
@@ -367,5 +384,27 @@ public class ExploreFragment extends Fragment {
 
     }
 
-}
+    class AsyncMarkerLoader extends AsyncTask <Object,Void,Void>
+    {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
 
+        }
+        @Override
+        protected Void doInBackground(Object... params) {
+            try {
+                    addMapMarker((Map<String,Object>) params[0], (GoogleMap) params[1]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+
+        }
+    }
+
+}
