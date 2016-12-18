@@ -12,7 +12,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -66,7 +68,7 @@ public class ExploreFragment extends Fragment {
     Marker myMarker5;
     Marker myMarker6;
     MapView mMapView;
-
+    Bitmap markerImageGlob = null;
     public GoogleMap googleMap;
 
     // paint defines the text color, stroke width and size
@@ -172,30 +174,42 @@ public class ExploreFragment extends Fragment {
         Map<String, Object> locationData = (Map<String, Object>) mapMarkerData.get("location");
         final double markerLat = (double) locationData.get("latitude");
         final double markerLng = (double) locationData.get("longitude");
-        final String markerImageSource = (String) mapMarkerData.get("imageURL");
+//        final String markerImageSource = (String) mapMarkerData.get("imageURL");
         final String markerTitle = (String) mapMarkerData.get("title");
 //        String markerSubtitle = (String) mapMarkerData.get("subtitle");
         long markerLikes = (long) mapMarkerData.get("likes");
 
-        boolean asynchTaskFinished = false;
-        while(!asynchTaskFinished) {
             try {
-                URL markerImageUrl = new URL(markerImageSource);
-                Bitmap markerImage = BitmapFactory.decodeStream(markerImageUrl.openConnection().getInputStream());
-                googleMap.addMarker(new MarkerOptions().position(new LatLng(markerLat, markerLng))
+    //            URL markerImageUrl = new URL(markerImageSource);
+    //            Bitmap markerImage = BitmapFactory.decodeStream(markerImageUrl.openConnection().getInputStream());
+                mMap.addMarker(new MarkerOptions().position(new LatLng(markerLat, markerLng))
+                        //.icon(BitmapDescriptorFactory.fromBitmap(markerImageGlob))
                         .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
                         .title(markerTitle)
                         // Specifies the anchor to be at a particular point in the marker image.
-                        .anchor(0.4f, 1))
-;
-                asynchTaskFinished = true;
+                        .anchor(0.4f, 1));
             }
             catch (Exception e) {
                 e.printStackTrace();
             }
-        }
     }
+     private Bitmap getMarkerPicture(Map<String, Object> mapMarkerData){
+         Map<String, Object> locationData = (Map<String, Object>) mapMarkerData.get("location");
+         final String markerImageSource = (String) mapMarkerData.get("imageURL");
 
+         try{
+             URL markerImageUrl = new URL(markerImageSource);
+             markerImageGlob = BitmapFactory.decodeStream(markerImageUrl.openConnection().getInputStream());
+             markerImageGlob = resizeMarkerImage(markerImageGlob);
+             Canvas myCanvas = new Canvas();
+             final float scale = getResources().getDisplayMetrics().density;
+             pulseMarker(1, markerImageGlob, myCanvas, scale);
+         }
+         catch(Exception e) {
+             e.printStackTrace();
+         }
+         return markerImageGlob;
+     }
 
     //================================================
 
@@ -360,7 +374,7 @@ public class ExploreFragment extends Fragment {
         canv.drawBitmap(BitmapFactory.decodeResource(getResources(),
                 R.drawable.profile_pic), 10,10, color);
         //canvas1.drawText("Zollie", 30, 40, color);
-
+   //     canv.drawBitmap(bitm, 10,10, color);
 
         Bitmap bitmap = bitm;
         circleBitmap = Bitmap.createBitmap(bitmap.getWidth()+5, bitmap.getHeight()+5, Bitmap.Config.ARGB_8888);
@@ -384,7 +398,15 @@ public class ExploreFragment extends Fragment {
 
     }
 
-    class AsyncMarkerLoader extends AsyncTask <Object,Void,Void>
+    public Bitmap resizeMarkerImage(Bitmap myPic){
+
+        Matrix m = new Matrix();
+        m.setRectToRect(new RectF(0, 0, myPic.getWidth(), myPic.getHeight()), new RectF(0, 0, 100, 100), Matrix.ScaleToFit.CENTER);
+        return Bitmap.createBitmap(myPic, 0, 0, myPic.getWidth(), myPic.getHeight(), m, true);
+
+    }
+
+    class AsyncMarkerLoader extends AsyncTask <Object,Void, Map<String,Object>>
     {
         @Override
         protected void onPreExecute() {
@@ -392,19 +414,19 @@ public class ExploreFragment extends Fragment {
 
         }
         @Override
-        protected Void doInBackground(Object... params) {
+        protected Map<String,Object> doInBackground(Object... params) {
             try {
-                    addMapMarker((Map<String,Object>) params[0], (GoogleMap) params[1]);
+                getMarkerPicture((Map<String,Object>) params[0]);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return null;
+            return (Map<String,Object>) params[0];
         }
         @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-
+        protected void onPostExecute(Map<String,Object> myMapMarkers) {
+         //   super.onPostExecute(result);
+                addMapMarker(myMapMarkers, googleMap);
+  //          googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(circleBitmap)));
         }
     }
-
 }
