@@ -69,7 +69,9 @@ public class ExploreFragment extends Fragment {
     Marker myMarker6;
     MapView mMapView;
     Bitmap markerImageGlob = null;
+
     public GoogleMap googleMap;
+    MarkerCache[] markerCache = new MarkerCache[100];
 
     // paint defines the text color, stroke width and size
     Paint color = new Paint();
@@ -180,35 +182,52 @@ public class ExploreFragment extends Fragment {
         long markerLikes = (long) mapMarkerData.get("likes");
 
             try {
+                Canvas myCanvas = new Canvas();
+                final float scale = getResources().getDisplayMetrics().density;
+                Bitmap markerImage = (Bitmap)mapMarkerData.get("imgBitmap");
+                pulseMarker(1, markerImage, myCanvas, scale);
     //            URL markerImageUrl = new URL(markerImageSource);
     //            Bitmap markerImage = BitmapFactory.decodeStream(markerImageUrl.openConnection().getInputStream());
-                mMap.addMarker(new MarkerOptions().position(new LatLng(markerLat, markerLng))
+               Marker mMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(markerLat, markerLng))
                         //.icon(BitmapDescriptorFactory.fromBitmap(markerImageGlob))
                         .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
                         .title(markerTitle)
                         // Specifies the anchor to be at a particular point in the marker image.
                         .anchor(0.4f, 1));
+                String markerID = mMarker.getId();
+                for(int i=0; i<100; i++)
+                {   if (markerCache[i] == null){
+                            markerCache[i] = new MarkerCache();
+                            markerCache[i].setMarkerID(markerID);
+                            markerCache[i].setMarkerIcon(markerImage);
+                            i=100;
+                        }
+                }
             }
             catch (Exception e) {
                 e.printStackTrace();
             }
+
     }
      private Bitmap getMarkerPicture(Map<String, Object> mapMarkerData){
          Map<String, Object> locationData = (Map<String, Object>) mapMarkerData.get("location");
          final String markerImageSource = (String) mapMarkerData.get("imageURL");
-
+         Bitmap markerImage= null;
          try{
              URL markerImageUrl = new URL(markerImageSource);
-             markerImageGlob = BitmapFactory.decodeStream(markerImageUrl.openConnection().getInputStream());
-             markerImageGlob = resizeMarkerImage(markerImageGlob);
-             Canvas myCanvas = new Canvas();
+             markerImage = BitmapFactory.decodeStream(markerImageUrl.openConnection().getInputStream());
+             markerImage = resizeMarkerImage(markerImage);
+             mapMarkerData.put("imgBitmap", markerImage);
+             //markerImageGlob = BitmapFactory.decodeStream(markerImageUrl.openConnection().getInputStream());
+            // markerImageGlob = resizeMarkerImage(markerImageGlob);
+          /*   Canvas myCanvas = new Canvas();
              final float scale = getResources().getDisplayMetrics().density;
-             pulseMarker(1, markerImageGlob, myCanvas, scale);
+             pulseMarker(1, markerImageGlob, myCanvas, scale);*/
          }
          catch(Exception e) {
              e.printStackTrace();
          }
-         return markerImageGlob;
+         return markerImage;
      }
 
     //================================================
@@ -283,6 +302,14 @@ public class ExploreFragment extends Fragment {
 
         final LatLng markerLatLng = marker.getPosition();
         final String markerTitle = marker.getTitle();
+        final String markerID = marker.getId();
+        for(int i=0; i<100; i++)
+        {
+            if(markerCache[i].getMarkerID().equals(markerID))
+            {markerImageGlob = markerCache[i].getMarkerIcon();
+                i=100;}
+        }
+
       //  String markerImage = marker.get
         marker.remove();
 
@@ -371,10 +398,18 @@ public class ExploreFragment extends Fragment {
         color.setColor(Color.BLACK);
 
         // modify canvas
-        canv.drawBitmap(BitmapFactory.decodeResource(getResources(),
-                R.drawable.profile_pic), 10,10, color);
+       // canv.drawBitmap(BitmapFactory.decodeResource(getResources(),
+     //           R.drawable.profile_pic), 10,10, color);
         //canvas1.drawText("Zollie", 30, 40, color);
-   //     canv.drawBitmap(bitm, 10,10, color);
+
+        try {
+            canv.drawBitmap(markerImageGlob, 10, 10, color);
+        }
+        catch(Exception e)
+        {
+            canv.drawBitmap(BitmapFactory.decodeResource(getResources(),
+                              R.drawable.profile_pic), 10,10, color);
+        }
 
         Bitmap bitmap = bitm;
         circleBitmap = Bitmap.createBitmap(bitmap.getWidth()+5, bitmap.getHeight()+5, Bitmap.Config.ARGB_8888);
@@ -429,4 +464,28 @@ public class ExploreFragment extends Fragment {
   //          googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(circleBitmap)));
         }
     }
+
+    class MarkerCache
+    {
+        public String markerID;
+        public Bitmap markerIcon;
+
+        public void setMarkerID(String markerID) {
+            this.markerID = markerID;
+        }
+
+        public void setMarkerIcon(Bitmap markerIcon) {
+            this.markerIcon = markerIcon;
+        }
+
+        public String getMarkerID() {
+            return markerID;
+        }
+
+        public Bitmap getMarkerIcon() {
+            return markerIcon;
+        }
+    }
+
+
 }
