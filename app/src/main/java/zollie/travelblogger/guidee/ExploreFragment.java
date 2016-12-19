@@ -139,9 +139,20 @@ public class ExploreFragment extends Fragment {
                     googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
                         public boolean onMarkerClick(Marker marker) {
-                            Bitmap bmp = Bitmap.createBitmap((int)(60*scale),(int) (60*scale), conf);
-                            Canvas canvas1 = new Canvas(bmp);
-                            animateMarker(marker, bmp, canvas1, scale, mMap);
+                         //   Bitmap bmp = Bitmap.createBitmap((int)(60*scale),(int) (60*scale), conf);
+                            Bitmap markerImage = null;
+                            final String markerID = marker.getId();
+                            for(int i=0; i<100; i++)
+                            {
+                                if(markerCache[i].getMarkerID().equals(markerID))
+                                {markerImage = markerCache[i].getMarkerIcon();
+                                    i=100;}
+                            }
+                            Canvas canvas1 = new Canvas(markerImage);
+                            if(markerImage != null){
+                                animateMarker(marker, markerImage, canvas1, scale, mMap);
+                            }
+
 
                             return false;
                         }
@@ -302,13 +313,6 @@ public class ExploreFragment extends Fragment {
 
         final LatLng markerLatLng = marker.getPosition();
         final String markerTitle = marker.getTitle();
-        final String markerID = marker.getId();
-        for(int i=0; i<100; i++)
-        {
-            if(markerCache[i].getMarkerID().equals(markerID))
-            {markerImageGlob = markerCache[i].getMarkerIcon();
-                i=100;}
-        }
 
       //  String markerImage = marker.get
         marker.remove();
@@ -401,15 +405,12 @@ public class ExploreFragment extends Fragment {
        // canv.drawBitmap(BitmapFactory.decodeResource(getResources(),
      //           R.drawable.profile_pic), 10,10, color);
         //canvas1.drawText("Zollie", 30, 40, color);
+   /*    if(bitm != null)
+            canv.drawBitmap(bitm, 10, 10, color);*/
 
-        try {
-            canv.drawBitmap(markerImageGlob, 10, 10, color);
-        }
-        catch(Exception e)
-        {
-            canv.drawBitmap(BitmapFactory.decodeResource(getResources(),
-                              R.drawable.profile_pic), 10,10, color);
-        }
+
+       //     canv.drawBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.profile_pic), 10,10, color);
+
 
         Bitmap bitmap = bitm;
         circleBitmap = Bitmap.createBitmap(bitmap.getWidth()+5, bitmap.getHeight()+5, Bitmap.Config.ARGB_8888);
