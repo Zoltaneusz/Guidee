@@ -146,6 +146,7 @@ public class ExploreFragment extends Fragment {
                             {
                                 if(markerCache[i].getMarkerID().equals(markerID))
                                 {markerImage = markerCache[i].getMarkerIcon();
+                                    markerCache[i] = null;
                                     i=100;}
                             }
                             Canvas canvas1 = new Canvas(markerImage);
@@ -313,7 +314,6 @@ public class ExploreFragment extends Fragment {
 
         final LatLng markerLatLng = marker.getPosition();
         final String markerTitle = marker.getTitle();
-
       //  String markerImage = marker.get
         marker.remove();
 
@@ -392,7 +392,15 @@ public class ExploreFragment extends Fragment {
         },500);
         //==================================================================================
         myMarker2.showInfoWindow();
-
+        String markerID = myMarker2.getId();
+        for(int i=0; i<100; i++)
+        {   if (markerCache[i] == null){
+            markerCache[i] = new MarkerCache();
+            markerCache[i].setMarkerID(markerID);
+            markerCache[i].setMarkerIcon(bmp);
+            i=100;
+        }
+        }
     }
 
     public void pulseMarker(int step, Bitmap bitm, Canvas canv, float scale){
