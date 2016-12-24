@@ -30,6 +30,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -226,8 +230,15 @@ public class ExploreFragment extends Fragment {
          final String markerImageSource = (String) mapMarkerData.get("imageURL");
          Bitmap markerImage= null;
          try{
-             URL markerImageUrl = new URL(markerImageSource);
-             markerImage = BitmapFactory.decodeStream(markerImageUrl.openConnection().getInputStream());
+             //============= Downloadding marker image via Glide ================
+             markerImage = Glide
+                     .with(getActivity())
+                     .load(markerImageSource)
+                     .asBitmap()
+                     .into(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL).get();
+             //==================================================================
+ //            URL markerImageUrl = new URL(markerImageSource);
+ //            markerImage = BitmapFactory.decodeStream(markerImageUrl.openConnection().getInputStream());
              markerImage = resizeMarkerImage(markerImage);
              mapMarkerData.put("imgBitmap", markerImage);
              //markerImageGlob = BitmapFactory.decodeStream(markerImageUrl.openConnection().getInputStream());
@@ -315,7 +326,11 @@ public class ExploreFragment extends Fragment {
         final LatLng markerLatLng = marker.getPosition();
         final String markerTitle = marker.getTitle();
       //  String markerImage = marker.get
-        marker.remove();
+        try {
+            marker.remove();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // Animating marker implementation =================================================
         pulseMarker(4, bmp, canvas1, scale);
