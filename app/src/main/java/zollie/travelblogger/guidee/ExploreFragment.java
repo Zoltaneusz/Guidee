@@ -35,6 +35,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by zoltanfuszenecker on 10/29/16.
@@ -109,10 +110,10 @@ public class ExploreFragment extends Fragment {
                     DataHandler.getInstance().getJourneys(new DataHandlerListener() {
                         @Override
                         public void onJourneyData(final Map<String, Object> rawJourneyData) {
-                                  //addMapMarker(annotationModel, mMap);
+                            //addMapMarker(journeyModel, mMap);
                             JourneyModel journeyModel = new JourneyModel(rawJourneyData);
-                            //allJourneys.add(new JourneyModel(annotationModel, eventModel));
-                            //new AsyncMarkerLoader().execute(annotationModel, mMap);
+                            allJourneys.add(journeyModel);
+                            new AsyncMarkerLoader().execute(journeyModel, mMap);
                         }
                     });
 
@@ -129,21 +130,31 @@ public class ExploreFragment extends Fragment {
                          //   Bitmap bmp = Bitmap.createBitmap((int)(60*scale),(int) (60*scale), conf);
                             Bitmap markerImage = null;
                             final String markerID = marker.getId();
-                            for(int i=0; i<100; i++)
+                            JourneyModel mJourney = null;
+                            int j = 0;
+                            for(int i=0; i<allJourneys.size(); i++)
                             {
-                                JourneyModel mJourney = allJourneys.get(i);
+                                 mJourney = allJourneys.get(i);
 
-                                /*if(mJourney.AnnotationModel.getMarkerID().equals(markerID))
-                                {markerImage = markerCache[i].getMarkerIcon();
-                                    markerCache[i] = null;
-                                    i=100;}
-     */                       }
-                            Canvas canvas1 = new Canvas(markerImage);
-                            if(markerImage != null){
-                                animateMarker(marker, markerImage, canvas1, scale, mMap);
+                                if(mJourney.annotationModel.getMarkerID().equals(markerID))
+                                {
+                                    //markerImage = markerImageGlob;
+//                                    markerImage = mJourney.annotationModel.markerIcon;
+                                    j=i;
+                                    break;
+                                }
                             }
-
-
+                            new AsyncAnimation().execute(allJourneys.get(j));
+                            markerImage = markerImageGlob;
+                            while (true) {
+                                if(markerImage != null) {
+                                    Canvas canvas1 = new Canvas(markerImageGlob);
+                                    if (markerImageGlob != null) {
+                                        animateMarker(marker, mJourney, markerImageGlob, canvas1, scale, mMap);
+                                        break;
+                                    }
+                                }
+                            }
                             return false;
                         }
                     });
@@ -172,21 +183,23 @@ public class ExploreFragment extends Fragment {
         return rootView;
     }
 
-    private void addMapMarker(Map<String, Object> mapMarkerData, GoogleMap mMap){
+    private void addMapMarker(JourneyModel journeyModel, GoogleMap mMap){
 
-        Map<String, Object> locationData = (Map<String, Object>) mapMarkerData.get("location");
-        final double markerLat = (double) locationData.get("latitude");
-        final double markerLng = (double) locationData.get("longitude");
+        LatLng locationData = journeyModel.annotationModel.markerLatLng;
+        final double markerLat = locationData.latitude;
+        final double markerLng = locationData.longitude;
 //        final String markerImageSource = (String) mapMarkerData.get("imageURL");
-        final String markerTitle = (String) mapMarkerData.get("title");
+        final String markerTitle = journeyModel.annotationModel.markerTitle;
 //        String markerSubtitle = (String) mapMarkerData.get("subtitle");
-        long markerLikes = (long) mapMarkerData.get("likes");
+        long markerLikes = journeyModel.annotationModel.markerLikes;
 
             try {
                 Canvas myCanvas = new Canvas();
                 final float scale = getResources().getDisplayMetrics().density;
-                Bitmap markerImage = (Bitmap)mapMarkerData.get("imgBitmap");
-                pulseMarker(1, markerImage, myCanvas, scale);
+
+                //Bitmap markerImage = journeyModel.annotationModel.markerIcon;
+                if(markerImageGlob != null)
+                    pulseMarker(1, markerImageGlob, myCanvas, scale);
     //            URL markerImageUrl = new URL(markerImageSource);
     //            Bitmap markerImage = BitmapFactory.decodeStream(markerImageUrl.openConnection().getInputStream());
                Marker mMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(markerLat, markerLng))
@@ -196,6 +209,7 @@ public class ExploreFragment extends Fragment {
                         // Specifies the anchor to be at a particular point in the marker image.
                         .anchor(0.4f, 1));
                 String markerID = mMarker.getId();
+                journeyModel.annotationModel.markerID = markerID;
            /*     for(int i=0; i<100; i++)
                 {   if (markerCache[i] == null){
                             markerCache[i] = new MarkerCache();
@@ -210,9 +224,8 @@ public class ExploreFragment extends Fragment {
             }
 
     }
-     private Bitmap getMarkerPicture(Map<String, Object> mapMarkerData){
-         Map<String, Object> locationData = (Map<String, Object>) mapMarkerData.get("location");
-         final String markerImageSource = (String) mapMarkerData.get("imageURL");
+     private Bitmap getMarkerPicture(JourneyModel journeyModel){
+         final String markerImageSource = journeyModel.annotationModel.getMarkerIconURL();
          Bitmap markerImage= null;
          try{
              //============= Downloadding marker image via Glide ================
@@ -221,11 +234,14 @@ public class ExploreFragment extends Fragment {
                      .load(markerImageSource)
                      .asBitmap()
                      .into(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL).get();
+
              //==================================================================
  //            URL markerImageUrl = new URL(markerImageSource);
  //            markerImage = BitmapFactory.decodeStream(markerImageUrl.openConnection().getInputStream());
              markerImage = resizeMarkerImage(markerImage);
-             mapMarkerData.put("imgBitmap", markerImage);
+             markerImageGlob = markerImage;
+             //journeyModel.annotationModel.setMarkerIcon(markerImage);
+          //   mapMarkerData.put("imgBitmap", markerImage);
              //markerImageGlob = BitmapFactory.decodeStream(markerImageUrl.openConnection().getInputStream());
             // markerImageGlob = resizeMarkerImage(markerImageGlob);
           /*   Canvas myCanvas = new Canvas();
@@ -306,7 +322,7 @@ public class ExploreFragment extends Fragment {
         mMapView.onLowMemory();
     }
 
-    public void animateMarker(Marker marker, final Bitmap bmp, final Canvas canvas1, final float scale, final GoogleMap mMap){
+    public void animateMarker(Marker marker, final JourneyModel mJourney, final Bitmap bmp, final Canvas canvas1, final float scale, final GoogleMap mMap){
 
         final LatLng markerLatLng = marker.getPosition();
         final String markerTitle = marker.getTitle();
@@ -392,7 +408,8 @@ public class ExploreFragment extends Fragment {
         },500);
         //==================================================================================
         myMarker2.showInfoWindow();
-        String markerID = myMarker2.getId();
+        mJourney.annotationModel.markerID = myMarker2.getId();
+
        /* for(int i=0; i<100; i++)
         {   if (markerCache[i] == null){
             markerCache[i] = new MarkerCache();
@@ -450,7 +467,7 @@ public class ExploreFragment extends Fragment {
 
     }
 
-    class AsyncMarkerLoader extends AsyncTask <Object,Void, Map<String,Object>>
+    class AsyncMarkerLoader extends AsyncTask <Object,Void, JourneyModel>
     {
         @Override
         protected void onPreExecute() {
@@ -458,19 +475,39 @@ public class ExploreFragment extends Fragment {
 
         }
         @Override
-        protected Map<String,Object> doInBackground(Object... params) {
+        protected JourneyModel doInBackground(Object... params) {
             try {
-                getMarkerPicture((Map<String,Object>) params[0]);
+                getMarkerPicture((JourneyModel) params[0]);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return (Map<String,Object>) params[0];
+            return (JourneyModel) params[0];
         }
         @Override
-        protected void onPostExecute(Map<String,Object> myMapMarkers) {
+        protected void onPostExecute(JourneyModel journeyModel) {
          //   super.onPostExecute(result);
-                addMapMarker(myMapMarkers, googleMap);
+                addMapMarker(journeyModel, googleMap);
   //          googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(circleBitmap)));
         }
     }
+
+    class AsyncAnimation extends AsyncTask <Object, Void, JourneyModel>{
+        @Override
+        protected JourneyModel doInBackground(Object... params) {
+            try {
+                getMarkerPicture((JourneyModel) params[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return (JourneyModel) params[0];
+        }
+
+        @Override
+        protected void onPostExecute(JourneyModel journeyModel) {
+
+
+
+        }
+    }
+
  }
