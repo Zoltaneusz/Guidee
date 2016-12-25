@@ -14,7 +14,7 @@ import java.util.Map;
 class JourneyModel {
 
     public AnnotationModel annotationModel;
-    public ArrayList<EventModel> eventModels;
+    public ArrayList<EventModel> eventModels= new ArrayList<EventModel>();
 
     public String title;
     public String summary;

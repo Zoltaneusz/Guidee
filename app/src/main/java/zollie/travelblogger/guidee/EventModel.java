@@ -12,7 +12,7 @@ import java.util.Map;
 class EventModel {
     public String summary;
     public String title;
-    public ArrayList<CarouselModel> carouselModels;
+    public ArrayList<CarouselModel> carouselModels = new ArrayList<CarouselModel>();
 
     public EventModel(Map<String, Object> rawEventModel) {
         ArrayList<Map<String, Object>> rawCarouselModels = null;
