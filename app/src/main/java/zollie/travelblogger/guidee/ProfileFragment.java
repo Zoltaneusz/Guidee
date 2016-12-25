@@ -14,6 +14,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.Glide;
+import com.google.api.services.youtube.YouTube;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -63,11 +65,21 @@ public class ProfileFragment extends Fragment {
             //final ImageView imageView = new ImageView (getActivity());
             final ImageView imageView = new ImageView(getActivity());
             //imageView.setTag(i);
-            imageView.setImageResource(R.drawable.profile_pic);
+            //===================== Adding Image to to Horizontal Slide via Glide =========
+
+            Glide
+                    .with(getActivity())
+                    .load("http://goo.gl/gEgYUd")
+                    .centerCrop()
+                    .placeholder(R.drawable.profile_pic)
+                    .crossFade()
+                    .into(imageView);
+            //=============================================================================
+    //        imageView.setImageResource(R.drawable.profile_pic);
             imageView.setBackgroundResource(R.drawable.pic_background);
 
-            imageView.setScaleX(2);
-            imageView.setScaleY(2);
+    //        imageView.setScaleX(2);
+    //        imageView.setScaleY(2);
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             horitontalLayout.addView(imageView, params);
 

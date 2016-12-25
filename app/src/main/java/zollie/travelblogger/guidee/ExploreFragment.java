@@ -1,14 +1,10 @@
 package zollie.travelblogger.guidee;
 
-import android.*;
 import android.Manifest;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -16,43 +12,28 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -73,9 +54,10 @@ public class ExploreFragment extends Fragment {
     Marker myMarker6;
     MapView mMapView;
     Bitmap markerImageGlob = null;
-
+    ArrayList<JourneyModel> allJourneys = new ArrayList<JourneyModel>();
     public GoogleMap googleMap;
-    MarkerCache[] markerCache = new MarkerCache[100];
+    //MarkerCache[] markerCache = new MarkerCache[100];
+
 
     // paint defines the text color, stroke width and size
     Paint color = new Paint();
@@ -127,9 +109,10 @@ public class ExploreFragment extends Fragment {
                     DataHandler.getInstance().getJourneys(new DataHandlerListener() {
                         @Override
                         public void onJourneyData(final Map<String, Object> rawJourneyData) {
-                            Map<String, Object> annotationModel = (Map<String, Object>) (rawJourneyData.get("annotationModel"));
-                            //addMapMarker(annotationModel, mMap);
-                            new AsyncMarkerLoader().execute(annotationModel, mMap);
+                                  //addMapMarker(annotationModel, mMap);
+                            JourneyModel journeyModel = new JourneyModel(rawJourneyData);
+                            //allJourneys.add(new JourneyModel(annotationModel, eventModel));
+                            //new AsyncMarkerLoader().execute(annotationModel, mMap);
                         }
                     });
 
@@ -148,11 +131,13 @@ public class ExploreFragment extends Fragment {
                             final String markerID = marker.getId();
                             for(int i=0; i<100; i++)
                             {
-                                if(markerCache[i].getMarkerID().equals(markerID))
+                                JourneyModel mJourney = allJourneys.get(i);
+
+                                /*if(mJourney.AnnotationModel.getMarkerID().equals(markerID))
                                 {markerImage = markerCache[i].getMarkerIcon();
                                     markerCache[i] = null;
                                     i=100;}
-                            }
+     */                       }
                             Canvas canvas1 = new Canvas(markerImage);
                             if(markerImage != null){
                                 animateMarker(marker, markerImage, canvas1, scale, mMap);
@@ -211,14 +196,14 @@ public class ExploreFragment extends Fragment {
                         // Specifies the anchor to be at a particular point in the marker image.
                         .anchor(0.4f, 1));
                 String markerID = mMarker.getId();
-                for(int i=0; i<100; i++)
+           /*     for(int i=0; i<100; i++)
                 {   if (markerCache[i] == null){
                             markerCache[i] = new MarkerCache();
                             markerCache[i].setMarkerID(markerID);
                             markerCache[i].setMarkerIcon(markerImage);
                             i=100;
                         }
-                }
+                }*/
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -408,14 +393,14 @@ public class ExploreFragment extends Fragment {
         //==================================================================================
         myMarker2.showInfoWindow();
         String markerID = myMarker2.getId();
-        for(int i=0; i<100; i++)
+       /* for(int i=0; i<100; i++)
         {   if (markerCache[i] == null){
             markerCache[i] = new MarkerCache();
             markerCache[i].setMarkerID(markerID);
             markerCache[i].setMarkerIcon(bmp);
             i=100;
         }
-        }
+        }*/
     }
 
     public void pulseMarker(int step, Bitmap bitm, Canvas canv, float scale){
@@ -488,28 +473,4 @@ public class ExploreFragment extends Fragment {
   //          googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(circleBitmap)));
         }
     }
-
-    class MarkerCache
-    {
-        public String markerID;
-        public Bitmap markerIcon;
-
-        public void setMarkerID(String markerID) {
-            this.markerID = markerID;
-        }
-
-        public void setMarkerIcon(Bitmap markerIcon) {
-            this.markerIcon = markerIcon;
-        }
-
-        public String getMarkerID() {
-            return markerID;
-        }
-
-        public Bitmap getMarkerIcon() {
-            return markerIcon;
-        }
-    }
-
-
-}
+ }
