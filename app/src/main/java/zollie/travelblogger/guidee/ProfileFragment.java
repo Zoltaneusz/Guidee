@@ -2,6 +2,13 @@ package zollie.travelblogger.guidee;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Shader;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -60,13 +67,44 @@ public class ProfileFragment extends Fragment {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         for (int i = 0; i < 15; i++){
 
+            //Circle bitmap into profile picture test ============================================
+            ImageView profilePicImg = (ImageView) getActivity().findViewById(R.id.prof_pic);
+            Bitmap circleBitmap = null;
+            int step = 0;
+            Canvas canv = new Canvas();
+            float scale = 0;
+            Paint color = new Paint();
+
+            color.setTextSize(35);
+            color.setColor(Color.BLACK);
+
+            Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.profile_pic);
+            circleBitmap = Bitmap.createBitmap(bitmap.getWidth()+5, bitmap.getHeight()+5, Bitmap.Config.ARGB_8888);
+
+            BitmapShader shader = new BitmapShader (bitmap,  Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+            Paint profilePic = new Paint();
+            profilePic.setFlags(Paint.ANTI_ALIAS_FLAG);
+            profilePic.setShader(shader);
+            profilePic.setAntiAlias(true);
+            Canvas c = new Canvas(circleBitmap);
+            Paint circleFrame = new Paint();
+            circleFrame.setFlags(Paint.ANTI_ALIAS_FLAG);
+            circleFrame.setColor(Color.BLACK);
+
+            c.drawCircle((int)(bitmap.getWidth()/2.5+10), (int)(bitmap.getHeight()/2.5+10),(int) (bitmap.getWidth()/2.5)-3+step*1, circleFrame);
+            circleFrame.setColor(Color.GRAY);
+            circleFrame.setStyle(Paint.Style.STROKE);
+            c.drawCircle((int)(bitmap.getWidth()/2.5+10), (int)(bitmap.getHeight()/2.5+10),(int) (bitmap.getWidth()/2.5)-7+step*1, circleFrame);
+            c.drawCircle((int)(bitmap.getWidth()/2.5+10), (int)(bitmap.getHeight()/2.5+10),(int) (bitmap.getWidth()/2.5)-3+step*1, circleFrame);
+            c.drawCircle((int)(bitmap.getWidth()/2.5+10), (int)(bitmap.getHeight()/2.5+10), (int)(bitmap.getWidth()/2.5)-8+step*1, profilePic);
 
 
+            profilePicImg.setImageBitmap(circleBitmap);
+            //=======================================================================
             //final ImageView imageView = new ImageView (getActivity());
             final ImageView imageView = new ImageView(getActivity());
             //imageView.setTag(i);
             //===================== Adding Image to to Horizontal Slide via Glide =========
-
             Glide
                     .with(getActivity())
                     .load("http://goo.gl/gEgYUd")
