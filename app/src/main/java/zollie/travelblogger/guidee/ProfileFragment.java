@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Shader;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -40,17 +41,9 @@ public class ProfileFragment extends Fragment {
     ArrayList<String> allUserJourneys = new ArrayList<String>();
     ArrayList<JourneyModel> allJourneys = new ArrayList<JourneyModel>();
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
-
-        return rootView;
-    }
-
-    @Override
-    public void onResume() {
-
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         // Change statusbar color ===============================
         if (Build.VERSION.SDK_INT >= 21) {
 
@@ -65,11 +58,7 @@ public class ProfileFragment extends Fragment {
             // finally change the color
             window.setStatusBarColor(getActivity().getResources().getColor(R.color.lightGreen));
         }
-        //========================================================
 
-        LinearLayout horitontalLayout = (LinearLayout) getView().findViewById(R.id.scroll_layout);
-        LinearLayout.LayoutParams params = new LinearLayout.
-                LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
         //================= Getting data of 1 profile =====================================
 
@@ -103,38 +92,24 @@ public class ProfileFragment extends Fragment {
         }
         //======================== Setting Journey Images ==================================
         for (JourneyModel mJourney : allJourneys){
-
-            final ImageView imageView = new ImageView(getActivity());
-            if(mJourney == null) break;
-            String coverImageUrl = mJourney.coverImageUrl;
-            //===================== Adding Image to to Horizontal Slide via Glide =========
-            Glide
-                    .with(getActivity())
-                    .load(coverImageUrl)
-                    .centerCrop()
-                    .placeholder(R.drawable.profile_pic)
-                    .crossFade()
-                    .into(imageView);
-            //=============================================================================
-    //        imageView.setImageResource(R.drawable.profile_pic);
-            imageView.setBackgroundResource(R.drawable.pic_background);
-
-    //        imageView.setScaleX(2);
-    //        imageView.setScaleY(2);
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            horitontalLayout.addView(imageView, params);
-            imageView.setOnClickListener(new View.OnClickListener()
-            {
-
-                @Override
-                public void onClick(View v)
-                {
-                    // TODO Auto-generated method stub
-                    //      Log.e("Tag",""+imageView.getTag());
-                }
-            });
+            ImageView imageView = new ImageView(getActivity());
+            new AsyncPictureLoader().execute(imageView, mJourney);
 
         }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        return rootView;
+    }
+
+    @Override
+    public void onResume() {
+
+
 //       horitontalLayout.setLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT);
         super.onResume();
     }
@@ -146,5 +121,56 @@ public class ProfileFragment extends Fragment {
             }
             return allJourneys;
         }
+    class AsyncPictureLoader extends AsyncTask<Object,Void, ImageView>
+    {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+        @Override
+        protected ImageView doInBackground(Object... params) {
+            try {
+
+                if(params[1] == null) return null;
+                String coverImageUrl = ((JourneyModel)params[1]).coverImageUrl;
+                //===================== Adding Image to to Horizontal Slide via Glide =========
+                Glide
+                        .with(getActivity())
+                        .load(coverImageUrl)
+                        .centerCrop()
+                        .placeholder(R.drawable.profile_pic)
+                        .crossFade()
+                        .into((ImageView) params[0]);
+                //=============================================================================
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return (ImageView) params[0];
+        }
+        @Override
+        protected void onPostExecute(ImageView imageView) {
+            //   super.onPostExecute(result);
+            //        imageView.setImageResource(R.drawable.profile_pic);
+            //========================================================
+            if(imageView == null) return;
+            LinearLayout horizontalLayout = (LinearLayout) getView().findViewById(R.id.scroll_layout);
+            LinearLayout.LayoutParams imageParams = new LinearLayout.
+                    LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            imageView.setBackgroundResource(R.drawable.pic_background);
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            horizontalLayout.addView(imageView, imageParams);
+            imageView.setOnClickListener(new View.OnClickListener()
+            {
+
+                @Override
+                public void onClick(View v)
+                {
+                    // TODO Auto-generated method stub
+                    //      Log.e("Tag",""+imageView.getTag());
+                }
+            });
+        }
+    }
 }
 
