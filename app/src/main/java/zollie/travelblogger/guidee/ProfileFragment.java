@@ -29,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -36,7 +37,7 @@ import java.util.Map;
  */
 
 public class ProfileFragment extends Fragment {
-
+    ArrayList<String> allUserJourneys = new ArrayList<String>();
 
     @Nullable
     @Override
@@ -70,17 +71,18 @@ public class ProfileFragment extends Fragment {
                 LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
         //================= Getting data of 1 profile =====================================
+
         DataHandler.getInstance().getUserWithId(new String("0"), new DataHandlerListener() {
             @Override
             public void onJourneyData(final Map<String, Object> rawJourneyData) {
                 //addMapMarker(journeyModel, mMap);
 
             }
-
             @Override
             public void onUserData(Map<String, Object> rawUserData) {
-                UserModel userModel = new UserModel(rawUserData);
 
+                UserModel userModel = new UserModel(rawUserData);
+                allUserJourneys = getUserJourneys(userModel);
             }
         });
 
@@ -119,5 +121,13 @@ public class ProfileFragment extends Fragment {
 //       horitontalLayout.setLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT);
         super.onResume();
     }
+        public ArrayList<String> getUserJourneys(UserModel userModel) {
+            ArrayList<String> allJourneys = new ArrayList<String>();
+            for (Map.Entry<String, Object> map : userModel.userJourneys.entrySet()) {
+                String journeyModel = (String) map.getValue();
+                allJourneys.add(journeyModel);
+            }
+            return allJourneys;
+        }
 }
 
