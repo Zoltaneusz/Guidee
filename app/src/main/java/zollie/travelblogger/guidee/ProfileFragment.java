@@ -9,7 +9,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Shader;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -41,9 +40,17 @@ public class ProfileFragment extends Fragment {
     ArrayList<String> allUserJourneys = new ArrayList<String>();
     ArrayList<JourneyModel> allJourneys = new ArrayList<JourneyModel>();
 
+    @Nullable
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        return rootView;
+    }
+
+    @Override
+    public void onResume() {
+
         // Change statusbar color ===============================
         if (Build.VERSION.SDK_INT >= 21) {
 
@@ -97,7 +104,18 @@ public class ProfileFragment extends Fragment {
         //======================== Setting Journey Images ==================================
         for (JourneyModel mJourney : allJourneys){
 
-
+            final ImageView imageView = new ImageView(getActivity());
+            if(mJourney == null) break;
+            String coverImageUrl = mJourney.coverImageUrl;
+            //===================== Adding Image to to Horizontal Slide via Glide =========
+            Glide
+                    .with(getActivity())
+                    .load(coverImageUrl)
+                    .centerCrop()
+                    .placeholder(R.drawable.profile_pic)
+                    .crossFade()
+                    .into(imageView);
+            //=============================================================================
             //        imageView.setImageResource(R.drawable.profile_pic);
             imageView.setBackgroundResource(R.drawable.pic_background);
 
@@ -117,64 +135,15 @@ public class ProfileFragment extends Fragment {
             });
 
         }
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
-
-        return rootView;
-    }
-
-    @Override
-    public void onResume() {
-
-
 //       horitontalLayout.setLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT);
         super.onResume();
     }
-        public ArrayList<String> getUserJourneys(UserModel userModel) {
-            ArrayList<String> allJourneys = new ArrayList<String>();
-            for (Map.Entry<String, Object> map : userModel.userJourneys.entrySet()) {
-                String journeyModel = (String) map.getValue();
-                allJourneys.add(journeyModel);
-            }
-            return allJourneys;
+    public ArrayList<String> getUserJourneys(UserModel userModel) {
+        ArrayList<String> allJourneys = new ArrayList<String>();
+        for (Map.Entry<String, Object> map : userModel.userJourneys.entrySet()) {
+            String journeyModel = (String) map.getValue();
+            allJourneys.add(journeyModel);
         }
-    class AsyncPictureLoader extends AsyncTask<Object,Void, JourneyModel>
-    {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-        }
-        @Override
-        protected JourneyModel doInBackground(Object... params) {
-            try {
-
-                if(params[1] == null) return null;
-                String coverImageUrl = ((JourneyModel)params[1]).coverImageUrl;
-                //===================== Adding Image to to Horizontal Slide via Glide =========
-                Glide
-                        .with(getActivity())
-                        .load(coverImageUrl)
-                        .centerCrop()
-                        .placeholder(R.drawable.profile_pic)
-                        .crossFade()
-                        .into(()params[0]);
-                //=============================================================================
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return (JourneyModel) params[0];
-        }
-        @Override
-        protected void onPostExecute(JourneyModel journeyModel) {
-            //   super.onPostExecute(result);
-            addMapMarker(journeyModel, googleMap);
-            //          googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(circleBitmap)));
-        }
+        return allJourneys;
     }
 }
-
