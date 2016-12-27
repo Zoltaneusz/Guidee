@@ -58,7 +58,11 @@ public class ProfileFragment extends Fragment {
             // finally change the color
             window.setStatusBarColor(getActivity().getResources().getColor(R.color.lightGreen));
         }
+        //========================================================
 
+        LinearLayout horitontalLayout = (LinearLayout) getView().findViewById(R.id.scroll_layout);
+        LinearLayout.LayoutParams params = new LinearLayout.
+                LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
         //================= Getting data of 1 profile =====================================
 
@@ -92,8 +96,25 @@ public class ProfileFragment extends Fragment {
         }
         //======================== Setting Journey Images ==================================
         for (JourneyModel mJourney : allJourneys){
-            ImageView imageView = new ImageView(getActivity());
-            new AsyncPictureLoader().execute(imageView, mJourney);
+
+
+            //        imageView.setImageResource(R.drawable.profile_pic);
+            imageView.setBackgroundResource(R.drawable.pic_background);
+
+            //        imageView.setScaleX(2);
+            //        imageView.setScaleY(2);
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            horitontalLayout.addView(imageView, params);
+            imageView.setOnClickListener(new View.OnClickListener()
+            {
+
+                @Override
+                public void onClick(View v)
+                {
+                    // TODO Auto-generated method stub
+                    //      Log.e("Tag",""+imageView.getTag());
+                }
+            });
 
         }
     }
@@ -121,7 +142,7 @@ public class ProfileFragment extends Fragment {
             }
             return allJourneys;
         }
-    class AsyncPictureLoader extends AsyncTask<Object,Void, ImageView>
+    class AsyncPictureLoader extends AsyncTask<Object,Void, JourneyModel>
     {
         @Override
         protected void onPreExecute() {
@@ -129,7 +150,7 @@ public class ProfileFragment extends Fragment {
 
         }
         @Override
-        protected ImageView doInBackground(Object... params) {
+        protected JourneyModel doInBackground(Object... params) {
             try {
 
                 if(params[1] == null) return null;
@@ -141,35 +162,18 @@ public class ProfileFragment extends Fragment {
                         .centerCrop()
                         .placeholder(R.drawable.profile_pic)
                         .crossFade()
-                        .into((ImageView) params[0]);
+                        .into(()params[0]);
                 //=============================================================================
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return (ImageView) params[0];
+            return (JourneyModel) params[0];
         }
         @Override
-        protected void onPostExecute(ImageView imageView) {
+        protected void onPostExecute(JourneyModel journeyModel) {
             //   super.onPostExecute(result);
-            //        imageView.setImageResource(R.drawable.profile_pic);
-            //========================================================
-            if(imageView == null) return;
-            LinearLayout horizontalLayout = (LinearLayout) getView().findViewById(R.id.scroll_layout);
-            LinearLayout.LayoutParams imageParams = new LinearLayout.
-                    LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            imageView.setBackgroundResource(R.drawable.pic_background);
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            horizontalLayout.addView(imageView, imageParams);
-            imageView.setOnClickListener(new View.OnClickListener()
-            {
-
-                @Override
-                public void onClick(View v)
-                {
-                    // TODO Auto-generated method stub
-                    //      Log.e("Tag",""+imageView.getTag());
-                }
-            });
+            addMapMarker(journeyModel, googleMap);
+            //          googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(circleBitmap)));
         }
     }
 }
