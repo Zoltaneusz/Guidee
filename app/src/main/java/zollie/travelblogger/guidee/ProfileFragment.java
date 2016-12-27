@@ -29,6 +29,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Map;
+
 /**
  * Created by FuszeneckerZ on 2016.11.27..
  */
@@ -64,46 +66,28 @@ public class ProfileFragment extends Fragment {
         //========================================================
 
         LinearLayout horitontalLayout = (LinearLayout) getView().findViewById(R.id.scroll_layout);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams params = new LinearLayout.
+                LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+
+        //================= Getting data of 1 profile =====================================
+        DataHandler.getInstance().getUserWithId(new String("0"), new DataHandlerListener() {
+            @Override
+            public void onJourneyData(final Map<String, Object> rawJourneyData) {
+                //addMapMarker(journeyModel, mMap);
+
+            }
+
+            @Override
+            public void onUserData(Map<String, Object> rawUserData) {
+                UserModel userModel = new UserModel(rawUserData);
+
+            }
+        });
+
         for (int i = 0; i < 15; i++){
 
-            //Circle bitmap into profile picture test ============================================
-            ImageView profilePicImg = (ImageView) getActivity().findViewById(R.id.prof_pic);
-            Bitmap circleBitmap = null;
-            int step = 0;
-            Canvas canv = new Canvas();
-            float scale = 0;
-            Paint color = new Paint();
-
-            color.setTextSize(35);
-            color.setColor(Color.BLACK);
-
-            Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.profile_pic);
-            circleBitmap = Bitmap.createBitmap(bitmap.getWidth()+5, bitmap.getHeight()+5, Bitmap.Config.ARGB_8888);
-
-            BitmapShader shader = new BitmapShader (bitmap,  Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-            Paint profilePic = new Paint();
-            profilePic.setFlags(Paint.ANTI_ALIAS_FLAG);
-            profilePic.setShader(shader);
-            profilePic.setAntiAlias(true);
-            Canvas c = new Canvas(circleBitmap);
-            Paint circleFrame = new Paint();
-            circleFrame.setFlags(Paint.ANTI_ALIAS_FLAG);
-            circleFrame.setColor(Color.BLACK);
-
-            c.drawCircle((int)(bitmap.getWidth()/2.5+10), (int)(bitmap.getHeight()/2.5+10),(int) (bitmap.getWidth()/2.5)-3+step*1, circleFrame);
-            circleFrame.setColor(Color.GRAY);
-            circleFrame.setStyle(Paint.Style.STROKE);
-            c.drawCircle((int)(bitmap.getWidth()/2.5+10), (int)(bitmap.getHeight()/2.5+10),(int) (bitmap.getWidth()/2.5)-7+step*1, circleFrame);
-            c.drawCircle((int)(bitmap.getWidth()/2.5+10), (int)(bitmap.getHeight()/2.5+10),(int) (bitmap.getWidth()/2.5)-3+step*1, circleFrame);
-            c.drawCircle((int)(bitmap.getWidth()/2.5+10), (int)(bitmap.getHeight()/2.5+10), (int)(bitmap.getWidth()/2.5)-8+step*1, profilePic);
-
-
-            profilePicImg.setImageBitmap(circleBitmap);
-            //=======================================================================
-            //final ImageView imageView = new ImageView (getActivity());
             final ImageView imageView = new ImageView(getActivity());
-            //imageView.setTag(i);
+
             //===================== Adding Image to to Horizontal Slide via Glide =========
             Glide
                     .with(getActivity())
@@ -120,7 +104,6 @@ public class ProfileFragment extends Fragment {
     //        imageView.setScaleY(2);
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             horitontalLayout.addView(imageView, params);
-
             imageView.setOnClickListener(new View.OnClickListener()
             {
 
@@ -131,6 +114,7 @@ public class ProfileFragment extends Fragment {
                     //      Log.e("Tag",""+imageView.getTag());
                 }
             });
+
         }
 //       horitontalLayout.setLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT);
         super.onResume();

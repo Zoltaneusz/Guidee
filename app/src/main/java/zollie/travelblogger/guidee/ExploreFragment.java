@@ -115,6 +115,11 @@ public class ExploreFragment extends Fragment {
                             allJourneys.add(journeyModel);
                             new AsyncMarkerLoader().execute(journeyModel, mMap);
                         }
+
+                        @Override
+                        public void onUserData(Map<String, Object> rawUserData) {
+
+                        }
                     });
 
                     // For showing a move to my location button
@@ -450,19 +455,19 @@ public class ExploreFragment extends Fragment {
         circleFrame.setFlags(Paint.ANTI_ALIAS_FLAG);
         circleFrame.setColor(Color.BLACK);
 
-        c.drawCircle((int)(bitmap.getWidth()/2.5+10), (int)(bitmap.getHeight()/2.5+10),(int) (bitmap.getWidth()/2.5)-3+step*1, circleFrame);
+        c.drawCircle((int)(bitmap.getWidth()/2.5+5), (int)(bitmap.getHeight()/2.5+5),(int) (bitmap.getWidth()/2.5)-3+step*1, circleFrame);
         circleFrame.setColor(Color.GRAY);
         circleFrame.setStyle(Paint.Style.STROKE);
-        c.drawCircle((int)(bitmap.getWidth()/2.5+10), (int)(bitmap.getHeight()/2.5+10),(int) (bitmap.getWidth()/2.5)-7+step*1, circleFrame);
-        c.drawCircle((int)(bitmap.getWidth()/2.5+10), (int)(bitmap.getHeight()/2.5+10),(int) (bitmap.getWidth()/2.5)-3+step*1, circleFrame);
-        c.drawCircle((int)(bitmap.getWidth()/2.5+10), (int)(bitmap.getHeight()/2.5+10), (int)(bitmap.getWidth()/2.5)-8+step*1, profilePic);
+        c.drawCircle((int)(bitmap.getWidth()/2.5+5), (int)(bitmap.getHeight()/2.5+5),(int) (bitmap.getWidth()/2.5)-5+step*1, circleFrame);
+        c.drawCircle((int)(bitmap.getWidth()/2.5+5), (int)(bitmap.getHeight()/2.5+5),(int) (bitmap.getWidth()/2.5)-3+step*1, circleFrame);
+        c.drawCircle((int)(bitmap.getWidth()/2.5+5), (int)(bitmap.getHeight()/2.5+5), (int)(bitmap.getWidth()/2.5)-6+step*1, profilePic);
 
     }
 
     public Bitmap resizeMarkerImage(Bitmap myPic){
 
         Matrix m = new Matrix();
-        m.setRectToRect(new RectF(0, 0, myPic.getWidth(), myPic.getHeight()), new RectF(0, 0, 100, 100), Matrix.ScaleToFit.CENTER);
+        m.setRectToRect(new RectF(0, 0, myPic.getWidth(), myPic.getHeight()), new RectF(0, 0, 50, 50), Matrix.ScaleToFit.CENTER);
         return Bitmap.createBitmap(myPic, 0, 0, myPic.getWidth(), myPic.getHeight(), m, true);
 
     }

@@ -8,5 +8,6 @@ import java.util.Map;
 public interface DataHandlerListener {
 
     void onJourneyData(Map<String, Object> rawJourneyData);
+    void onUserData(Map<String, Object> rawUserData);
 
 }

@@ -38,7 +38,7 @@ public class DataHandler {
         return this.myProfPic;
     }
 
-    public void getJourneys(final DataHandlerListener dataHandlerListener){
+    public void getJourneys(final DataHandlerListener dataHandlerListener) {
         DatabaseReference mJourneyRef = mRootRef.child("Journeys");
         mJourneyRef.addChildEventListener(new ChildEventListener() {
             @Override
@@ -67,8 +67,23 @@ public class DataHandler {
 
             }
         });
+    }
 
+    public void getUserWithId(String userId, final DataHandlerListener dataHandlerListener) {
+        DatabaseReference mUserReference = mRootRef.child("Users");
+       // Map<String, Object> mUser = (Map<String, Object>) mUserReference.child(userId);
+        mUserReference.child(userId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String, Object> userInfo = (Map<String, Object>) dataSnapshot.getValue();
+                dataHandlerListener.onUserData(userInfo);
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
