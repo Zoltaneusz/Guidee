@@ -38,6 +38,7 @@ import java.util.Map;
 
 public class ProfileFragment extends Fragment {
     ArrayList<String> allUserJourneys = new ArrayList<String>();
+    ArrayList<JourneyModel> allJourneys = new ArrayList<JourneyModel>();
 
     @Nullable
     @Override
@@ -85,15 +86,31 @@ public class ProfileFragment extends Fragment {
                 allUserJourneys = getUserJourneys(userModel);
             }
         });
+        //================= Getting journeys of profile =====================================
+        for(String userJourneyString : allUserJourneys) {
+            DataHandler.getInstance().getJourneyWithId(userJourneyString, new DataHandlerListener() {
+                @Override
+                public void onJourneyData(Map<String, Object> rawJourneyData) {
+                    JourneyModel journeyModel = new JourneyModel(rawJourneyData);
+                    allJourneys.add(journeyModel);
+                }
 
-        for (int i = 0; i < 15; i++){
+                @Override
+                public void onUserData(Map<String, Object> rawUserData) {
+
+                }
+            });
+        }
+        //======================== Setting Journey Images ==================================
+        for (JourneyModel mJourney : allJourneys){
 
             final ImageView imageView = new ImageView(getActivity());
-
+            if(mJourney == null) break;
+            String coverImageUrl = mJourney.coverImageUrl;
             //===================== Adding Image to to Horizontal Slide via Glide =========
             Glide
                     .with(getActivity())
-                    .load("http://goo.gl/gEgYUd")
+                    .load(coverImageUrl)
                     .centerCrop()
                     .placeholder(R.drawable.profile_pic)
                     .crossFade()

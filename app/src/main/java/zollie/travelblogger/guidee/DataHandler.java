@@ -85,6 +85,22 @@ public class DataHandler {
             }
         });
     }
+    public void getJourneyWithId(String journeyId, final DataHandlerListener dataHandlerListener)
+    {
+        DatabaseReference mJourneyReference = mRootRef.child("Journeys");
+        mJourneyReference.child(journeyId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String, Object> mJourneyReference = (Map<String, Object>) dataSnapshot.getValue();
+                dataHandlerListener.onJourneyData(mJourneyReference);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
 
     public void setProfPic(String value){

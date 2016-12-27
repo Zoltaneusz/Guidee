@@ -24,13 +24,41 @@ class JourneyModel {
 
 
     public JourneyModel(Map<String, Object> rawJourneyModel) {
-        this.title = (String) rawJourneyModel.get("title");
-        this.summary = (String) rawJourneyModel.get("summary");
-        this.coverImageUrl = (String) rawJourneyModel.get("coverImageUrl");
-        this.userAvatarUrl = (String) rawJourneyModel.get("userAvatarUrl");
-        this.identifier = (String) rawJourneyModel.get("identifier");
-        this.annotationModel = new AnnotationModel((Map<String, Object>)rawJourneyModel.get("annotationModel"));
-        this.eventModels = new ArrayList<EventModel>();
+        try {
+            this.title = (String) rawJourneyModel.get("title");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.summary = (String) rawJourneyModel.get("summary");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.coverImageUrl = (String) rawJourneyModel.get("coverImageUrl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.userAvatarUrl = (String) rawJourneyModel.get("userAvatarUrl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.identifier = (String) rawJourneyModel.get("identifier");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.annotationModel = new AnnotationModel((Map<String, Object>)rawJourneyModel.get("annotationModel"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.eventModels = new ArrayList<EventModel>();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ArrayList<Map<String, Object>> rawEventModels = null;
         try {
             rawEventModels = (ArrayList<Map<String, Object>>) rawJourneyModel.get("eventModels");

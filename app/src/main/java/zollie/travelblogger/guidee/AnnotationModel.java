@@ -23,11 +23,32 @@ class AnnotationModel {
         Map<String, Object> locationData = (Map<String, Object>) rawAnnotationModel.get("location");
         this.markerID = null;
         this.markerIcon = null;
-        this.markerIconURL = (String) rawAnnotationModel.get("imageURL");
-        this.markerLikes = (long) rawAnnotationModel.get("likes");
-        this.markerLatLng = new LatLng((double) locationData.get("latitude"), (double) locationData.get("longitude"));
-        this.markerSubtitle = (String) rawAnnotationModel.get("subtitle");;
-        this.markerTitle = (String) rawAnnotationModel.get("title");
+        try {
+            this.markerIconURL = (String) rawAnnotationModel.get("imageURL");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.markerLikes = (long) rawAnnotationModel.get("likes");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.markerLatLng = new LatLng((double) locationData.get("latitude"), (double) locationData.get("longitude"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.markerSubtitle = (String) rawAnnotationModel.get("subtitle");
+            ;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.markerTitle = (String) rawAnnotationModel.get("title");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String getMarkerIconURL() {

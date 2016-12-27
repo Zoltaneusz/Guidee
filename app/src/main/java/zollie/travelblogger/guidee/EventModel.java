@@ -16,8 +16,16 @@ class EventModel {
 
     public EventModel(Map<String, Object> rawEventModel) {
         ArrayList<Map<String, Object>> rawCarouselModels = null;
-        this.summary = (String) rawEventModel.get("summary");
-        this.title = (String) rawEventModel.get("title");
+        try {
+            this.summary = (String) rawEventModel.get("summary");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.title = (String) rawEventModel.get("title");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         try {
             rawCarouselModels = (ArrayList<Map<String, Object>>) rawEventModel.get("carouselModels");
             for(Map<String, Object> rawCarouselModel : rawCarouselModels ){
