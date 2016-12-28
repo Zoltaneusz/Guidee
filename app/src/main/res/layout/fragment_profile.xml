@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="10">
+    android:weightSum="3">
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
@@ -21,8 +21,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center">
-
-
                         <ImageView
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content"
@@ -49,10 +47,9 @@
 
 
     <TextView
-        android:id="@+id/all_journeys_title"
-        android:text="All journeys"
+        android:id="@+id/my_journeys_title"
+        android:text="My journeys"
         android:textColor="#000000"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_below="@+id/frameLayout"
@@ -61,82 +58,69 @@
         android:paddingLeft="10dp"/>
 
     <HorizontalScrollView
-        android:id="@+id/all_journeys_content"
-        android:layout_weight="2"
+        android:id="@+id/my_journeys_content"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_below="@+id/all_journeys_title"
+        android:layout_below="@+id/my_journeys_title"
         android:paddingTop="5dp"
-        android:paddingLeft="10dp">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/profile_pic"/>
-
-        </LinearLayout>
-
-    </HorizontalScrollView>
-
-    <TextView
-        android:id="@+id/profile_journey_title"
-        android:text="Journey to Bizsomfalva"
-        android:textColor="#000000"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:textSize="20dp"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:layout_above="@+id/profile_journey_content"/>
-
-    <TextView
-        android:id="@+id/profile_journey_content"
-        android:layout_weight="2"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="This journey took place in this january. Bla bla blaaaaaa Fuszenecker Zsombor is an idiot."
-        android:layout_above="@+id/profile_moments_title"
-        android:paddingBottom="5dp"
-        android:paddingLeft="10dp"/>
-
-    <TextView
-        android:id="@+id/profile_moments_title"
-        android:textColor="#000000"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="Moments"
-        android:textSize="20dp"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:layout_above="@+id/horizontal_scroll"/>
-
-    <HorizontalScrollView
-        android:layout_weight="2"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="#90D499"
-        android:id="@+id/horizontal_scroll"
-        android:layout_alignParentBottom="true"
-        android:clipChildren="false"
-        android:paddingLeft="10dp"
-        android:layout_alignParentStart="true">
-
+        android:paddingStart="10dp"
+        android:paddingEnd="0dp"
+        android:scrollbars="none">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:id="@+id/scroll_layout"
+            android:id="@+id/journey_scroll_layout"
             android:clipChildren="false"
-            android:weightSum="1">
-
-        </LinearLayout>
+            android:weightSum="1"
+            android:scrollbars="none"
+            android:divider="@android:color/transparent"
+            android:dividerPadding="16dp">
+            </LinearLayout>
 
     </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/my_plans_title"
+        android:text="My Plans"
+        android:textColor="#000000"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textSize="20dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:layout_below="@+id/my_journeys_content"/>
+
+    <TextView
+        android:id="@+id/my_plans_content"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="This should be replaced with recycleview or horizontal scroll view"
+        android:layout_below="@+id/my_plans_title"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"/>
+
+    <TextView
+        android:id="@+id/my_favorites"
+        android:textColor="#000000"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="My favorites"
+        android:textSize="20dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:layout_below="@+id/my_plans_content"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/recycler_view"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:layout_below="@+id/my_favorites"
+        android:scrollbars="none"/>
+
 
 </RelativeLayout>
