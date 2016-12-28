@@ -72,7 +72,7 @@ public class DataHandler {
     public void getUserWithId(String userId, final DataHandlerListener dataHandlerListener) {
         DatabaseReference mUserReference = mRootRef.child("Users");
        // Map<String, Object> mUser = (Map<String, Object>) mUserReference.child(userId);
-        mUserReference.child(userId).addValueEventListener(new ValueEventListener() {
+        mUserReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Map<String, Object> userInfo = (Map<String, Object>) dataSnapshot.getValue();

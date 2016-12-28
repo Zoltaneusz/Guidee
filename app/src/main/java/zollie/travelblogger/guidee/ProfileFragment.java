@@ -12,6 +12,7 @@ import android.graphics.Shader;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
@@ -40,71 +41,63 @@ import java.util.Map;
  */
 
 public class ProfileFragment extends Fragment {
-    ArrayList<String> allUserJourneys = new ArrayList<String>();
     ArrayList<JourneyModel> allJourneys = new ArrayList<JourneyModel>();
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         return rootView;
     }
 
     @Override
     public void onResume() {
-
+        super.onResume();
         // Change statusbar color ===============================
+
         if (Build.VERSION.SDK_INT >= 21) {
-
             Window window = getActivity().getWindow();
-
             // clear FLAG_TRANSLUCENT_STATUS flag:
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
             // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
             // finally change the color
             window.setStatusBarColor(getActivity().getResources().getColor(R.color.lightGreen));
         }
-
-
         //================= Getting data of 1 profile =====================================
 
         DataHandler.getInstance().getUserWithId(new String("0"), new DataHandlerListener() {
             @Override
             public void onJourneyData(final Map<String, Object> rawJourneyData) {
                 //addMapMarker(journeyModel, mMap);
-
             }
-
             @Override
             public void onUserData(Map<String, Object> rawUserData) {
-
+                allJourneys.clear();
                 UserModel userModel = new UserModel(rawUserData);
-                allUserJourneys = getUserJourneys(userModel);
+                //================= Getting journeys of profile =====================================
+                for (String userJourneyString : getUserJourneys(userModel)) {
+                    DataHandler.getInstance().getJourneyWithId(userJourneyString, new DataHandlerListener() {
+                        @Override
+                        public void onJourneyData(Map<String, Object> rawJourneyData) {
+                            JourneyModel journeyModel = new JourneyModel(rawJourneyData);
+                            allJourneys.add(journeyModel);
+                            fillHorizontalScrollBar();
+                            fillRecyclerView();
+                        }
+
+                        @Override
+                        public void onUserData(Map<String, Object> rawUserData) {
+
+                        }
+                    });
+                }
             }
         });
-        //================= Getting journeys of profile =====================================
-        for (String userJourneyString : allUserJourneys) {
-            DataHandler.getInstance().getJourneyWithId(userJourneyString, new DataHandlerListener() {
-                @Override
-                public void onJourneyData(Map<String, Object> rawJourneyData) {
-                    JourneyModel journeyModel = new JourneyModel(rawJourneyData);
-                    allJourneys.add(journeyModel);
-                    fillHorizontalScrollBar();
-                }
 
-                @Override
-                public void onUserData(Map<String, Object> rawUserData) {
 
-                }
-            });
-        }
-        fillRecyclerView();
-//       horitontalLayout.setLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT);
-        super.onResume();
+
     }
 
     public ArrayList<String> getUserJourneys(UserModel userModel) {
@@ -123,6 +116,9 @@ public class ProfileFragment extends Fragment {
         JourneyAdapter adapter = new JourneyAdapter(getActivity(), allJourneys);
         rvJourneys.setAdapter(adapter);
         rvJourneys.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        RecyclerView.ItemDecoration itemDecoration = new
+                DividerItemDecoration(getActivity(), zollie.travelblogger.guidee.DividerItemDecoration.HORIZONTAL_LIST);
+        rvJourneys.addItemDecoration(itemDecoration);
     }
 
     public void fillHorizontalScrollBar() {
