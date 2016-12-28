@@ -51,7 +51,7 @@
 
     <TextView
         android:id="@+id/my_journeys_title"
-        android:text="My journeys"
+        android:text="My Journeys ✈"
         android:textColor="#000000"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
@@ -60,69 +60,59 @@
         android:paddingTop="10dp"
         android:paddingLeft="10dp"/>
 
-    <HorizontalScrollView
-        android:id="@+id/my_journeys_content"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
+    <android.support.v7.widget.RecyclerView
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/my_journeys_recycle"
+        android:orientation="horizontal"
+        android:layout_weight="1"
         android:layout_below="@+id/my_journeys_title"
-        android:paddingTop="5dp"
+        android:scrollbars="none"
         android:paddingStart="10dp"
-        android:paddingEnd="0dp"
-        android:scrollbars="none">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:id="@+id/journey_scroll_layout"
-            android:clipChildren="false"
-            android:weightSum="1"
-            android:scrollbars="none"
-            android:divider="@android:color/transparent"
-            android:dividerPadding="16dp">
-            </LinearLayout>
+        />
 
-    </HorizontalScrollView>
-
-    <TextView
+    <EditText
         android:id="@+id/my_plans_title"
-        android:text="My Plans"
+        android:text="My Plans "
         android:textColor="#000000"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:textSize="20dp"
         android:paddingBottom="10dp"
         android:paddingLeft="10dp"
-        android:layout_below="@+id/my_journeys_content"/>
-
-    <TextView
-        android:id="@+id/my_plans_content"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="This should be replaced with recycleview or horizontal scroll view :-) :D XD"
-        android:layout_below="@+id/my_plans_title"
-        android:paddingBottom="5dp"
-        android:paddingLeft="10dp"/>
-
-    <TextView
-        android:id="@+id/my_favorites"
-        android:textColor="#000000"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="My favorites"
-        android:textSize="20dp"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:layout_below="@+id/my_plans_content"/>
+        android:layout_below="@+id/my_journeys_recycle"
+        android:background="@android:color/transparent"/>
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/recycler_view"
+        android:id="@+id/plan_journeys_recycle"
         android:orientation="horizontal"
         android:layout_weight="1"
-        android:layout_below="@+id/my_favorites"
+        android:layout_below="@+id/my_plans_title"
+        android:scrollbars="none"
+        android:paddingStart="10dp"
+        />
+
+    <EditText
+        android:id="@+id/my_favorites_title"
+        android:textColor="#000000"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="My "
+        android:textSize="20dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:layout_below="@+id/plan_journeys_recycle"
+        android:background="@android:color/transparent"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/following_journeys_recycle"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:layout_below="@+id/my_favorites_title"
         android:scrollbars="none"
         android:paddingStart="10dp"
         />

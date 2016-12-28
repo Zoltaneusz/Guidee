@@ -7,6 +7,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -85,21 +86,23 @@ public class DataHandler {
             }
         });
     }
-    public void getJourneyWithId(String journeyId, final DataHandlerListener dataHandlerListener)
+    public void getJourneyWithIds(ArrayList<String> journeyIds, final DataHandlerListener dataHandlerListener)
     {
-        DatabaseReference mJourneyReference = mRootRef.child("Journeys");
-        mJourneyReference.child(journeyId).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Map<String, Object> mJourneyReference = (Map<String, Object>) dataSnapshot.getValue();
-                dataHandlerListener.onJourneyData(mJourneyReference);
-            }
+        for (String journeyId : journeyIds) {
+            DatabaseReference mJourneyReference = mRootRef.child("Journeys");
+            mJourneyReference.child(journeyId).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Map<String, Object> mJourneyReference = (Map<String, Object>) dataSnapshot.getValue();
+                    dataHandlerListener.onJourneyData(mJourneyReference);
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        }
     }
 
 
