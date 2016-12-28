@@ -7,7 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="3">
+    android:weightSum="4">
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
@@ -47,8 +47,6 @@
                 </RelativeLayout>
     </FrameLayout>
 
-
-
     <TextView
         android:id="@+id/my_journeys_title"
         android:text="My Journeys ✈"
@@ -59,6 +57,8 @@
         android:textSize="20dp"
         android:paddingTop="10dp"
         android:paddingLeft="10dp"/>
+
+
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="wrap_content"
@@ -117,6 +117,18 @@
         android:paddingStart="10dp"
         />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/my_journeys_recycle_placeholder"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_below="@+id/following_journeys_recycle">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
 </RelativeLayout>
 </ScrollView>

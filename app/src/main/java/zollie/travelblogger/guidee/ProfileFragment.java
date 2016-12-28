@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -130,6 +131,7 @@ public class ProfileFragment extends Fragment {
                 });
             }
         });
+        showPlaceholderCards();
     }
 
     public ArrayList<String> getUserJourneys(UserModel userModel) {
@@ -169,5 +171,16 @@ public class ProfileFragment extends Fragment {
         RecyclerView.ItemDecoration itemDecoration = new
                 DividerItemDecoration(getActivity(), zollie.travelblogger.guidee.DividerItemDecoration.HORIZONTAL_LIST);
         rvJourneys.addItemDecoration(itemDecoration);
+        rvJourneys.setVisibility(View.INVISIBLE);
+    }
+
+    public void showPlaceholderCards(){
+        View viewToLoad = LayoutInflater.from(
+                getActivity()).inflate(
+                R.layout.card_placeholder, null);
+        ((LinearLayout) getActivity().findViewById(R.id.my_journeys_recycle_placeholder)).addView(viewToLoad);
+        LinearLayout itemForm=(LinearLayout) viewToLoad.findViewById(R.id.my_journeys_recycle_placeholder);
+        itemForm.addView(itemForm);
+
     }
 }
