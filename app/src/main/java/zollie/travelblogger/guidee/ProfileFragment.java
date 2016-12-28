@@ -12,12 +12,15 @@ import android.graphics.Shader;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -65,11 +68,7 @@ public class ProfileFragment extends Fragment {
             // finally change the color
             window.setStatusBarColor(getActivity().getResources().getColor(R.color.lightGreen));
         }
-        //========================================================
 
-        LinearLayout horitontalLayout = (LinearLayout) getView().findViewById(R.id.scroll_layout);
-        LinearLayout.LayoutParams params = new LinearLayout.
-                LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
         //================= Getting data of 1 profile =====================================
 
@@ -79,6 +78,7 @@ public class ProfileFragment extends Fragment {
                 //addMapMarker(journeyModel, mMap);
 
             }
+
             @Override
             public void onUserData(Map<String, Object> rawUserData) {
 
@@ -87,12 +87,13 @@ public class ProfileFragment extends Fragment {
             }
         });
         //================= Getting journeys of profile =====================================
-        for(String userJourneyString : allUserJourneys) {
+        for (String userJourneyString : allUserJourneys) {
             DataHandler.getInstance().getJourneyWithId(userJourneyString, new DataHandlerListener() {
                 @Override
                 public void onJourneyData(Map<String, Object> rawJourneyData) {
                     JourneyModel journeyModel = new JourneyModel(rawJourneyData);
                     allJourneys.add(journeyModel);
+                    fillHorizontalScrollBar();
                 }
 
                 @Override
@@ -101,43 +102,11 @@ public class ProfileFragment extends Fragment {
                 }
             });
         }
-        //======================== Setting Journey Images ==================================
-        for (JourneyModel mJourney : allJourneys){
-
-            final ImageView imageView = new ImageView(getActivity());
-            if(mJourney == null) break;
-            String coverImageUrl = mJourney.coverImageUrl;
-            //===================== Adding Image to to Horizontal Slide via Glide =========
-            Glide
-                    .with(getActivity())
-                    .load(coverImageUrl)
-                    .centerCrop()
-                    .placeholder(R.drawable.profile_pic)
-                    .crossFade()
-                    .into(imageView);
-            //=============================================================================
-            //        imageView.setImageResource(R.drawable.profile_pic);
-            imageView.setBackgroundResource(R.drawable.pic_background);
-
-            //        imageView.setScaleX(2);
-            //        imageView.setScaleY(2);
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            horitontalLayout.addView(imageView, params);
-            imageView.setOnClickListener(new View.OnClickListener()
-            {
-
-                @Override
-                public void onClick(View v)
-                {
-                    // TODO Auto-generated method stub
-                    //      Log.e("Tag",""+imageView.getTag());
-                }
-            });
-
-        }
+        fillRecyclerView();
 //       horitontalLayout.setLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT);
         super.onResume();
     }
+
     public ArrayList<String> getUserJourneys(UserModel userModel) {
         ArrayList<String> allJourneys = new ArrayList<String>();
         for (Map.Entry<String, Object> map : userModel.userJourneys.entrySet()) {
@@ -145,5 +114,56 @@ public class ProfileFragment extends Fragment {
             allJourneys.add(journeyModel);
         }
         return allJourneys;
+    }
+
+    public void fillRecyclerView(){
+
+        RecyclerView rvJourneys = (RecyclerView) getActivity().findViewById(R.id.recycler_view);
+
+        JourneyAdapter adapter = new JourneyAdapter(getActivity(), allJourneys);
+        rvJourneys.setAdapter(adapter);
+        rvJourneys.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+    }
+
+    public void fillHorizontalScrollBar() {
+        //========================================================
+
+        LinearLayout horitontalLayout = (LinearLayout) getView().findViewById(R.id.journey_scroll_layout);
+        if (horitontalLayout.getChildAt(0) == null) {
+            LinearLayout.LayoutParams params = new LinearLayout.
+                    LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            //======================== Setting Journey Images ==================================
+            for (JourneyModel mJourney : allJourneys) {
+
+                final ImageView imageView = new ImageView(getActivity());
+                if (mJourney == null) break;
+                String coverImageUrl = mJourney.coverImageUrl;
+                //===================== Adding Image to to Horizontal Slide via Glide =========
+                Glide
+                        .with(getActivity())
+                        .load(coverImageUrl)
+                        .centerCrop()
+                        .override(160, 160)
+                        .crossFade()
+                        .into(imageView);
+                //=============================================================================
+                //        imageView.setImageResource(R.drawable.profile_pic);
+                  imageView.setBackgroundResource(R.drawable.pic_background);
+
+                //        imageView.setScaleX(2);
+                //        imageView.setScaleY(2);
+                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                horitontalLayout.addView(imageView, params);
+                imageView.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        //      Log.e("Tag",""+imageView.getTag());
+                    }
+                });
+
+            }
+        }
     }
 }
