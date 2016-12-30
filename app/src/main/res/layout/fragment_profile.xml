@@ -70,6 +70,14 @@
         android:scrollbars="none"
         android:paddingStart="10dp"
         />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/my_journeys_recycle_placeholder"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_below="@+id/my_journeys_title">
+    </LinearLayout>
 
     <EditText
         android:id="@+id/my_plans_title"
@@ -78,6 +86,7 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:textSize="20dp"
+        android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:paddingLeft="10dp"
         android:layout_below="@+id/my_journeys_recycle"
@@ -93,6 +102,14 @@
         android:scrollbars="none"
         android:paddingStart="10dp"
         />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/plan_journeys_recycle_placeholder"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_below="@+id/my_plans_title">
+    </LinearLayout>
 
     <EditText
         android:id="@+id/my_favorites_title"
@@ -101,6 +118,7 @@
         android:layout_width="wrap_content"
         android:text="My "
         android:textSize="20dp"
+        android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:paddingLeft="10dp"
         android:layout_below="@+id/plan_journeys_recycle"
@@ -120,14 +138,11 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/my_journeys_recycle_placeholder"
+        android:id="@+id/following_journeys_recycle_placeholder"
         android:orientation="vertical"
         android:layout_weight="1"
-        android:layout_below="@+id/following_journeys_recycle">
+        android:layout_below="@+id/my_favorites_title">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -93,7 +93,7 @@ public class ProfileFragment extends Fragment {
                         public void onJourneyData(Map<String, Object> rawJourneyData) {
                             JourneyModel journeyModel = new JourneyModel(rawJourneyData);
                             allJourneys.add(journeyModel);
-                            fillRecyclerView(R.id.my_journeys_recycle, allJourneys);
+                            fillRecyclerView(R.id.my_journeys_recycle, R.id.my_journeys_recycle_placeholder, allJourneys);
                         }
 
                         @Override
@@ -102,12 +102,13 @@ public class ProfileFragment extends Fragment {
                         }
                     });
 
+
                 DataHandler.getInstance().getJourneyWithIds(getUserFavorites(userModel), new DataHandlerListener() {
                     @Override
                     public void onJourneyData(Map<String, Object> rawJourneyData) {
                         JourneyModel journeyModel = new JourneyModel(rawJourneyData);
                         allFavorites.add(journeyModel);
-                        fillRecyclerView(R.id.following_journeys_recycle, allFavorites);
+                        fillRecyclerView(R.id.following_journeys_recycle,R.id.following_journeys_recycle_placeholder,  allFavorites);
                     }
 
                     @Override
@@ -121,7 +122,7 @@ public class ProfileFragment extends Fragment {
                     public void onJourneyData(Map<String, Object> rawJourneyData) {
                         JourneyModel journeyModel = new JourneyModel(rawJourneyData);
                         allPlans.add(journeyModel);
-                        fillRecyclerView(R.id.plan_journeys_recycle, allPlans);
+                        fillRecyclerView(R.id.plan_journeys_recycle, R.id.plan_journeys_recycle_placeholder,  allPlans);
                     }
 
                     @Override
@@ -131,7 +132,6 @@ public class ProfileFragment extends Fragment {
                 });
             }
         });
-        showPlaceholderCards();
     }
 
     public ArrayList<String> getUserJourneys(UserModel userModel) {
@@ -161,9 +161,9 @@ public class ProfileFragment extends Fragment {
         return allJourneys;
     }
 
-    public void fillRecyclerView(int resource, ArrayList<JourneyModel> journeyModels){
+    public void fillRecyclerView(int primaryResource, int emptyResource, ArrayList<JourneyModel> journeyModels){
 
-        RecyclerView rvJourneys = (RecyclerView) getActivity().findViewById(resource);
+        RecyclerView rvJourneys = (RecyclerView) getActivity().findViewById(primaryResource);
 
         JourneyAdapter adapter = new JourneyAdapter(getActivity(), journeyModels);
         rvJourneys.setAdapter(adapter);
@@ -171,16 +171,20 @@ public class ProfileFragment extends Fragment {
         RecyclerView.ItemDecoration itemDecoration = new
                 DividerItemDecoration(getActivity(), zollie.travelblogger.guidee.DividerItemDecoration.HORIZONTAL_LIST);
         rvJourneys.addItemDecoration(itemDecoration);
-        rvJourneys.setVisibility(View.INVISIBLE);
+        if(journeyModels.isEmpty() == true ) showPlaceholderCards(emptyResource);
+   //     rvJourneys.setVisibility(View.INVISIBLE);
     }
 
-    public void showPlaceholderCards(){
+    public void showPlaceholderCards(int id){
+        int card = R.layout.card_placeholder;
+        if(id == R.id.following_journeys_recycle_placeholder) card = R.layout.following_card_placeholder;
+
         View viewToLoad = LayoutInflater.from(
                 getActivity()).inflate(
-                R.layout.card_placeholder, null);
-        ((LinearLayout) getActivity().findViewById(R.id.my_journeys_recycle_placeholder)).addView(viewToLoad);
-        LinearLayout itemForm=(LinearLayout) viewToLoad.findViewById(R.id.my_journeys_recycle_placeholder);
-        itemForm.addView(itemForm);
+                card, null);
+        ((LinearLayout) getActivity().findViewById(id)).addView(viewToLoad);
+    //    LinearLayout itemForm=(LinearLayout) viewToLoad.findViewById(R.id.my_journeys_recycle_placeholder);
+    //    itemForm.addView(itemForm);
 
     }
 }
