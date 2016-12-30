@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Shader;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -28,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.ResourceId;
 import com.google.firebase.database.DataSnapshot;
@@ -38,6 +40,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by FuszeneckerZ on 2016.11.27..
@@ -47,6 +50,8 @@ public class ProfileFragment extends Fragment {
     ArrayList<JourneyModel> allJourneys = new ArrayList<JourneyModel>();
     ArrayList<JourneyModel> allFavorites = new ArrayList<JourneyModel>();
     ArrayList<JourneyModel> allPlans = new ArrayList<JourneyModel>();
+    Bitmap userAvatarGlobal = null;
+    ImageProcessor imageProcessor = new ImageProcessor();
 
     @Nullable
     @Override
@@ -86,6 +91,8 @@ public class ProfileFragment extends Fragment {
                 allFavorites.clear();
                 allPlans.clear();
                 UserModel userModel = new UserModel(rawUserData);
+                new AsyncProfilePic().execute(userModel);
+
                 //================= Getting journeys of profile =====================================
 
                     DataHandler.getInstance().getJourneyWithIds(getUserJourneys(userModel), new DataHandlerListener() {
@@ -187,4 +194,41 @@ public class ProfileFragment extends Fragment {
     //    itemForm.addView(itemForm);
 
     }
+
+    class AsyncProfilePic extends AsyncTask<Object, Void, UserModel>{
+
+
+        @Override
+        protected UserModel doInBackground(Object... params) {
+            UserModel mUser = new UserModel((UserModel)(params[0]));
+            //===================== Adding Image to to Horizontal Slide via Glide =========
+            try {
+                userAvatarGlobal= Glide.with(getActivity())
+                        .load(mUser.avatarUrl)
+                        .asBitmap()
+                        .into(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            //=============================================================================
+            userAvatarGlobal = imageProcessor.resizeMarkerImage(userAvatarGlobal, 2);
+            return mUser;
+        }
+
+        @Override
+        protected void onPostExecute(UserModel mUser) {
+            ImageView mProfileImage = (ImageView) getActivity().findViewById(R.id.prof_pic);
+            final float scale = getResources().getDisplayMetrics().density;
+            final Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+            Bitmap bmp = Bitmap.createBitmap((int)(120*scale),(int) (120*scale), conf);
+            Canvas canvas1 = new Canvas(bmp);
+            Bitmap circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale*2, userAvatarGlobal);
+            circleBitmap = imageProcessor.pulseMarker(4, userAvatarGlobal, canvas1, scale*2, circleBitmap);
+            mProfileImage.setImageBitmap(circleBitmap);
+        }
+    }
+
+
 }

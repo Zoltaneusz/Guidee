@@ -25,6 +25,7 @@ import android.view.WindowManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -61,9 +62,9 @@ public class ExploreFragment extends Fragment {
 
 
     // paint defines the text color, stroke width and size
-    Paint color = new Paint();
-    Bitmap circleBitmap;
 
+    Bitmap circleBitmap;
+    ImageProcessor imageProcessor = new ImageProcessor();
 
 
     @Override
@@ -106,7 +107,7 @@ public class ExploreFragment extends Fragment {
                     googleMap = mMap;
                     Bitmap bmp = Bitmap.createBitmap((int)(60*scale),(int) (60*scale), conf);
                     Canvas canvas1 = new Canvas(bmp);
-                    pulseMarker(4, bmp, canvas1, scale);
+                    circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale, circleBitmap);
                     DataHandler.getInstance().getJourneys(new DataHandlerListener() {
                         @Override
                         public void onJourneyData(final Map<String, Object> rawJourneyData) {
@@ -134,6 +135,7 @@ public class ExploreFragment extends Fragment {
                         public boolean onMarkerClick(Marker marker) {
                          //   Bitmap bmp = Bitmap.createBitmap((int)(60*scale),(int) (60*scale), conf);
                             Bitmap markerImage = null;
+
                             final String markerID = marker.getId();
                             JourneyModel mJourney = null;
                             int j = 0;
@@ -145,21 +147,14 @@ public class ExploreFragment extends Fragment {
                                 {
                                     //markerImage = markerImageGlob;
 //                                    markerImage = mJourney.annotationModel.markerIcon;
+                                    mJourney.annotationModel.setMarker(marker);
                                     j=i;
                                     break;
                                 }
                             }
                             new AsyncAnimation().execute(allJourneys.get(j));
-                            markerImage = markerImageGlob;
-                            while (true) {
-                                if(markerImage != null) {
-                                    Canvas canvas1 = new Canvas(markerImageGlob);
-                                    if (markerImageGlob != null) {
-                                        animateMarker(marker, mJourney, markerImageGlob, canvas1, scale, mMap);
-                                        break;
-                                    }
-                                }
-                            }
+
+
                             return false;
                         }
                     });
@@ -204,7 +199,7 @@ public class ExploreFragment extends Fragment {
 
                 //Bitmap markerImage = journeyModel.annotationModel.markerIcon;
                 if(markerImageGlob != null)
-                    pulseMarker(1, markerImageGlob, myCanvas, scale);
+                    circleBitmap = imageProcessor.pulseMarker(1, markerImageGlob, myCanvas, scale, circleBitmap);
     //            URL markerImageUrl = new URL(markerImageSource);
     //            Bitmap markerImage = BitmapFactory.decodeStream(markerImageUrl.openConnection().getInputStream());
                Marker mMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(markerLat, markerLng))
@@ -243,7 +238,7 @@ public class ExploreFragment extends Fragment {
              //==================================================================
  //            URL markerImageUrl = new URL(markerImageSource);
  //            markerImage = BitmapFactory.decodeStream(markerImageUrl.openConnection().getInputStream());
-             markerImage = resizeMarkerImage(markerImage);
+             markerImage = imageProcessor.resizeMarkerImage(markerImage, 1);
              markerImageGlob = markerImage;
              //journeyModel.annotationModel.setMarkerIcon(markerImage);
           //   mapMarkerData.put("imgBitmap", markerImage);
@@ -327,19 +322,20 @@ public class ExploreFragment extends Fragment {
         mMapView.onLowMemory();
     }
 
-    public void animateMarker(Marker marker, final JourneyModel mJourney, final Bitmap bmp, final Canvas canvas1, final float scale, final GoogleMap mMap){
+    public void animateMarker(Marker marker, final JourneyModel mJourney, final Bitmap bmp, final Canvas canvas1, final GoogleMap mMap){
 
         final LatLng markerLatLng = marker.getPosition();
         final String markerTitle = marker.getTitle();
+        final float scale = getResources().getDisplayMetrics().density;
       //  String markerImage = marker.get
         try {
             marker.remove();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        circleBitmap = null;
         // Animating marker implementation =================================================
-        pulseMarker(4, bmp, canvas1, scale);
+        circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale, circleBitmap);
         myMarker2 = mMap.addMarker(new MarkerOptions().position(markerLatLng)
                 .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
                 .title(markerTitle)
@@ -350,7 +346,7 @@ public class ExploreFragment extends Fragment {
             @Override
             public void run() {
                 try{
-                    pulseMarker(6, bmp, canvas1, scale);
+                    circleBitmap = imageProcessor.pulseMarker(6, bmp, canvas1, scale, circleBitmap);
                     myMarker4 = mMap.addMarker(new MarkerOptions().position(markerLatLng)
                             .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
                             .title(markerTitle)
@@ -383,7 +379,7 @@ public class ExploreFragment extends Fragment {
 
                 try{
 
-                    pulseMarker(6, bmp, canvas1, scale);
+                    circleBitmap = imageProcessor.pulseMarker(6, bmp, canvas1, scale, circleBitmap);
                     myMarker5 = mMap.addMarker(new MarkerOptions().position(markerLatLng)
                             .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
                             .title(markerTitle)
@@ -414,7 +410,8 @@ public class ExploreFragment extends Fragment {
         //==================================================================================
         myMarker2.showInfoWindow();
         mJourney.annotationModel.markerID = myMarker2.getId();
-
+        circleBitmap = null;
+        markerImageGlob = null;
        /* for(int i=0; i<100; i++)
         {   if (markerCache[i] == null){
             markerCache[i] = new MarkerCache();
@@ -423,53 +420,6 @@ public class ExploreFragment extends Fragment {
             i=100;
         }
         }*/
-    }
-
-    public void pulseMarker(int step, Bitmap bitm, Canvas canv, float scale){
-
-
-        color.setTextSize(35);
-        color.setColor(Color.BLACK);
-
-        // modify canvas
-       // canv.drawBitmap(BitmapFactory.decodeResource(getResources(),
-     //           R.drawable.profile_pic), 10,10, color);
-        //canvas1.drawText("Zollie", 30, 40, color);
-   /*    if(bitm != null)
-            canv.drawBitmap(bitm, 10, 10, color);*/
-
-
-       //     canv.drawBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.profile_pic), 10,10, color);
-
-
-        Bitmap bitmap = bitm;
-        circleBitmap = Bitmap.createBitmap(bitmap.getWidth()+5, bitmap.getHeight()+5, Bitmap.Config.ARGB_8888);
-
-        BitmapShader shader = new BitmapShader (bitmap,  Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-        Paint profilePic = new Paint();
-        profilePic.setFlags(Paint.ANTI_ALIAS_FLAG);
-        profilePic.setShader(shader);
-        profilePic.setAntiAlias(true);
-        Canvas c = new Canvas(circleBitmap);
-        Paint circleFrame = new Paint();
-        circleFrame.setFlags(Paint.ANTI_ALIAS_FLAG);
-        circleFrame.setColor(Color.BLACK);
-
-        c.drawCircle((int)(bitmap.getWidth()/2.5+5), (int)(bitmap.getHeight()/2.5+5),(int) (bitmap.getWidth()/2.5)-3+step*1, circleFrame);
-        circleFrame.setColor(Color.GRAY);
-        circleFrame.setStyle(Paint.Style.STROKE);
-        c.drawCircle((int)(bitmap.getWidth()/2.5+5), (int)(bitmap.getHeight()/2.5+5),(int) (bitmap.getWidth()/2.5)-5+step*1, circleFrame);
-        c.drawCircle((int)(bitmap.getWidth()/2.5+5), (int)(bitmap.getHeight()/2.5+5),(int) (bitmap.getWidth()/2.5)-3+step*1, circleFrame);
-        c.drawCircle((int)(bitmap.getWidth()/2.5+5), (int)(bitmap.getHeight()/2.5+5), (int)(bitmap.getWidth()/2.5)-6+step*1, profilePic);
-
-    }
-
-    public Bitmap resizeMarkerImage(Bitmap myPic){
-
-        Matrix m = new Matrix();
-        m.setRectToRect(new RectF(0, 0, myPic.getWidth(), myPic.getHeight()), new RectF(0, 0, 50, 50), Matrix.ScaleToFit.CENTER);
-        return Bitmap.createBitmap(myPic, 0, 0, myPic.getWidth(), myPic.getHeight(), m, true);
-
     }
 
     class AsyncMarkerLoader extends AsyncTask <Object,Void, JourneyModel>
@@ -510,7 +460,10 @@ public class ExploreFragment extends Fragment {
         @Override
         protected void onPostExecute(JourneyModel journeyModel) {
 
-
+                if(markerImageGlob != null) {
+                    Canvas canvas1 = new Canvas(markerImageGlob);
+                    animateMarker(journeyModel.annotationModel.getMarker(), journeyModel, markerImageGlob, canvas1, googleMap);
+                }
 
         }
     }

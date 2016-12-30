@@ -28,8 +28,6 @@
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content"
                             android:id="@+id/prof_pic"
-                            android:src="@drawable/layer"
-                            android:background="@drawable/profile_pic"
                             android:layout_alignParentTop="true"
                             android:layout_centerHorizontal="true">
                         </ImageView>

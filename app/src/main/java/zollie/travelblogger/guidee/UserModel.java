@@ -30,4 +30,13 @@ public class UserModel {
         this.plans = (Map<String, Object>) rawUserModel.get("plans");
 
     }
+    public UserModel(UserModel userModel){
+        this.avatarUrl = userModel.avatarUrl;
+        this.userName = userModel.userName;
+        this.summary = userModel.summary;
+        this.userJourneys = userModel.userJourneys;
+        this.following = userModel.following;
+        this.loves = userModel.loves;
+        this.plans = userModel.plans;
+    }
 }

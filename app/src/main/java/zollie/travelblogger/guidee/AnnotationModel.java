@@ -3,6 +3,7 @@ package zollie.travelblogger.guidee;
 import android.graphics.Bitmap;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 
 import java.util.Map;
 
@@ -18,6 +19,7 @@ class AnnotationModel {
     public LatLng markerLatLng;
     public String markerSubtitle;
     public String markerTitle;
+    public Marker marker;
 
     public AnnotationModel(Map<String, Object> rawAnnotationModel) {
         Map<String, Object> locationData = (Map<String, Object>) rawAnnotationModel.get("location");
@@ -105,5 +107,12 @@ class AnnotationModel {
 
     public Bitmap getMarkerIcon() {
         return markerIcon;
+    }
+    public Marker getMarker() {
+        return marker;
+    }
+
+    public void setMarker(Marker marker) {
+        this.marker = marker;
     }
 }
