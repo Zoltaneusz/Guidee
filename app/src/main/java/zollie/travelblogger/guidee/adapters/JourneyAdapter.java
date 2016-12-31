@@ -1,21 +1,19 @@
-package zollie.travelblogger.guidee;
+package zollie.travelblogger.guidee.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.support.v4.view.ViewGroupCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroupOverlay;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+
+import zollie.travelblogger.guidee.R;
+import zollie.travelblogger.guidee.models.JourneyModel;
 
 /**
  * Created by FuszeneckerZ on 2016.12.28..

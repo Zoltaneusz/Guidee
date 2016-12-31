@@ -1,6 +1,4 @@
-package zollie.travelblogger.guidee;
-
-import android.graphics.Bitmap;
+package zollie.travelblogger.guidee.models;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -9,7 +7,7 @@ import java.util.Map;
  * Created by FuszeneckerZ on 2016.12.24..
  */
 
-class EventModel {
+public class EventModel {
     public String summary;
     public String title;
     public ArrayList<CarouselModel> carouselModels = new ArrayList<CarouselModel>();

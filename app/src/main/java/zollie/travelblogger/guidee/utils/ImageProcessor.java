@@ -1,4 +1,4 @@
-package zollie.travelblogger.guidee;
+package zollie.travelblogger.guidee.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;

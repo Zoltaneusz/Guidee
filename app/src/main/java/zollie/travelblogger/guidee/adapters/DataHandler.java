@@ -1,4 +1,4 @@
-package zollie.travelblogger.guidee;
+package zollie.travelblogger.guidee.adapters;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;

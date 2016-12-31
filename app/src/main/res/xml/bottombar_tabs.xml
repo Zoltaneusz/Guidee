@@ -4,11 +4,11 @@
             id="@+id/tab_explore"
             icon="@drawable/ic_explore"
             title="Explore"
-            barColorWhenSelected="#FF6565" />
+            barColorWhenSelected="@color/LightGreen" />
 
         <tab
             id="@+id/tab_profile"
             icon="@drawable/ic_friends"
             title="Profile"
-            barColorWhenSelected="#90D499"/>
+            barColorWhenSelected="@color/colorPrimary"/>
     </tabs>

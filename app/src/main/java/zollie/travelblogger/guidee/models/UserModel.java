@@ -1,8 +1,6 @@
-package zollie.travelblogger.guidee;
+package zollie.travelblogger.guidee.models;
 
-import java.util.ArrayList;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Created by FuszeneckerZ on 2016.12.27..

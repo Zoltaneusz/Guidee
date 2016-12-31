@@ -1,18 +1,19 @@
-package zollie.travelblogger.guidee;
+package zollie.travelblogger.guidee.activities;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 
 
-import com.google.api.services.youtube.YouTube;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
+
+import zollie.travelblogger.guidee.fragments.ExploreFragment;
+import zollie.travelblogger.guidee.fragments.ProfileFragment;
+import zollie.travelblogger.guidee.R;
 
 
 /**

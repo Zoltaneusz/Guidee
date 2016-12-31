@@ -1,4 +1,4 @@
-package zollie.travelblogger.guidee;
+package zollie.travelblogger.guidee.adapters;
 
 import java.util.ArrayList;
 import java.util.Map;

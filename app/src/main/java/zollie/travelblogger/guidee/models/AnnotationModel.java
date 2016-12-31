@@ -1,4 +1,4 @@
-package zollie.travelblogger.guidee;
+package zollie.travelblogger.guidee.models;
 
 import android.graphics.Bitmap;
 
@@ -11,7 +11,7 @@ import java.util.Map;
  * Created by FuszeneckerZ on 2016.12.24..
  */
 
-class AnnotationModel {
+public class AnnotationModel {
     public String markerID;
     public Bitmap markerIcon;
     public String markerIconURL;

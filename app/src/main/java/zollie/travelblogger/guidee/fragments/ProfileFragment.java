@@ -1,14 +1,8 @@
-package zollie.travelblogger.guidee;
+package zollie.travelblogger.guidee.fragments;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapShader;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Shader;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,31 +10,30 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
-import com.google.api.services.youtube.YouTube;
-import com.google.api.services.youtube.model.ResourceId;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+
+import zollie.travelblogger.guidee.adapters.DataHandler;
+import zollie.travelblogger.guidee.adapters.DataHandlerListener;
+import zollie.travelblogger.guidee.utils.ImageProcessor;
+import zollie.travelblogger.guidee.adapters.JourneyAdapter;
+import zollie.travelblogger.guidee.R;
+import zollie.travelblogger.guidee.models.JourneyModel;
+import zollie.travelblogger.guidee.models.UserModel;
 
 /**
  * Created by FuszeneckerZ on 2016.11.27..
@@ -59,8 +52,17 @@ public class ProfileFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         return rootView;
-    }
 
+
+    }
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        EditText messageInput = (EditText) getActivity().findViewById(R.id.my_plans_title);
+        messageInput.getText().append("\ud83d\udcdd");
+        messageInput = (EditText) getActivity().findViewById(R.id.my_favorites_title);
+        messageInput.getText().append("\ud83d\udc9c");
+    }
     @Override
     public void onResume() {
         super.onResume();
@@ -73,13 +75,10 @@ public class ProfileFragment extends Fragment {
             // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             // finally change the color
-            window.setStatusBarColor(getActivity().getResources().getColor(R.color.lightGreen));
+            window.setStatusBarColor(getActivity().getResources().getColor(R.color.colorPrimaryDark));
         }
         //================= Getting data of 1 profile =====================================
-        EditText messageInput = (EditText) getActivity().findViewById(R.id.my_plans_title);
-        messageInput.getText().append("\ud83d\udcdd");
-        messageInput = (EditText) getActivity().findViewById(R.id.my_favorites_title);
-        messageInput.getText().append("\ud83d\udc9c");
+
         DataHandler.getInstance().getUserWithId(new String("0"), new DataHandlerListener() {
             @Override
             public void onJourneyData(final Map<String, Object> rawJourneyData) {
@@ -176,7 +175,7 @@ public class ProfileFragment extends Fragment {
         rvJourneys.setAdapter(adapter);
         rvJourneys.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         RecyclerView.ItemDecoration itemDecoration = new
-                DividerItemDecoration(getActivity(), zollie.travelblogger.guidee.DividerItemDecoration.HORIZONTAL_LIST);
+                DividerItemDecoration(getActivity(), zollie.travelblogger.guidee.utils.DividerItemDecoration.HORIZONTAL_LIST);
         rvJourneys.addItemDecoration(itemDecoration);
         if(journeyModels.isEmpty() == true ) showPlaceholderCards(emptyResource);
    //     rvJourneys.setVisibility(View.INVISIBLE);
@@ -227,6 +226,8 @@ public class ProfileFragment extends Fragment {
             Bitmap circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale*2, userAvatarGlobal);
             circleBitmap = imageProcessor.pulseMarker(4, userAvatarGlobal, canvas1, scale*2, circleBitmap);
             mProfileImage.setImageBitmap(circleBitmap);
+            TextView mProfileName = (TextView) getActivity().findViewById(R.id.profile_name);
+            mProfileName.setText(mUser.userName);
         }
     }
 

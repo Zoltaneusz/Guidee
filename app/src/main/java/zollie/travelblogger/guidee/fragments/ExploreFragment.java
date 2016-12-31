@@ -1,17 +1,11 @@
-package zollie.travelblogger.guidee;
+package zollie.travelblogger.guidee.fragments;
 
 import android.Manifest;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapShader;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.RectF;
-import android.graphics.Shader;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,7 +19,6 @@ import android.view.WindowManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
-import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -36,7 +29,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
+
+import zollie.travelblogger.guidee.adapters.DataHandler;
+import zollie.travelblogger.guidee.adapters.DataHandlerListener;
+import zollie.travelblogger.guidee.utils.ImageProcessor;
+import zollie.travelblogger.guidee.R;
+import zollie.travelblogger.guidee.models.JourneyModel;
 
 /**
  * Created by zoltanfuszenecker on 10/29/16.
@@ -290,15 +288,12 @@ public class ExploreFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= 21) {
 
             Window window = getActivity().getWindow();
-
             // clear FLAG_TRANSLUCENT_STATUS flag:
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
             // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
             // finally change the color
-            window.setStatusBarColor(getActivity().getResources().getColor(R.color.pastellRed));
+            window.setStatusBarColor(getActivity().getResources().getColor(R.color.LightGreen));
         }
         //========================================================
         mMapView.onResume();

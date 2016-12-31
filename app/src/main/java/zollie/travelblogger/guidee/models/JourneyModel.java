@@ -1,8 +1,4 @@
-package zollie.travelblogger.guidee;
-
-import android.graphics.Bitmap;
-
-import com.google.android.gms.maps.model.LatLng;
+package zollie.travelblogger.guidee.models;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -11,7 +7,7 @@ import java.util.Map;
  * Created by FuszeneckerZ on 2016.12.24..
  */
 
-class JourneyModel {
+public class JourneyModel {
 
     public AnnotationModel annotationModel;
     public ArrayList<EventModel> eventModels= new ArrayList<EventModel>();

@@ -1,4 +1,4 @@
-package zollie.travelblogger.guidee;
+package zollie.travelblogger.guidee.utils;
 
 import android.content.Context;
 import android.content.res.TypedArray;

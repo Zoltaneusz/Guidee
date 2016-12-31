@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="100dp"
+    android:id="@+id/event_card_placeholder">
+    <FrameLayout
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/event_frame">
+        <ImageView
+            android:id="@+id/event_mLoved"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="#929494"
+            android:src="@drawable/placeholder2"/>
+    </FrameLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_title_right"
+        android:text="#1 Omis beach"
+        android:allowUndo="true"
+        android:layout_toRightOf="@+id/event_frame"
+        android:gravity="top"
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp"
+        android:shadowColor="#000000"
+        android:textColor="#000000"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:background="#00FFFFFF" />
+    <TextView
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_summary_right"
+        android:text="Nice beach of the city called Omis"
+        android:layout_toRightOf="@+id/event_frame"
+        android:allowUndo="true"
+        android:layout_below="@+id/event_title_right"
+        android:paddingLeft="16dp"
+        android:shadowColor="#000000"
+        android:textColor="#000000"
+        android:textSize="15dp"
+        android:background="#00FFFFFF" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_keyboard_arrow_right_black_48dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:id="@+id/imageView" />
+
+</RelativeLayout>
