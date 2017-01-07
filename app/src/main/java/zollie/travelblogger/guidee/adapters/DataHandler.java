@@ -105,6 +105,9 @@ public class DataHandler {
         }
     }
 
+    // public  void getEvents........
+
+    // public  void getEventWithIds........
 
     public void setProfPic(String value){
         myProfPic = value;

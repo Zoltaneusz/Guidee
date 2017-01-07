@@ -62,12 +62,6 @@ public class ProfileFragment extends Fragment {
         messageInput.getText().append("\ud83d\udcdd");
         messageInput = (EditText) getActivity().findViewById(R.id.my_favorites_title);
         messageInput.getText().append("\ud83d\udc9c");
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-        // Change statusbar color ===============================
-
         if (Build.VERSION.SDK_INT >= 21) {
             Window window = getActivity().getWindow();
             // clear FLAG_TRANSLUCENT_STATUS flag:
@@ -94,19 +88,19 @@ public class ProfileFragment extends Fragment {
 
                 //================= Getting journeys of profile =====================================
 
-                    DataHandler.getInstance().getJourneyWithIds(getUserJourneys(userModel), new DataHandlerListener() {
-                        @Override
-                        public void onJourneyData(Map<String, Object> rawJourneyData) {
-                            JourneyModel journeyModel = new JourneyModel(rawJourneyData);
-                            allJourneys.add(journeyModel);
-                            fillRecyclerView(R.id.my_journeys_recycle, R.id.my_journeys_recycle_placeholder, allJourneys);
-                        }
+                DataHandler.getInstance().getJourneyWithIds(getUserJourneys(userModel), new DataHandlerListener() {
+                    @Override
+                    public void onJourneyData(Map<String, Object> rawJourneyData) {
+                        JourneyModel journeyModel = new JourneyModel(rawJourneyData);
+                        allJourneys.add(journeyModel);
+                        fillRecyclerView(R.id.my_journeys_recycle, R.id.my_journeys_recycle_placeholder, allJourneys);
+                    }
 
-                        @Override
-                        public void onUserData(Map<String, Object> rawUserData) {
+                    @Override
+                    public void onUserData(Map<String, Object> rawUserData) {
 
-                        }
-                    });
+                    }
+                });
 
 
                 DataHandler.getInstance().getJourneyWithIds(getUserFavorites(userModel), new DataHandlerListener() {
@@ -138,6 +132,13 @@ public class ProfileFragment extends Fragment {
                 });
             }
         });
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Change statusbar color ===============================
+
+
     }
 
     public ArrayList<String> getUserJourneys(UserModel userModel) {
@@ -182,7 +183,7 @@ public class ProfileFragment extends Fragment {
     }
 
     public void showPlaceholderCards(int id){
-        int card = R.layout.card_placeholder;
+        int card = R.layout.journey_card_placeholder;
         if(id == R.id.following_journeys_recycle_placeholder) card = R.layout.following_card_placeholder;
 
         View viewToLoad = LayoutInflater.from(

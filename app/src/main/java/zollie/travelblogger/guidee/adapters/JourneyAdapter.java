@@ -1,11 +1,14 @@
 package zollie.travelblogger.guidee.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -13,6 +16,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 import zollie.travelblogger.guidee.R;
+import zollie.travelblogger.guidee.activities.JourneyView;
 import zollie.travelblogger.guidee.models.JourneyModel;
 
 /**
@@ -29,13 +33,16 @@ public class JourneyAdapter extends RecyclerView.Adapter<JourneyAdapter.ViewHold
 
         public ImageView mCoverImage;
         public TextView mTitle;
+        public FrameLayout mJourney;
 
         public ViewHolder(View itemView){
             super(itemView);
 
             mCoverImage = (ImageView) itemView.findViewById(R.id.mJourney);
             mTitle = (TextView) itemView.findViewById(R.id.mJourneyTitle);
+            mJourney = (FrameLayout) itemView.findViewById(R.id.mJourneyCard);
         }
+
     }
 
     public JourneyAdapter(Context context, ArrayList<JourneyModel> allJourneyList) {
@@ -64,7 +71,7 @@ public class JourneyAdapter extends RecyclerView.Adapter<JourneyAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(JourneyAdapter.ViewHolder holder, int position) {
-        JourneyModel mJourney = allJourneys.get(position);
+        final JourneyModel mJourney = allJourneys.get(position);
 
         TextView textView = holder.mTitle;
         textView.setText(mJourney.title);
@@ -78,6 +85,14 @@ public class JourneyAdapter extends RecyclerView.Adapter<JourneyAdapter.ViewHold
                 .crossFade()
                 .into(imageView);
         //=============================================================================
+        holder.mJourney.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent toJourneyIntent = new Intent(mContext, JourneyView.class);
+                toJourneyIntent.putExtra("ser_journey", mJourney);
+                mContext.startActivity(toJourneyIntent);
+            }
+        });
 
     }
 

@@ -1,5 +1,11 @@
 package zollie.travelblogger.guidee.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.support.design.internal.ParcelableSparseArray;
+
+import com.google.android.gms.games.event.Event;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -7,17 +13,15 @@ import java.util.Map;
  * Created by FuszeneckerZ on 2016.12.24..
  */
 
-public class JourneyModel {
-
-    public AnnotationModel annotationModel;
-    public ArrayList<EventModel> eventModels= new ArrayList<EventModel>();
+public class JourneyModel implements Parcelable {
 
     public String title;
     public String summary;
     public String coverImageUrl;
     public String userAvatarUrl;
     public String identifier;
-
+    public AnnotationModel annotationModel;
+    public ArrayList<EventModel> eventModels= new ArrayList<EventModel>();
 
     public JourneyModel(Map<String, Object> rawJourneyModel) {
         try {
@@ -67,6 +71,17 @@ public class JourneyModel {
         }
 
     }
+    public JourneyModel(Parcel in){
+        String[] data = new String[5];
+        in.readStringArray(data);
+        this.title = data[0];
+        this.summary =  data[1];
+        this.coverImageUrl = data[2];
+        this.userAvatarUrl = data[3];
+        this.identifier = data[4];
+        annotationModel = in.readParcelable(AnnotationModel.class.getClassLoader());
+        in.readTypedList(eventModels, EventModel.CREATOR);
+    }
 
     public String getTitle() {
         return title;
@@ -107,4 +122,33 @@ public class JourneyModel {
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeStringArray(new String[] {
+                this.title,
+                this.summary,
+                this.coverImageUrl,
+                this.userAvatarUrl,
+                this.identifier});
+        parcel.writeParcelable(annotationModel, i);
+        parcel.writeTypedList(eventModels);
+    }
+    public static final Parcelable.Creator<JourneyModel> CREATOR = new Parcelable.Creator<JourneyModel>(){
+
+        @Override
+        public JourneyModel createFromParcel(Parcel parcel) {
+            return new JourneyModel(parcel);
+        }
+
+        @Override
+        public JourneyModel[] newArray(int i) {
+            return new JourneyModel[0];
+        }
+    };
 }
