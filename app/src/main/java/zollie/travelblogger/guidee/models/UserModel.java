@@ -18,14 +18,42 @@ public class UserModel {
 
     public UserModel(Map<String, Object> rawUserModel) {
 
-        this.avatarUrl = (String) rawUserModel.get("avatarUrl");
-    //    this.userId = (long) rawUserModel.get("id");
-        this.userName = (String) rawUserModel.get("name");
-        this.summary = (String) rawUserModel.get("summary");
-        this.userJourneys = (Map<String, Object>) rawUserModel.get("journeys");
-        this.following = (Map<String, Object>) rawUserModel.get("following");
-        this.loves = (Map<String, Object>) rawUserModel.get("loves");
-        this.plans = (Map<String, Object>) rawUserModel.get("plans");
+        try {
+            this.avatarUrl = (String) rawUserModel.get("avatarUrl");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //    this.userId = (long) rawUserModel.get("id");
+        try {
+            this.userName = (String) rawUserModel.get("name");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.summary = (String) rawUserModel.get("summary");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.userJourneys = (Map<String, Object>) rawUserModel.get("journeys");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.following = (Map<String, Object>) rawUserModel.get("following");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.loves = (Map<String, Object>) rawUserModel.get("loves");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.plans = (Map<String, Object>) rawUserModel.get("plans");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
     public UserModel(UserModel userModel){

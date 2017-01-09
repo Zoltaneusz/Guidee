@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="100dp"
+    android:id="@+id/journey_card_placeholder">
+    <FrameLayout
+        android:layout_width="100dp"
+        android:layout_height="100dp">
+        <ImageView
+            android:id="@+id/mJourney"
+            android:layout_width="350dp"
+            android:layout_height="100dp"
+            android:background="#929494"
+            android:src="@drawable/placeholder_grey"/>
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center|center"
+            android:src="@drawable/ic_add_circle_outline_black_48dp"
+            android:id="@+id/plus_button"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/hint_below"
+            android:allowUndo="true"
+            android:text="My journey"
+            android:shadowColor="#000000"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="15dp"
+            android:layout_gravity="bottom|center"
+            android:background="#00FFFFFF" />
+    </FrameLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/hint_right"
+        android:text="Add some journeys"
+        android:allowUndo="true"
+        android:layout_gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:shadowColor="#000000"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="15dp"
+        android:background="#00FFFFFF" />
+
+</LinearLayout>

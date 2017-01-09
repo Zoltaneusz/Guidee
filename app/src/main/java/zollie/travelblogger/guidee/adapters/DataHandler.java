@@ -88,6 +88,7 @@ public class DataHandler {
     }
     public void getJourneyWithIds(ArrayList<String> journeyIds, final DataHandlerListener dataHandlerListener)
     {
+        if(journeyIds == null) return;
         for (String journeyId : journeyIds) {
             DatabaseReference mJourneyReference = mRootRef.child("Journeys");
             mJourneyReference.child(journeyId).addValueEventListener(new ValueEventListener() {
@@ -105,7 +106,9 @@ public class DataHandler {
         }
     }
 
-    // public  void getEvents........
+ /*    public  void getEvents(final DataHandlerListener dataHandlerListener){
+
+     }*/
 
     // public  void getEventWithIds........
 

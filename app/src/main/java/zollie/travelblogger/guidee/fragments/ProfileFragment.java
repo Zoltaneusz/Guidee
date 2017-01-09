@@ -143,6 +143,7 @@ public class ProfileFragment extends Fragment {
 
     public ArrayList<String> getUserJourneys(UserModel userModel) {
         ArrayList<String> allJourneys = new ArrayList<String>();
+        if(userModel.userJourneys == null) return null;
         for (Map.Entry<String, Object> map : userModel.userJourneys.entrySet()) {
             String journeyModel = (String) map.getValue();
             allJourneys.add(journeyModel);
@@ -152,6 +153,7 @@ public class ProfileFragment extends Fragment {
 
     public ArrayList<String> getUserFavorites(UserModel userModel) {
         ArrayList<String> allJourneys = new ArrayList<String>();
+        if(userModel.loves == null) return null;
         for (Map.Entry<String, Object> map : userModel.loves.entrySet()) {
             String journeyModel = (String) map.getValue();
             allJourneys.add(journeyModel);
@@ -161,6 +163,7 @@ public class ProfileFragment extends Fragment {
 
     public ArrayList<String> getUserPlans(UserModel userModel) {
         ArrayList<String> allJourneys = new ArrayList<String>();
+        if(userModel.plans == null) return null;
         for (Map.Entry<String, Object> map : userModel.plans.entrySet()) {
             String journeyModel = (String) map.getValue();
             allJourneys.add(journeyModel);

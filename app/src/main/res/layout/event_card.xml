@@ -8,7 +8,7 @@
         android:layout_height="100dp"
         android:id="@+id/event_frame">
         <ImageView
-            android:id="@+id/event_mLoved"
+            android:id="@+id/event_cover_mLoved"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:background="#929494"
