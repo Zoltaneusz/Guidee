@@ -106,14 +106,46 @@ public class DataHandler {
             });
         }
     }
+    public void getCommentsWithID(String journeyID, final DataHandlerListener dataHandlerListener) {
+        DatabaseReference mCommentsReference = mRootRef.child("Comments");
+        mCommentsReference.child(journeyID).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Map<String, Object> commentInfo = (Map<String, Object>) dataSnapshot.getValue();
+                dataHandlerListener.onCommentData(commentInfo);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
 
  /*    public  void getEvents(final DataHandlerListener dataHandlerListener){
 
      }*/
 
-    // public  void getEventWithIds........
+                // public  void getEventWithIds........
 
-    public void setProfPic(String value){
+        public void setProfPic(String value){
         myProfPic = value;
     }
 

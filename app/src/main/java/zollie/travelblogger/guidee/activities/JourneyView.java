@@ -10,12 +10,17 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import zollie.travelblogger.guidee.R;
+import zollie.travelblogger.guidee.adapters.DataHandler;
+import zollie.travelblogger.guidee.adapters.DataHandlerListener;
 import zollie.travelblogger.guidee.adapters.EventAdapter;
 import zollie.travelblogger.guidee.adapters.JourneyAdapter;
+import zollie.travelblogger.guidee.models.CommentModel;
 import zollie.travelblogger.guidee.models.EventModel;
 import zollie.travelblogger.guidee.models.JourneyModel;
+import zollie.travelblogger.guidee.models.UserModel;
 
 /**
  * Created by FuszeneckerZ on 2016.12.31..
@@ -32,6 +37,23 @@ public class JourneyView extends Activity{
         mJourneySummary.setText(mJourney.summary);
 
         fillRecyclerView(R.id.journey_events_recycle, R.id.journey_events_recycle_placeholder, mJourney.eventModels);
+
+        DataHandler.getInstance().getCommentsWithID(mJourney.ID, new DataHandlerListener() {
+            @Override
+            public void onJourneyData(Map<String, Object> rawJourneyData, String journeyReference) {
+
+            }
+
+            @Override
+            public void onUserData(Map<String, Object> rawUserData) {
+
+            }
+
+            @Override
+            public void onCommentData(Map<String, Object> rawCommentData) {
+                CommentModel commentModel = new CommentModel(rawCommentData);
+            }
+        });
 
     }
 

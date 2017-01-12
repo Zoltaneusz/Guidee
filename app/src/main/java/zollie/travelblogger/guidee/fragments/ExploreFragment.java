@@ -33,6 +33,7 @@ import java.util.Map;
 
 import zollie.travelblogger.guidee.adapters.DataHandler;
 import zollie.travelblogger.guidee.adapters.DataHandlerListener;
+import zollie.travelblogger.guidee.models.CommentModel;
 import zollie.travelblogger.guidee.utils.ImageProcessor;
 import zollie.travelblogger.guidee.R;
 import zollie.travelblogger.guidee.models.JourneyModel;
@@ -119,6 +120,11 @@ public class ExploreFragment extends Fragment {
                         @Override
                         public void onUserData(Map<String, Object> rawUserData) {
 
+                        }
+
+                        @Override
+                        public void onCommentData(Map<String, Object> rawCommentData) {
+                            CommentModel commentModel = new CommentModel(rawCommentData);
                         }
                     });
 
