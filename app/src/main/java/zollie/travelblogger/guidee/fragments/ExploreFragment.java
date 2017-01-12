@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DatabaseReference;
 
 
 import java.util.ArrayList;
@@ -108,9 +109,9 @@ public class ExploreFragment extends Fragment {
                     circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale, circleBitmap);
                     DataHandler.getInstance().getJourneys(new DataHandlerListener() {
                         @Override
-                        public void onJourneyData(final Map<String, Object> rawJourneyData) {
+                        public void onJourneyData(final Map<String, Object> rawJourneyData, String journeyReference) {
                             //addMapMarker(journeyModel, mMap);
-                            JourneyModel journeyModel = new JourneyModel(rawJourneyData);
+                            JourneyModel journeyModel = new JourneyModel(rawJourneyData, journeyReference);
                             allJourneys.add(journeyModel);
                             new AsyncMarkerLoader().execute(journeyModel, mMap);
                         }

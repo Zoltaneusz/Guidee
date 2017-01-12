@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -75,7 +76,7 @@ public class ProfileFragment extends Fragment {
 
         DataHandler.getInstance().getUserWithId(new String("0"), new DataHandlerListener() {
             @Override
-            public void onJourneyData(final Map<String, Object> rawJourneyData) {
+            public void onJourneyData(final Map<String, Object> rawJourneyData, String journeyReference) {
                 //addMapMarker(journeyModel, mMap);
             }
             @Override
@@ -90,10 +91,12 @@ public class ProfileFragment extends Fragment {
 
                 DataHandler.getInstance().getJourneyWithIds(getUserJourneys(userModel), new DataHandlerListener() {
                     @Override
-                    public void onJourneyData(Map<String, Object> rawJourneyData) {
-                        JourneyModel journeyModel = new JourneyModel(rawJourneyData);
-                        allJourneys.add(journeyModel);
-                        fillRecyclerView(R.id.my_journeys_recycle, R.id.my_journeys_recycle_placeholder, allJourneys);
+                    public void onJourneyData(Map<String, Object> rawJourneyData, String journeyReference) {
+                        JourneyModel journeyModel = new JourneyModel(rawJourneyData, journeyReference);
+                        if(journeyModel.title != null) {
+                            allJourneys.add(journeyModel);
+                            fillRecyclerView(R.id.my_journeys_recycle, R.id.my_journeys_recycle_placeholder, allJourneys);
+                        }
                     }
 
                     @Override
@@ -105,10 +108,12 @@ public class ProfileFragment extends Fragment {
 
                 DataHandler.getInstance().getJourneyWithIds(getUserFavorites(userModel), new DataHandlerListener() {
                     @Override
-                    public void onJourneyData(Map<String, Object> rawJourneyData) {
-                        JourneyModel journeyModel = new JourneyModel(rawJourneyData);
-                        allFavorites.add(journeyModel);
-                        fillRecyclerView(R.id.following_journeys_recycle,R.id.following_journeys_recycle_placeholder,  allFavorites);
+                    public void onJourneyData(Map<String, Object> rawJourneyData, String journeyReference) {
+                        JourneyModel journeyModel = new JourneyModel(rawJourneyData, journeyReference);
+                        if(journeyModel.title != null) {
+                            allFavorites.add(journeyModel);
+                            fillRecyclerView(R.id.following_journeys_recycle, R.id.following_journeys_recycle_placeholder, allFavorites);
+                        }
                     }
 
                     @Override
@@ -119,10 +124,12 @@ public class ProfileFragment extends Fragment {
 
                 DataHandler.getInstance().getJourneyWithIds(getUserPlans(userModel), new DataHandlerListener() {
                     @Override
-                    public void onJourneyData(Map<String, Object> rawJourneyData) {
-                        JourneyModel journeyModel = new JourneyModel(rawJourneyData);
-                        allPlans.add(journeyModel);
-                        fillRecyclerView(R.id.plan_journeys_recycle, R.id.plan_journeys_recycle_placeholder,  allPlans);
+                    public void onJourneyData(Map<String, Object> rawJourneyData, String journeyReference) {
+                        JourneyModel journeyModel = new JourneyModel(rawJourneyData, journeyReference);
+                        if(journeyModel.title != null) {
+                            allPlans.add(journeyModel);
+                            fillRecyclerView(R.id.plan_journeys_recycle, R.id.plan_journeys_recycle_placeholder, allPlans);
+                        }
                     }
 
                     @Override

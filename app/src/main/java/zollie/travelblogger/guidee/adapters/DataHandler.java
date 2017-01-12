@@ -40,12 +40,12 @@ public class DataHandler {
     }
 
     public void getJourneys(final DataHandlerListener dataHandlerListener) {
-        DatabaseReference mJourneyRef = mRootRef.child("Journeys");
-        mJourneyRef.addChildEventListener(new ChildEventListener() {
+        mRootRef.child("Journeys").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Map<String, Object> kutya = (Map<String, Object>) dataSnapshot.getValue();
-                dataHandlerListener.onJourneyData(kutya);
+                String mJourneyRef = dataSnapshot.getKey();
+                dataHandlerListener.onJourneyData(kutya, mJourneyRef);
             }
 
             @Override
@@ -95,7 +95,8 @@ public class DataHandler {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Map<String, Object> mJourneyReference = (Map<String, Object>) dataSnapshot.getValue();
-                    dataHandlerListener.onJourneyData(mJourneyReference);
+                    String journeyRef = dataSnapshot.getKey();
+                    dataHandlerListener.onJourneyData(mJourneyReference, journeyRef);
                 }
 
                 @Override

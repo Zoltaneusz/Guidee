@@ -5,6 +5,10 @@ import android.os.Parcelable;
 import android.support.design.internal.ParcelableSparseArray;
 
 import com.google.android.gms.games.event.Event;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -20,10 +24,11 @@ public class JourneyModel implements Parcelable {
     public String coverImageUrl;
     public String userAvatarUrl;
     public String identifier;
+    public String ID;
     public AnnotationModel annotationModel;
     public ArrayList<EventModel> eventModels= new ArrayList<EventModel>();
 
-    public JourneyModel(Map<String, Object> rawJourneyModel) {
+    public JourneyModel(Map<String, Object> rawJourneyModel, String journeyReference) {
         try {
             this.title = (String) rawJourneyModel.get("title");
         } catch (Exception e) {
@@ -59,6 +64,18 @@ public class JourneyModel implements Parcelable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        try {
+            this.ID = journeyReference;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+  /*      try { // THIS SHOULD BE CHANGED TO USE THE VALUE OF journeyReference with Value Listener to make it more ROBUST
+            this.ID = journeyReference.toString().substring(45,65);
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.ID = journeyReference.toString().substring(43,44);
+        }*/
         ArrayList<Map<String, Object>> rawEventModels = null;
         try {
             rawEventModels = (ArrayList<Map<String, Object>>) rawJourneyModel.get("eventModels");
@@ -72,13 +89,14 @@ public class JourneyModel implements Parcelable {
 
     }
     public JourneyModel(Parcel in){
-        String[] data = new String[5];
+        String[] data = new String[6];
         in.readStringArray(data);
         this.title = data[0];
         this.summary =  data[1];
         this.coverImageUrl = data[2];
         this.userAvatarUrl = data[3];
         this.identifier = data[4];
+        this.ID = data[5];
         annotationModel = in.readParcelable(AnnotationModel.class.getClassLoader());
         in.readTypedList(eventModels, EventModel.CREATOR);
     }
@@ -135,7 +153,8 @@ public class JourneyModel implements Parcelable {
                 this.summary,
                 this.coverImageUrl,
                 this.userAvatarUrl,
-                this.identifier});
+                this.identifier,
+                this.ID});
         parcel.writeParcelable(annotationModel, i);
         parcel.writeTypedList(eventModels);
     }

@@ -23,25 +23,21 @@ public class CarouselModel implements Parcelable{
     public CarouselType carouselType;
 
     public CarouselModel(Map<String, Object> rawCarouselModel) {
-        String imageUrl = null;
-        String videoUrl = null;
 
         try {
-            imageUrl = (String) rawCarouselModel.get("imageURL");
+            this.imageUrl = (String) rawCarouselModel.get("imageURL");
         } catch (Exception e) {
 
         }
         try {
-            videoUrl = (String) rawCarouselModel.get("videoYoutubeId");
+            this.videoUrl = (String) rawCarouselModel.get("videoYoutubeId");
         } catch (Exception e1) {
 
         }
         if(imageUrl != null) {
-            this.imageUrl = imageUrl;
             this.carouselType = CarouselType.IMAGE;
         }
         if(videoUrl != null) {
-            this.videoUrl = videoUrl;
             this.carouselType = CarouselType.VIDEO;
         }
 
@@ -58,6 +54,12 @@ public class CarouselModel implements Parcelable{
             this.videoUrl = in.readString();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        if(imageUrl != null) {
+            this.carouselType = CarouselType.IMAGE;
+        }
+        if(videoUrl != null) {
+            this.carouselType = CarouselType.VIDEO;
         }
     }
 

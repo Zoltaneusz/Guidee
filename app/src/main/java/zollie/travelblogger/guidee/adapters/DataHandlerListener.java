@@ -1,5 +1,7 @@
 package zollie.travelblogger.guidee.adapters;
 
+import com.google.firebase.database.DatabaseReference;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -8,7 +10,7 @@ import java.util.Map;
  */
 public interface DataHandlerListener {
 
-    void onJourneyData(Map<String, Object> rawJourneyData);
+    void onJourneyData(Map<String, Object> rawJourneyData, String journeyID);
     void onUserData(Map<String, Object> rawUserData);
 
 }

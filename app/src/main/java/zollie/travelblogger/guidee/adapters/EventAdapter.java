@@ -70,8 +70,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder>{
     public void onBindViewHolder(EventAdapter.ViewHolder holder, int position) {
         final EventModel mEvent = allEvents.get(position);
 
-        TextView textView = holder.mTitle;
-        textView.setText(mEvent.title);
+        TextView coverText = holder.mTitle;
+        coverText.setText("#" + String.valueOf(position+1) + " " + mEvent.title);
+        TextView summaryText = holder.mSummary;
+        summaryText.setText(mEvent.summary);
         ImageView imageView = holder.mCoverImage;
         if(mEvent.carouselModels.get(0).carouselType == CarouselModel.CarouselType.IMAGE) {
             //===================== Adding Image to to Horizontal Slide via Glide =========
