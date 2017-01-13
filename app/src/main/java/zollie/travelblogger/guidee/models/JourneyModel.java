@@ -101,6 +101,17 @@ public class JourneyModel implements Parcelable {
         in.readTypedList(eventModels, EventModel.CREATOR);
     }
 
+    public JourneyModel(JourneyModel journeyModel){
+        this.title = journeyModel.title;
+        this.summary = journeyModel.summary;
+        this.coverImageUrl = journeyModel.coverImageUrl;
+        this.userAvatarUrl = journeyModel.userAvatarUrl;
+        this.identifier = journeyModel.identifier;
+        this.ID = journeyModel.ID;
+        this.annotationModel = journeyModel.annotationModel;
+        this.eventModels = journeyModel.eventModels;
+    }
+
     public String getTitle() {
         return title;
     }

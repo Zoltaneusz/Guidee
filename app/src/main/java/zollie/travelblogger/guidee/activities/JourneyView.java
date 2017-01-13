@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import zollie.travelblogger.guidee.R;
+import zollie.travelblogger.guidee.adapters.CommentAdapter;
 import zollie.travelblogger.guidee.adapters.DataHandler;
 import zollie.travelblogger.guidee.adapters.DataHandlerListener;
 import zollie.travelblogger.guidee.adapters.EventAdapter;
@@ -27,6 +28,9 @@ import zollie.travelblogger.guidee.models.UserModel;
  */
 
 public class JourneyView extends Activity{
+
+    ArrayList<CommentModel> allComments = new ArrayList<CommentModel>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +56,9 @@ public class JourneyView extends Activity{
             @Override
             public void onCommentData(Map<String, Object> rawCommentData) {
                 CommentModel commentModel = new CommentModel(rawCommentData);
+                allComments.add(commentModel);
+                fillCommentsRecyclerView(R.id.journey_comments_recycle, R.id.journey_comments_recycle_placeholder, allComments);
+
             }
         });
 
@@ -80,4 +87,18 @@ public class JourneyView extends Activity{
   //      if(eventModels.isEmpty() == true ) showPlaceholderCards(emptyResource);
         //     rvJourneys.setVisibility(View.INVISIBLE);
     }
+    public void fillCommentsRecyclerView(int primaryResource, int emptyResource, ArrayList<CommentModel> commentModels){
+
+        RecyclerView rvEvents = (RecyclerView) findViewById(primaryResource);
+
+        CommentAdapter adapter = new CommentAdapter(this, commentModels);
+        rvEvents.setAdapter(adapter);
+        rvEvents.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        RecyclerView.ItemDecoration itemDecoration = new
+                DividerItemDecoration(this, zollie.travelblogger.guidee.utils.DividerItemDecoration.VERTICAL_LIST);
+        rvEvents.addItemDecoration(itemDecoration);
+        //      if(eventModels.isEmpty() == true ) showPlaceholderCards(emptyResource);
+        //     rvJourneys.setVisibility(View.INVISIBLE);
+    }
+
 }

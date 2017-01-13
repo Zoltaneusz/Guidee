@@ -28,4 +28,10 @@ public class CommentModel {
             e.printStackTrace();
         }
     }
+
+    public CommentModel (CommentModel commentModel){
+        this.author = commentModel.author;
+        this.avatarURL = commentModel.avatarURL;
+        this.comment = commentModel.comment;
+    }
 }

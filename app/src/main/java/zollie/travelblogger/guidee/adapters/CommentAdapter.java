@@ -1,24 +1,28 @@
 package zollie.travelblogger.guidee.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
 
 import org.w3c.dom.Comment;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import zollie.travelblogger.guidee.R;
 import zollie.travelblogger.guidee.models.CommentModel;
-import zollie.travelblogger.guidee.models.EventModel;
+import zollie.travelblogger.guidee.utils.ImageProcessor;
 
 /**
  * Created by FuszeneckerZ on 2017.01.12..
@@ -28,6 +32,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
     private ArrayList<CommentModel> allComments = new ArrayList<CommentModel>();
     private Context mContext;
+    Bitmap userAvatarGlobal = null;
+    ImageProcessor imageProcessor = new ImageProcessor();
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
@@ -69,15 +75,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         TextView commentText = holder.mComment;
         commentText.setText(mComment.comment);
-        ImageView commentUserAvatar = holder.mUserAvatar;
         //===================== Adding Image to to Horizontal Slide via Glide =========
-        Glide
-                .with(mContext)
-                .load(mComment.avatarURL)
-                .centerCrop()
-                .override(160, 160)
-                .crossFade()
-                .into(commentUserAvatar);
+        new AsyncUserPic().execute(mComment, holder);
         //=============================================================================
     }
 
@@ -85,4 +84,41 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     public int getItemCount() {
         return allComments.size();
     }
+
+    class AsyncUserPic extends AsyncTask<Object, Void, CommentAdapter.ViewHolder> {
+
+
+        @Override
+        protected CommentAdapter.ViewHolder doInBackground(Object... params) {
+            CommentModel mComment = new CommentModel((CommentModel)(params[0]));
+            CommentAdapter.ViewHolder holder = (CommentAdapter.ViewHolder) params[1];
+            //===================== Adding Image to to Horizontal Slide via Glide =========
+            try {
+                userAvatarGlobal= Glide.with(mContext)
+                        .load(mComment.avatarURL)
+                        .asBitmap()
+                        .into(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            //=============================================================================
+            userAvatarGlobal = imageProcessor.resizeMarkerImage(userAvatarGlobal, 2);
+            return holder;
+        }
+
+        @Override
+        protected void onPostExecute(CommentAdapter.ViewHolder holder) {
+            ImageView imageView = holder.mUserAvatar;
+            final float scale = mContext.getResources().getDisplayMetrics().density;
+            final Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+            Bitmap bmp = Bitmap.createBitmap((int)(120*scale),(int) (120*scale), conf);
+            Canvas canvas1 = new Canvas(bmp);
+            Bitmap circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale*2, userAvatarGlobal);
+            circleBitmap = imageProcessor.pulseMarker(4, userAvatarGlobal, canvas1, scale*2, circleBitmap);
+            imageView.setImageBitmap(circleBitmap);
+        }
+    }
+
 }
