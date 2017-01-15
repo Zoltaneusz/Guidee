@@ -14,6 +14,9 @@ import com.bumptech.glide.Glide;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
+import com.google.android.youtube.player.YouTubeThumbnailLoader;
+import com.google.android.youtube.player.YouTubeThumbnailView;
+import com.google.api.services.youtube.YouTube;
 
 import java.util.ArrayList;
 
@@ -29,7 +32,8 @@ public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private ArrayList<CarouselModel> allCarousels = new ArrayList<CarouselModel>();
     private Context mContext;
     private final int VIDEO = 0, IMAGE = 1;
-
+    private YouTubePlayer player;
+    private YouTubeThumbnailLoader mThumbnailLoader;
     public CarouselAdapter(Context context, ArrayList<CarouselModel> allCarouselList) {
         allCarousels = allCarouselList;
         mContext = context;
@@ -87,19 +91,22 @@ public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                     @Override
                     public void onClick(View view) {
-                       int a = 0;
+                        // Go to new activity and display image
                     }
                 });
                 break;
             case VIDEO:
+
                 final YouTubePlayerView mCarouselVideo = ((ViewHolderVideo) holder).getmVideo();
-                mCarouselVideo.setSoundEffectsEnabled(true);
+                final YouTubeThumbnailView mCarouselThumbnail = ((ViewHolderVideo) holder).getmThumbnail();
+             //   mCarouselVideo.setSoundEffectsEnabled(true);
                 final YouTubePlayer.OnInitializedListener onInitializedListener;
                 onInitializedListener = new YouTubePlayer.OnInitializedListener(){
 
                     @Override
                     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-                        youTubePlayer.loadVideo(mCarousel.videoUrl);
+              //          youTubePlayer.loadVideo(mCarousel.videoUrl);
+                        player = youTubePlayer;
                     }
 
                     @Override
@@ -107,15 +114,56 @@ public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         int b = 1;
                     }
                 };
-                ((ViewHolderVideo) holder).mCarousel.setOnClickListener(new View.OnClickListener(){
+                mCarouselVideo.initialize(mContext.getString(R.string.Youtube_API), onInitializedListener);
+                final YouTubeThumbnailView.OnInitializedListener onThumbnailInitialize;
+                onThumbnailInitialize = new YouTubeThumbnailView.OnInitializedListener(){
+
+                    @Override
+                    public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader youTubeThumbnailLoader) {
+                        mThumbnailLoader = youTubeThumbnailLoader;
+                        mThumbnailLoader.setOnThumbnailLoadedListener(new ThumbnailLoadedListener());
+                        youTubeThumbnailLoader.setVideo(mCarousel.videoUrl);
+                    }
+
+                    @Override
+                    public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView, YouTubeInitializationResult youTubeInitializationResult) {
+
+                    }
+                };
+                mCarouselThumbnail.initialize(mContext.getString(R.string.Youtube_API), onThumbnailInitialize);
+                mCarouselThumbnail.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mCarouselThumbnail.setVisibility(View.INVISIBLE);
+             //           player.loadVideo(mCarousel.videoUrl);
+                        // Go to new activity and display video
+                    }
+                });
+
+
+
+                /*((ViewHolderVideo) holder).mCarousel.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View view) {
                         mCarouselVideo.initialize(mContext.getString(R.string.Youtube_API), onInitializedListener);
                     }
-                });
+                });*/
                 break;
             default:
                 break;
+        }
+    }
+    private final class ThumbnailLoadedListener implements YouTubeThumbnailLoader.OnThumbnailLoadedListener {
+
+
+        @Override
+        public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
+
+        }
+
+        @Override
+        public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader.ErrorReason errorReason) {
+
         }
     }
 

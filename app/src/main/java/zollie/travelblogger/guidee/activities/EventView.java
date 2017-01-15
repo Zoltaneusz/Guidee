@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubeThumbnailView;
 
 import java.util.ArrayList;
 

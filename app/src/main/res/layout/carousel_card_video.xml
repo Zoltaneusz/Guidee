@@ -10,5 +10,10 @@
     android:layout_height="200dp"
     android:background="#929494"
     android:src="@drawable/placeholder2"/>
-
+    <com.google.android.youtube.player.YouTubeThumbnailView
+        android:id="@+id/mCarouselThumbnail"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:background="#929494"
+        android:src="@drawable/placeholder2"/>
     </FrameLayout>

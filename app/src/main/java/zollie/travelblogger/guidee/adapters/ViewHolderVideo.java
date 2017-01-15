@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.google.android.youtube.player.YouTubePlayerView;
+import com.google.android.youtube.player.YouTubeThumbnailView;
 
 import zollie.travelblogger.guidee.R;
 
@@ -15,6 +16,16 @@ import zollie.travelblogger.guidee.R;
 public class ViewHolderVideo extends RecyclerView.ViewHolder{
 
     public YouTubePlayerView mVideo;
+
+    public YouTubeThumbnailView getmThumbnail() {
+        return mThumbnail;
+    }
+
+    public void setmThumbnail(YouTubeThumbnailView mThumbnail) {
+        this.mThumbnail = mThumbnail;
+    }
+
+    public YouTubeThumbnailView mThumbnail;
     public FrameLayout mCarousel;
 
     public YouTubePlayerView getmVideo() {
@@ -37,6 +48,7 @@ public class ViewHolderVideo extends RecyclerView.ViewHolder{
         super(itemView);
 
         mVideo = (YouTubePlayerView) itemView.findViewById(R.id.mCarouselVideo);
+        mThumbnail = (YouTubeThumbnailView) itemView.findViewById(R.id.mCarouselThumbnail);
         mCarousel = (FrameLayout) itemView.findViewById(R.id.mCarouselVideoCard);
     }
 }
