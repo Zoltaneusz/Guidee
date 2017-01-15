@@ -5,10 +5,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 
 import java.util.ArrayList;
@@ -26,34 +30,9 @@ public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Context mContext;
     private final int VIDEO = 0, IMAGE = 1;
 
-    public static class ViewHolderImage extends RecyclerView.ViewHolder{
-
-        public ImageView mImage;
-        public TextView mTitle;
-        public RelativeLayout mCarousel;
-
-        public ViewHolderImage(View itemView){
-            super(itemView);
-
-            mImage = (ImageView) itemView.findViewById();
-            mTitle = (TextView) itemView.findViewById();
-            mCarousel = (RelativeLayout) itemView.findViewById();
-        }
-    }
-
-    public static class ViewHolderVideo extends RecyclerView.ViewHolder{
-
-        public YouTubePlayerView mVideo;
-        public TextView mTitle;
-        public RelativeLayout mCarousel;
-
-        public ViewHolderVideo(View itemView){
-            super(itemView);
-
-            mVideo = (YouTubePlayerView) itemView.findViewById();
-            mTitle = (TextView) itemView.findViewById();
-            mCarousel = (RelativeLayout) itemView.findViewById();
-        }
+    public CarouselAdapter(Context context, ArrayList<CarouselModel> allCarouselList) {
+        allCarousels = allCarouselList;
+        mContext = context;
     }
 
     //Returns the view type of the item at position for the purposes of view recycling.
@@ -74,14 +53,16 @@ public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         switch(viewType) {
             case IMAGE:
-                View v1 = inflater.inflate(R.layout.layout_carousel_image, parent, false);
+                View v1 = inflater.inflate(R.layout.carousel_card_image, parent, false);
                 viewHolder = new ViewHolderImage(v1);
                 break;
             case VIDEO:
-                View v2 = inflater.inflate(R.layout.layout_carousel_video, parent, false);
+                View v2 = inflater.inflate(R.layout.carousel_card_video, parent, false);
                 viewHolder = new ViewHolderVideo(v2);
                 break;
             default:
+                View v = inflater.inflate(R.layout.journey_card_placeholder, parent, false);
+                viewHolder = new JourneyAdapter.ViewHolder(v);
                 break;
         }
         return viewHolder;
@@ -89,11 +70,57 @@ public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        final CarouselModel mCarousel = allCarousels.get(position);
+        switch(holder.getItemViewType()) {
+            case IMAGE:
+                ImageView mCarouselImage = ((ViewHolderImage) holder).getmImage();
+                //===================== Adding Image to to Horizontal Slide via Glide =========
+                Glide
+                        .with(mContext)
+                        .load(mCarousel.imageUrl)
+                        .centerCrop()
+                        .override(160, 160)
+                        .crossFade()
+                        .into(mCarouselImage);
+                //=============================================================================
+                ((ViewHolderImage) holder).mCarousel.setOnClickListener(new View.OnClickListener(){
 
+                    @Override
+                    public void onClick(View view) {
+                       int a = 0;
+                    }
+                });
+                break;
+            case VIDEO:
+                final YouTubePlayerView mCarouselVideo = ((ViewHolderVideo) holder).getmVideo();
+                mCarouselVideo.setSoundEffectsEnabled(true);
+                final YouTubePlayer.OnInitializedListener onInitializedListener;
+                onInitializedListener = new YouTubePlayer.OnInitializedListener(){
+
+                    @Override
+                    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+                        youTubePlayer.loadVideo(mCarousel.videoUrl);
+                    }
+
+                    @Override
+                    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+                        int b = 1;
+                    }
+                };
+                ((ViewHolderVideo) holder).mCarousel.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View view) {
+                        mCarouselVideo.initialize(mContext.getString(R.string.Youtube_API), onInitializedListener);
+                    }
+                });
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return allCarousels.size();
     }
 }

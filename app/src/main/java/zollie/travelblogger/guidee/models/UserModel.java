@@ -45,7 +45,7 @@ public class UserModel {
             e.printStackTrace();
         }
         try {
-            this.loves = (Map<String, Object>) rawUserModel.get("loves");
+            this.loves = (Map<String, Object>) rawUserModel.get("loved");
         } catch (Exception e) {
             e.printStackTrace();
         }

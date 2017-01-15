@@ -74,7 +74,7 @@ public class ProfileFragment extends Fragment {
         }
         //================= Getting data of 1 profile =====================================
 
-        DataHandler.getInstance().getUserWithId(new String("0"), new DataHandlerListener() {
+        DataHandler.getInstance().getUserWithId(new String("UQEch8jENJc4SjY6ZuMt7rULGho1"), new DataHandlerListener() {
             @Override
             public void onJourneyData(final Map<String, Object> rawJourneyData, String journeyReference) {
                 //addMapMarker(journeyModel, mMap);

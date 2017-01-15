@@ -28,10 +28,14 @@ public class EventModel implements Parcelable{
             e.printStackTrace();
         }
         try {
+            this.carouselModels = new ArrayList<CarouselModel>();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
             rawCarouselModels = (ArrayList<Map<String, Object>>) rawEventModel.get("carouselModels");
             for(Map<String, Object> rawCarouselModel : rawCarouselModels ){
                 CarouselModel carouselModel = new CarouselModel(rawCarouselModel);
-                this.carouselModels= new ArrayList<CarouselModel>();
                 this.carouselModels.add(carouselModel);
             }
         } catch (Exception e) {

@@ -85,7 +85,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder>{
             //=============================================================================
         }
         else {
-            //===================== Load Video to Horizontal Slide ========================
+            //===================== Load Video thumbnail to Horizontal Slide ==============
 
 
             //=============================================================================
