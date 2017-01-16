@@ -1,5 +1,9 @@
 package zollie.travelblogger.guidee.adapters;
 
+import android.app.Activity;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,6 +25,7 @@ import com.google.api.services.youtube.YouTube;
 import java.util.ArrayList;
 
 import zollie.travelblogger.guidee.R;
+import zollie.travelblogger.guidee.fragments.ContentViewerDialogFragment;
 import zollie.travelblogger.guidee.models.CarouselModel;
 
 /**
@@ -92,6 +97,14 @@ public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     @Override
                     public void onClick(View view) {
                         // Go to new activity and display image
+                        FragmentTransaction ft = ((Activity)mContext).getFragmentManager().beginTransaction();
+                        Fragment prev = ((Activity)mContext).getFragmentManager().findFragmentByTag("imageViewer");
+                        if (prev != null) {
+                            ft.remove(prev);
+                        }
+
+                        DialogFragment newFragment = ContentViewerDialogFragment.newInstance(mCarousel.imageUrl);
+                        newFragment.show(ft, "imageViewer");
                     }
                 });
                 break;
