@@ -3,6 +3,7 @@ package zollie.travelblogger.guidee.fragments;
 import android.Manifest;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -31,12 +32,15 @@ import com.google.firebase.database.DatabaseReference;
 import java.util.ArrayList;
 import java.util.Map;
 
+import zollie.travelblogger.guidee.activities.JourneyView;
 import zollie.travelblogger.guidee.adapters.DataHandler;
 import zollie.travelblogger.guidee.adapters.DataHandlerListener;
 import zollie.travelblogger.guidee.models.CommentModel;
 import zollie.travelblogger.guidee.utils.ImageProcessor;
 import zollie.travelblogger.guidee.R;
 import zollie.travelblogger.guidee.models.JourneyModel;
+
+import static zollie.travelblogger.guidee.R.id.mJourney;
 
 /**
  * Created by zoltanfuszenecker on 10/29/16.
@@ -168,8 +172,29 @@ public class ExploreFragment extends Fragment {
                         @Override
                         public void onInfoWindowClick(Marker marker) {
 
-                            FragmentManager fm = getFragmentManager();
+                            /*FragmentManager fm = getFragmentManager();
                             fm.beginTransaction().replace(R.id.contentContainer, _profileFrag).commit();
+                            */
+                            // ======================== Go to selected journey =====================
+                            final String markerID = marker.getId();
+                            JourneyModel mJourney = null;
+                            int j = 0;
+                            for(int i=0; i<allJourneys.size(); i++)
+                            {
+                                mJourney = allJourneys.get(i);
+
+                                if(mJourney.annotationModel.getMarkerID().equals(markerID))
+                                {
+                                    //markerImage = markerImageGlob;
+//                                    markerImage = mJourney.annotationModel.markerIcon;
+                                    j=i;
+                                    break;
+                                }
+                            }
+                            Intent toJourneyIntent = new Intent(getActivity(), JourneyView.class);
+                            toJourneyIntent.putExtra("ser_journey", allJourneys.get(j));
+                            getActivity().startActivity(toJourneyIntent);
+
                         }
                     });
 

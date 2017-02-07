@@ -148,7 +148,7 @@ public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     @Override
                     public void onClick(View view) {
                         mCarouselThumbnail.setVisibility(View.INVISIBLE);
-             //           player.loadVideo(mCarousel.videoUrl);
+                        player.loadVideo(mCarousel.videoUrl);
                         // Go to new activity and display video
                     }
                 });

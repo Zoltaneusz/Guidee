@@ -3,15 +3,24 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
+import android.util.Base64;
+import android.util.Log;
 
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import zollie.travelblogger.guidee.fragments.ExploreFragment;
+import zollie.travelblogger.guidee.fragments.FaceLoginFragment;
 import zollie.travelblogger.guidee.fragments.ProfileFragment;
 import zollie.travelblogger.guidee.R;
 
@@ -24,10 +33,12 @@ public class MainActivity extends Activity {
 
     private ExploreFragment _exploreMapFrag = new ExploreFragment();
     private ProfileFragment _profileFrag = new ProfileFragment();
+    private FaceLoginFragment _loginFrag = new FaceLoginFragment();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        printHashKey();
         setContentView(R.layout.activity_main);
 
         // Pushing MapView Fragment
@@ -53,7 +64,8 @@ public class MainActivity extends Activity {
 
                     case R.id.tab_profile:
                         fm = getFragmentManager();
-                        fm.beginTransaction().replace(R.id.contentContainer, _profileFrag).commit();
+                        //fm.beginTransaction().replace(R.id.contentContainer, _profileFrag).commit();
+                        fm.beginTransaction().replace(R.id.contentContainer, _loginFrag).commit();
                         break;
 
                 }
@@ -62,6 +74,25 @@ public class MainActivity extends Activity {
             }
         });
 
+
+    }
+    public void printHashKey(){
+
+        // Add code to print out the key hash
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "zollie.travelblogger.guidee",
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {
+
+        }
 
     }
 }

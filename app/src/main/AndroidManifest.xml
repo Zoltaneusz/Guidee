@@ -8,9 +8,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name="android.support.multidex.MultiDexApplication">
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/app_id"/>
+
 
         <activity android:name=".activities.MainActivity"
-                    android:launchMode="singleInstance">
+                    android:launchMode="standard">
 
         <intent-filter>
         <action android:name="android.intent.action.MAIN" />
