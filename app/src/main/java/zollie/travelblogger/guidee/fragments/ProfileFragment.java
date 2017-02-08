@@ -22,6 +22,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
+import com.facebook.Profile;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
@@ -73,8 +76,10 @@ public class ProfileFragment extends Fragment {
             window.setStatusBarColor(getActivity().getResources().getColor(R.color.colorPrimaryDark));
         }
         //================= Getting data of 1 profile =====================================
-
-        DataHandler.getInstance().getUserWithId(new String("UQEch8jENJc4SjY6ZuMt7rULGho1"), new DataHandlerListener() {
+        //Getting Firebase user ID
+        FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
+        String firUserID = firUser.getUid();
+        DataHandler.getInstance().getUserWithId(new String(firUserID), new DataHandlerListener() {
             @Override
             public void onJourneyData(final Map<String, Object> rawJourneyData, String journeyReference) {
                 //addMapMarker(journeyModel, mMap);
@@ -163,6 +168,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        Profile profile = Profile.getCurrentProfile();
         // Change statusbar color ===============================
 
 
