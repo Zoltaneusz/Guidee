@@ -2,12 +2,16 @@ package zollie.travelblogger.guidee.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -37,6 +41,18 @@ public class JourneyView extends Activity{
         setContentView(R.layout.activity_journey_view);
         Bundle intentData = getIntent().getExtras();
         JourneyModel mJourney = (JourneyModel) intentData.getParcelable("ser_journey");
+        if(mJourney.coverImageUrl != null){
+            ImageView coverImage = (ImageView ) findViewById(R.id.journey_imgFirst);
+            //===================== Adding Image to to Horizontal Slide via Glide =========
+            Glide
+                    .with(this)
+                    .load(mJourney.coverImageUrl)
+                    .crossFade()
+                    .into(coverImage);
+            //=============================================================================
+
+        }
+
         TextView mJourneySummary = (TextView) findViewById(R.id.journey_summary_content);
         mJourneySummary.setText(mJourney.summary);
 

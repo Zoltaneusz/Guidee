@@ -268,7 +268,8 @@ public class ExploreFragment extends Fragment {
              //==================================================================
  //            URL markerImageUrl = new URL(markerImageSource);
  //            markerImage = BitmapFactory.decodeStream(markerImageUrl.openConnection().getInputStream());
-             markerImage = imageProcessor.resizeMarkerImage(markerImage, 1);
+             float scale = getResources().getDisplayMetrics().density;
+             markerImage = imageProcessor.resizeMarkerImage(markerImage, scale*2/3);
              markerImageGlob = markerImage;
              //journeyModel.annotationModel.setMarkerIcon(markerImage);
           //   mapMarkerData.put("imgBitmap", markerImage);

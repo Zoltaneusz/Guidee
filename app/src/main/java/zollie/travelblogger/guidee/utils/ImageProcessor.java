@@ -45,7 +45,7 @@ public class ImageProcessor {
 
         return circleBitmap;
     }
-    public Bitmap resizeMarkerImage(Bitmap myPic, int size){
+    public Bitmap resizeMarkerImage(Bitmap myPic, float size){
 
         Matrix m = new Matrix();
         m.setRectToRect(new RectF(0, 0, myPic.getWidth(), myPic.getHeight()), new RectF(0, 0, 50*size, 50*size), Matrix.ScaleToFit.CENTER);

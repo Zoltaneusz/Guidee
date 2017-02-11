@@ -73,22 +73,24 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder>{
         TextView summaryText = holder.mSummary;
         summaryText.setText(mEvent.summary);
         ImageView imageView = holder.mCoverImage;
-        if(mEvent.carouselModels.get(0).carouselType == CarouselModel.CarouselType.IMAGE) {
-            //===================== Adding Image to to Horizontal Slide via Glide =========
-            Glide
-                    .with(mContext)
-                    .load(mEvent.carouselModels.get(0).imageUrl)
-                    .centerCrop()
-                    .override(160, 160)
-                    .crossFade()
-                    .into(imageView);
-            //=============================================================================
-        }
-        else {
-            //===================== Load Video thumbnail to Horizontal Slide ==============
+        if(mEvent.carouselModels.get(0).imageUrl != null){
+            if(mEvent.carouselModels.get(0).carouselType == CarouselModel.CarouselType.IMAGE) {
+                //===================== Adding Image to to Horizontal Slide via Glide =========
+                Glide
+                        .with(mContext)
+                        .load(mEvent.carouselModels.get(0).imageUrl)
+                        .centerCrop()
+                        .override(160, 160)
+                        .crossFade()
+                        .into(imageView);
+                //=============================================================================
+            }
+            else {
+                //===================== Load Video thumbnail to Horizontal Slide ==============
 
 
-            //=============================================================================
+                //=============================================================================
+            }
         }
         holder.mEvent.setOnClickListener(new View.OnClickListener() {
             @Override

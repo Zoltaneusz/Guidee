@@ -249,7 +249,8 @@ public class ProfileFragment extends Fragment {
                 e.printStackTrace();
             }
             //=============================================================================
-            userAvatarGlobal = imageProcessor.resizeMarkerImage(userAvatarGlobal, 2);
+            float scale = getResources().getDisplayMetrics().density;
+            userAvatarGlobal = imageProcessor.resizeMarkerImage(userAvatarGlobal, scale*4/3);
             return mUser;
         }
 

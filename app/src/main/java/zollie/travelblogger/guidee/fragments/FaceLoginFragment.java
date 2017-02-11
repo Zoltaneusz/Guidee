@@ -33,15 +33,15 @@ import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.vision.face.Face;
+
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.concurrent.Executor;
+
+
 
 import zollie.travelblogger.guidee.R;
 
@@ -68,13 +68,6 @@ public class FaceLoginFragment extends Fragment {
 
         FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
 
-        Profile prof = Profile.getCurrentProfile();
-
-        if(prof != null) { // User is already logged in
-            FragmentManager fm;
-            fm = getFragmentManager();
-            fm.beginTransaction().replace(R.id.contentContainer, _profileFrag).commit();
-        }
 
         mCallbackManager = CallbackManager.Factory.create();
         mTokenTracker = new AccessTokenTracker() {
@@ -118,6 +111,13 @@ public class FaceLoginFragment extends Fragment {
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
+        Profile prof = Profile.getCurrentProfile();
+        FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(firUser != null) { // User is already logged in
+            FragmentManager fm;
+            fm = getFragmentManager();
+            fm.beginTransaction().replace(R.id.contentContainer, _profileFrag).commit();
+        }
     }
 
     @Override
@@ -146,6 +146,7 @@ public class FaceLoginFragment extends Fragment {
                 AccessToken accessToken = loginResult.getAccessToken();
                 handleFacebookAccessToken(accessToken);
                 Profile profile = Profile.getCurrentProfile();
+                FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
                 FragmentManager fm;
                 fm = getFragmentManager();
                 fm.beginTransaction().replace(R.id.contentContainer, _profileFrag).commit();
@@ -180,7 +181,7 @@ public class FaceLoginFragment extends Fragment {
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener((Executor) this, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
