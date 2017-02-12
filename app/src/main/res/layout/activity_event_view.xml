@@ -17,7 +17,7 @@
             android:id="@+id/event_frameLayout">
             <ImageView
                 android:id="@+id/event_imgFirst"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scaleType="fitXY"
                 android:src="@mipmap/maxresdefault"
@@ -38,7 +38,7 @@
                     android:text=""
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:id="@+id/journey_profile_name"
+                    android:id="@+id/event_name"
                     android:layout_below="@+id/event_prof_pic"
                     android:layout_marginTop="15dp"
                     android:textSize="25dp"

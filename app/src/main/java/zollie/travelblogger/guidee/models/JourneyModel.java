@@ -25,10 +25,11 @@ public class JourneyModel implements Parcelable {
     public String userAvatarUrl;
     public String identifier;
     public String ID;
+    public boolean userEligible;
     public AnnotationModel annotationModel;
     public ArrayList<EventModel> eventModels= new ArrayList<EventModel>();
 
-    public JourneyModel(Map<String, Object> rawJourneyModel, String journeyReference) {
+    public JourneyModel(Map<String, Object> rawJourneyModel, String journeyReference, boolean eligibile) {
         try {
             this.title = (String) rawJourneyModel.get("title");
         } catch (Exception e) {
@@ -65,10 +66,16 @@ public class JourneyModel implements Parcelable {
             e.printStackTrace();
         }
         try {
+            this.userEligible = eligibile;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
             this.ID = journeyReference;
         } catch (Exception e) {
             e.printStackTrace();
         }
+
 
   /*      try { // THIS SHOULD BE CHANGED TO USE THE VALUE OF journeyReference with Value Listener to make it more ROBUST
             this.ID = journeyReference.toString().substring(45,65);
@@ -97,6 +104,9 @@ public class JourneyModel implements Parcelable {
         this.userAvatarUrl = data[3];
         this.identifier = data[4];
         this.ID = data[5];
+        boolean[] data2 = new boolean[1];
+        in.readBooleanArray(data2);
+        this.userEligible = data2[0];
         annotationModel = in.readParcelable(AnnotationModel.class.getClassLoader());
         in.readTypedList(eventModels, EventModel.CREATOR);
     }
@@ -166,6 +176,7 @@ public class JourneyModel implements Parcelable {
                 this.userAvatarUrl,
                 this.identifier,
                 this.ID});
+        parcel.writeBooleanArray(new boolean[]{this.userEligible});
         parcel.writeParcelable(annotationModel, i);
         parcel.writeTypedList(eventModels);
     }

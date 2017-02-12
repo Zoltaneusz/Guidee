@@ -116,7 +116,7 @@ public class ExploreFragment extends Fragment {
                         @Override
                         public void onJourneyData(final Map<String, Object> rawJourneyData, String journeyReference) {
                             //addMapMarker(journeyModel, mMap);
-                            JourneyModel journeyModel = new JourneyModel(rawJourneyData, journeyReference);
+                            JourneyModel journeyModel = new JourneyModel(rawJourneyData, journeyReference, false);
                             allJourneys.add(journeyModel);
                             new AsyncMarkerLoader().execute(journeyModel, mMap);
                         }

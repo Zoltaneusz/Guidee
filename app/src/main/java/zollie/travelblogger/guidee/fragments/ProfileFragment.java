@@ -97,7 +97,7 @@ public class ProfileFragment extends Fragment {
                 DataHandler.getInstance().getJourneyWithIds(getUserJourneys(userModel), new DataHandlerListener() {
                     @Override
                     public void onJourneyData(Map<String, Object> rawJourneyData, String journeyReference) {
-                        JourneyModel journeyModel = new JourneyModel(rawJourneyData, journeyReference);
+                        JourneyModel journeyModel = new JourneyModel(rawJourneyData, journeyReference, true);
                         if(journeyModel.title != null) {
                             allJourneys.add(journeyModel);
                             fillRecyclerView(R.id.my_journeys_recycle, R.id.my_journeys_recycle_placeholder, allJourneys);
@@ -119,7 +119,7 @@ public class ProfileFragment extends Fragment {
                 DataHandler.getInstance().getJourneyWithIds(getUserFavorites(userModel), new DataHandlerListener() {
                     @Override
                     public void onJourneyData(Map<String, Object> rawJourneyData, String journeyReference) {
-                        JourneyModel journeyModel = new JourneyModel(rawJourneyData, journeyReference);
+                        JourneyModel journeyModel = new JourneyModel(rawJourneyData, journeyReference, false);
                         if(journeyModel.title != null) {
                             allFavorites.add(journeyModel);
                             fillRecyclerView(R.id.following_journeys_recycle, R.id.following_journeys_recycle_placeholder, allFavorites);
@@ -140,7 +140,7 @@ public class ProfileFragment extends Fragment {
                 DataHandler.getInstance().getJourneyWithIds(getUserPlans(userModel), new DataHandlerListener() {
                     @Override
                     public void onJourneyData(Map<String, Object> rawJourneyData, String journeyReference) {
-                        JourneyModel journeyModel = new JourneyModel(rawJourneyData, journeyReference);
+                        JourneyModel journeyModel = new JourneyModel(rawJourneyData, journeyReference, false);
                         if(journeyModel.title != null) {
                             allPlans.add(journeyModel);
                             fillRecyclerView(R.id.plan_journeys_recycle, R.id.plan_journeys_recycle_placeholder, allPlans);

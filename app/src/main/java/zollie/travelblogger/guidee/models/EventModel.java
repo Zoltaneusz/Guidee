@@ -3,6 +3,8 @@ package zollie.travelblogger.guidee.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -13,9 +15,11 @@ import java.util.Map;
 public class EventModel implements Parcelable{
     public String summary;
     public String title;
+    public LatLng eventLatLng;
     public ArrayList<CarouselModel> carouselModels;
 
     public EventModel(Map<String, Object> rawEventModel) {
+        Map<String, Object> locationData = (Map<String, Object>) rawEventModel.get("location");
         ArrayList<Map<String, Object>> rawCarouselModels = null;
         try {
             this.summary = (String) rawEventModel.get("summary");
@@ -24,6 +28,11 @@ public class EventModel implements Parcelable{
         }
         try {
             this.title = (String) rawEventModel.get("title");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.eventLatLng = new LatLng((double) locationData.get("latitude"), (double) locationData.get("longitude"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -44,10 +53,33 @@ public class EventModel implements Parcelable{
     }
 
     public EventModel(Parcel in){
-        this.summary = in.readString();
-        this.title = in.readString();
+        try {
+            this.summary = in.readString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.title = in.readString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        LatLng mLatLng = null;
+        try {
+            mLatLng = new LatLng(in.readDouble(), in.readDouble());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.eventLatLng = mLatLng;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         carouselModels= new ArrayList<CarouselModel>();
-        in.readTypedList(carouselModels, CarouselModel.CREATOR);
+        try {
+            in.readTypedList(carouselModels, CarouselModel.CREATOR);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String getSummary() {
@@ -81,9 +113,31 @@ public class EventModel implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(summary);
-        parcel.writeString(title);
-        parcel.writeTypedList(carouselModels);
+        try {
+            parcel.writeString(summary);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            parcel.writeString(title);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            parcel.writeDouble(eventLatLng.latitude);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            parcel.writeDouble(eventLatLng.longitude);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            parcel.writeTypedList(carouselModels);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     public static final Parcelable.Creator<EventModel> CREATOR = new Parcelable.Creator<EventModel>(){
 

@@ -38,7 +38,7 @@ import zollie.travelblogger.guidee.models.EventModel;
  * Created by FuszeneckerZ on 2017.01.09..
  */
 
-public class EventView extends YouTubeBaseActivity {
+public class EditEventView extends YouTubeBaseActivity {
     final int locationPermission = 0;
     MapView mMapView;
     public GoogleMap googleMap;
@@ -61,10 +61,6 @@ public class EventView extends YouTubeBaseActivity {
                         .into(coverImage);
                 //=============================================================================
             }
-        }
-        if(mEvent.title != null) {
-            TextView eventTitle = (TextView) findViewById(R.id.event_name);
-            eventTitle.setText(mEvent.title);
         }
         TextView mEventSummary = (TextView) findViewById(R.id.event_summary_content);
         try {
