@@ -74,6 +74,10 @@ public class EventView extends YouTubeBaseActivity {
         }
         fillRecyclerView(R.id.event_pictures_recycle_test, R.id.event_pictures_recycle_placeholder, mEvent.carouselModels);
 
+        // Check user edit right for this event
+        boolean userEdit = false;
+        userEdit = mEvent.userEligible;
+
         mMapView = (MapView) findViewById(R.id.event_Map);
         mMapView.onCreate(savedInstanceState);
         final ScrollView scrollView = (ScrollView) findViewById(R.id.event_scroll_view);
@@ -131,7 +135,7 @@ public class EventView extends YouTubeBaseActivity {
                 googleMap.moveCamera(center);
                 googleMap.animateCamera(zoom);
 */
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mEvent.eventLatLng, 16);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mEvent.eventLatLng, 30);
                 googleMap.moveCamera(CameraUpdateFactory.newLatLng(mEvent.eventLatLng ));
                 googleMap.animateCamera(cameraUpdate);
             }

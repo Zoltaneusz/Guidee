@@ -1,6 +1,12 @@
 package zollie.travelblogger.guidee.models;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.Map;
+
+import zollie.travelblogger.guidee.adapters.DataHandler;
+import zollie.travelblogger.guidee.adapters.DataHandlerListener;
 
 /**
  * Created by FuszeneckerZ on 2016.12.27..
@@ -15,6 +21,8 @@ public class UserModel {
     public Map<String, Object> following = null;
     public Map<String, Object> loves = null;
     public Map<String, Object> plans = null;
+
+    private static UserModel mInstance = null;
 
     public UserModel(Map<String, Object> rawUserModel) {
 
@@ -65,4 +73,28 @@ public class UserModel {
         this.loves = userModel.loves;
         this.plans = userModel.plans;
     }
+    public static synchronized UserModel getInstance(){
+        if(null == mInstance) {
+            FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
+            String firUserID = firUser.getUid();
+            DataHandler.getInstance().getUserWithId(new String(firUserID), new DataHandlerListener() {
+                @Override
+                public void onJourneyData(final Map<String, Object> rawJourneyData, String journeyReference) {
+                }
+
+                @Override
+                public void onUserData(Map<String, Object> rawUserData) {
+                    UserModel mInstance = new UserModel(rawUserData);
+                }
+
+                @Override
+                public void onCommentData(Map<String, Object> rawCommentData) {
+
+                }
+
+            });
+        }
+        return mInstance;
+    }
+
 }

@@ -87,7 +87,7 @@ public class JourneyModel implements Parcelable {
         try {
             rawEventModels = (ArrayList<Map<String, Object>>) rawJourneyModel.get("eventModels");
             for(Map<String, Object> rawEventModel : rawEventModels ){
-                EventModel eventModel = new EventModel(rawEventModel);
+                EventModel eventModel = new EventModel(rawEventModel, this.userEligible);
                 this.eventModels.add(eventModel);
             }
         } catch (Exception e) {

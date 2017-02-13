@@ -26,6 +26,7 @@ import zollie.travelblogger.guidee.models.CommentModel;
 import zollie.travelblogger.guidee.models.EventModel;
 import zollie.travelblogger.guidee.models.JourneyModel;
 import zollie.travelblogger.guidee.models.UserModel;
+import zollie.travelblogger.guidee.utils.ProfileHandlerUtility;
 
 /**
  * Created by FuszeneckerZ on 2016.12.31..
@@ -53,6 +54,11 @@ public class JourneyView extends Activity{
 
         }
 
+        //Get user eligibility for writing this journey
+   /*     ProfileHandlerUtility mUtility = new ProfileHandlerUtility();
+        boolean editRight = false;
+        editRight  = mUtility.getJourneyWriteRight(mJourney);
+*/
         TextView mJourneySummary = (TextView) findViewById(R.id.journey_summary_content);
         mJourneySummary.setText(mJourney.summary);
 

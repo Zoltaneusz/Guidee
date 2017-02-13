@@ -16,9 +16,10 @@ public class EventModel implements Parcelable{
     public String summary;
     public String title;
     public LatLng eventLatLng;
+    public boolean userEligible;
     public ArrayList<CarouselModel> carouselModels;
 
-    public EventModel(Map<String, Object> rawEventModel) {
+    public EventModel(Map<String, Object> rawEventModel, boolean journeyEligible) {
         Map<String, Object> locationData = (Map<String, Object>) rawEventModel.get("location");
         ArrayList<Map<String, Object>> rawCarouselModels = null;
         try {
@@ -50,6 +51,11 @@ public class EventModel implements Parcelable{
         } catch (Exception e) {
             e.printStackTrace();
         }
+        try {
+            this.userEligible = journeyEligible;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public EventModel(Parcel in){
@@ -74,6 +80,13 @@ public class EventModel implements Parcelable{
         } catch (Exception e) {
             e.printStackTrace();
         }
+        boolean[] data2 = new boolean[1];
+        try {
+            in.readBooleanArray(data2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.userEligible = data2[0];
         carouselModels= new ArrayList<CarouselModel>();
         try {
             in.readTypedList(carouselModels, CarouselModel.CREATOR);
@@ -130,6 +143,11 @@ public class EventModel implements Parcelable{
         }
         try {
             parcel.writeDouble(eventLatLng.longitude);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            parcel.writeBooleanArray(new boolean[]{this.userEligible});
         } catch (Exception e) {
             e.printStackTrace();
         }
