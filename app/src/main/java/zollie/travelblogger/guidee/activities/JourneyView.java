@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -126,17 +128,46 @@ public class JourneyView extends Activity{
     class AsyncEditRightCheck extends AsyncTask<Object, Void, JourneyModel>{
         @Override
         protected JourneyModel doInBackground(Object... params) {
-            JourneyModel mJourney =  (JourneyModel) params[0];
+            final JourneyModel mJourney =  (JourneyModel) params[0];
             ProfileHandlerUtility mUtility = new ProfileHandlerUtility();
             boolean editRight = false;
-            mJourney  = mUtility.getJourneyWriteRight(mJourney);
+
+            final ArrayList<String> allJourneys = new ArrayList<String>();
+            FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
+            String firUserID = firUser.getUid();
+            DataHandler.getInstance().getUserStringWithId(new String(firUserID), new DataHandlerListener() {
+                @Override
+                public void onJourneyData(final Map<String, Object> rawJourneyData, String journeyReference) {
+                }
+
+                @Override
+                public void onUserData(Map<String, Object> rawUserData) {
+                    UserModel mInstance = new UserModel(rawUserData);
+                    for (Map.Entry<String, Object> map : mInstance.userJourneys.entrySet()) {
+                        String journeyModel = (String) map.getValue();
+                        allJourneys.add(journeyModel);
+                        for(String string : allJourneys){
+                            if(string.matches(mJourney.ID)) {
+                                mJourney.userEligible = true;
+                                mJourney.setEventsEligibility();
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCommentData(Map<String, Object> rawCommentData) {
+
+                }
+
+            });
+
             return mJourney;
         }
 
         @Override
         protected void onPostExecute(JourneyModel mJourney) {
             userEditEight = mJourney.userEligible;
-            mJourney.setEventsEligibility();
         }
     }
 }

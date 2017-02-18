@@ -1,9 +1,12 @@
 package zollie.travelblogger.guidee.activities;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -42,10 +45,12 @@ public class EventView extends YouTubeBaseActivity {
     final int locationPermission = 0;
     MapView mMapView;
     public GoogleMap googleMap;
+    public Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
         setContentView(R.layout.activity_event_view);
 
         Bundle intentData = getIntent().getExtras();
@@ -72,11 +77,29 @@ public class EventView extends YouTubeBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
         fillRecyclerView(R.id.event_pictures_recycle_test, R.id.event_pictures_recycle_placeholder, mEvent.carouselModels);
 
-        // Check user edit right for this event
+        //======= Check user edit right for this event and add FAB for editing Event ===============
         boolean userEdit = false;
         userEdit = mEvent.userEligible;
+        if(userEdit) {
+            FloatingActionButton editEventFAB = (FloatingActionButton) findViewById(R.id.event_edit_FAB);
+            editEventFAB.setVisibility(View.VISIBLE);
+            editEventFAB.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent toEventIntent = new Intent(mContext, EditEventView.class);
+                    toEventIntent.putExtra("ser_event", mEvent);
+                    mContext.startActivity(toEventIntent);
+                }
+            });
+
+
+        }
+
+        //==========================================================================================
 
         mMapView = (MapView) findViewById(R.id.event_Map);
         mMapView.onCreate(savedInstanceState);

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -68,6 +69,12 @@ public class EditEventView extends YouTubeBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        // Testing purpose for writing to database
+        mEventSummary.setText("Text pushed from code into Firebase.");
+
+//        FloatingActionButton editEventFAB = (FloatingActionButton) findViewById(R.id.event_edit_FAB);
+//        editEventFAB.setVisibility(View.INVISIBLE);
+
         fillRecyclerView(R.id.event_pictures_recycle_test, R.id.event_pictures_recycle_placeholder, mEvent.carouselModels);
 
         mMapView = (MapView) findViewById(R.id.event_Map);

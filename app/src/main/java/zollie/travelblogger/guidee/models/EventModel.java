@@ -15,11 +15,13 @@ import java.util.Map;
 public class EventModel implements Parcelable{
     public String summary;
     public String title;
+    public String journeyID;
+    public int FIRNumber;
     public LatLng eventLatLng;
-    public boolean userEligible;
+    public boolean userEligible; // deprecated, remove in future !
     public ArrayList<CarouselModel> carouselModels;
 
-    public EventModel(Map<String, Object> rawEventModel, boolean journeyEligible) {
+    public EventModel(Map<String, Object> rawEventModel, boolean journeyEligible, String ID, int number) {
         Map<String, Object> locationData = (Map<String, Object>) rawEventModel.get("location");
         ArrayList<Map<String, Object>> rawCarouselModels = null;
         try {
@@ -39,6 +41,16 @@ public class EventModel implements Parcelable{
         }
         try {
             this.carouselModels = new ArrayList<CarouselModel>();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.journeyID = ID;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.FIRNumber = number;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -66,6 +78,16 @@ public class EventModel implements Parcelable{
         }
         try {
             this.title = in.readString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.journeyID = in.readString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.FIRNumber = in.readInt();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -133,6 +155,16 @@ public class EventModel implements Parcelable{
         }
         try {
             parcel.writeString(title);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            parcel.writeString(journeyID);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            parcel.writeInt(FIRNumber);
         } catch (Exception e) {
             e.printStackTrace();
         }

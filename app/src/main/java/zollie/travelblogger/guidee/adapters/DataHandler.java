@@ -10,6 +10,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Map;
 
+import zollie.travelblogger.guidee.models.EventModel;
+import zollie.travelblogger.guidee.models.JourneyModel;
+
 /**
  * Created by FuszeneckerZ on 2016.12.03..
  */
@@ -152,6 +155,13 @@ public class DataHandler {
 
             }
         });
+    }
+    public void setEventInFIR(EventModel mEvent){
+
+        DatabaseReference mDatabaseReference  =  mRootRef.child("Journeys");
+        ArrayList<Map<String, Object>> rawEventModels = null;
+        DatabaseReference eventReference = mDatabaseReference.child(mEvent.journeyID).child("eventModels").child(String.valueOf(mEvent.FIRNumber));
+        // From here we can modify the data in FIR Database.
     }
 
 
