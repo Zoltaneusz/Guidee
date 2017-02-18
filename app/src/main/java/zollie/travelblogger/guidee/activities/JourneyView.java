@@ -3,6 +3,7 @@ package zollie.travelblogger.guidee.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,6 +36,7 @@ import zollie.travelblogger.guidee.utils.ProfileHandlerUtility;
 public class JourneyView extends Activity{
 
     ArrayList<CommentModel> allComments = new ArrayList<CommentModel>();
+    boolean userEditEight = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +57,8 @@ public class JourneyView extends Activity{
         }
 
         //Get user eligibility for writing this journey
-   /*     ProfileHandlerUtility mUtility = new ProfileHandlerUtility();
-        boolean editRight = false;
-        editRight  = mUtility.getJourneyWriteRight(mJourney);
-*/
+        new AsyncEditRightCheck().execute(mJourney);
+
         TextView mJourneySummary = (TextView) findViewById(R.id.journey_summary_content);
         mJourneySummary.setText(mJourney.summary);
 
@@ -123,4 +123,20 @@ public class JourneyView extends Activity{
         //     rvJourneys.setVisibility(View.INVISIBLE);
     }
 
+    class AsyncEditRightCheck extends AsyncTask<Object, Void, JourneyModel>{
+        @Override
+        protected JourneyModel doInBackground(Object... params) {
+            JourneyModel mJourney =  (JourneyModel) params[0];
+            ProfileHandlerUtility mUtility = new ProfileHandlerUtility();
+            boolean editRight = false;
+            mJourney  = mUtility.getJourneyWriteRight(mJourney);
+            return mJourney;
+        }
+
+        @Override
+        protected void onPostExecute(JourneyModel mJourney) {
+            userEditEight = mJourney.userEligible;
+            mJourney.setEventsEligibility();
+        }
+    }
 }

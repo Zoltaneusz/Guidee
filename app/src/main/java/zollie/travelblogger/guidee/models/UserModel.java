@@ -3,6 +3,7 @@ package zollie.travelblogger.guidee.models;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import zollie.travelblogger.guidee.adapters.DataHandler;
@@ -73,11 +74,12 @@ public class UserModel {
         this.loves = userModel.loves;
         this.plans = userModel.plans;
     }
-    public static synchronized UserModel getInstance(){
+   /* public static synchronized boolean getInstance(final JourneyModel mJourney){
         if(null == mInstance) {
+            final ArrayList<String> allJourneys = new ArrayList<String>();
             FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
             String firUserID = firUser.getUid();
-            DataHandler.getInstance().getUserWithId(new String(firUserID), new DataHandlerListener() {
+            DataHandler.getInstance().getUserStringWithId(new String(firUserID), new DataHandlerListener() {
                 @Override
                 public void onJourneyData(final Map<String, Object> rawJourneyData, String journeyReference) {
                 }
@@ -85,6 +87,12 @@ public class UserModel {
                 @Override
                 public void onUserData(Map<String, Object> rawUserData) {
                     UserModel mInstance = new UserModel(rawUserData);
+                    for (Map.Entry<String, Object> map : mInstance.userJourneys.entrySet()) {
+                        String journeyModel = (String) map.getValue();
+                        allJourneys.add(journeyModel);
+                    }
+
+
                 }
 
                 @Override
@@ -93,8 +101,12 @@ public class UserModel {
                 }
 
             });
+            for(String string : allJourneys){
+                if(string.matches(mJourney.ID)) return true;
+            }
         }
-        return mInstance;
-    }
+
+        return false;
+    }*/
 
 }

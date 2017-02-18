@@ -110,6 +110,12 @@ public class JourneyModel implements Parcelable {
         annotationModel = in.readParcelable(AnnotationModel.class.getClassLoader());
         in.readTypedList(eventModels, EventModel.CREATOR);
     }
+    public boolean setEventsEligibility(){
+        for(EventModel event : eventModels){
+            event.userEligible = this.userEligible;
+        }
+        return this.userEligible;
+    }
 
     public JourneyModel(JourneyModel journeyModel){
         this.title = journeyModel.title;

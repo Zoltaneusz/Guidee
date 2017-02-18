@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import zollie.travelblogger.guidee.activities.EventView;
+import zollie.travelblogger.guidee.adapters.DataHandler;
+import zollie.travelblogger.guidee.adapters.DataHandlerListener;
 import zollie.travelblogger.guidee.models.JourneyModel;
 import zollie.travelblogger.guidee.models.UserModel;
 
@@ -22,17 +24,36 @@ public class ProfileHandlerUtility {
 
     }
 
-    public boolean getJourneyWriteRight(JourneyModel mJourney){
-        ArrayList<String> allJourneys = new ArrayList<String>();
-        UserModel mUser = UserModel.getInstance();
-        for (Map.Entry<String, Object> map : mUser.userJourneys.entrySet()) {
-            String journeyModel = (String) map.getValue();
-            allJourneys.add(journeyModel);
-        }
-        for(String string : allJourneys){
-            if(string.matches(mJourney.ID)) return true;
-        }
-        return false;
+    public JourneyModel getJourneyWriteRight(final JourneyModel mJourney){
+        final ArrayList<String> allJourneys = new ArrayList<String>();
+        FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
+        String firUserID = firUser.getUid();
+        DataHandler.getInstance().getUserStringWithId(new String(firUserID), new DataHandlerListener() {
+            @Override
+            public void onJourneyData(final Map<String, Object> rawJourneyData, String journeyReference) {
+            }
+
+            @Override
+            public void onUserData(Map<String, Object> rawUserData) {
+                UserModel mInstance = new UserModel(rawUserData);
+                for (Map.Entry<String, Object> map : mInstance.userJourneys.entrySet()) {
+                    String journeyModel = (String) map.getValue();
+                    allJourneys.add(journeyModel);
+                    for(String string : allJourneys){
+                        if(string.matches(mJourney.ID)) mJourney.userEligible = true;
+                    }
+                }
+            }
+
+            @Override
+            public void onCommentData(Map<String, Object> rawCommentData) {
+
+            }
+
+        });
+
+
+        return mJourney;
     }
 
 }

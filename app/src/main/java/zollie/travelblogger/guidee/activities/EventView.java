@@ -135,7 +135,7 @@ public class EventView extends YouTubeBaseActivity {
                 googleMap.moveCamera(center);
                 googleMap.animateCamera(zoom);
 */
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mEvent.eventLatLng, 30);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mEvent.eventLatLng, 10);
                 googleMap.moveCamera(CameraUpdateFactory.newLatLng(mEvent.eventLatLng ));
                 googleMap.animateCamera(cameraUpdate);
             }
