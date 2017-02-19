@@ -8,6 +8,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import zollie.travelblogger.guidee.models.EventModel;
@@ -156,12 +157,20 @@ public class DataHandler {
             }
         });
     }
-    public void setEventInFIR(EventModel mEvent){
+    public void setEventInFIR(EventModel originalEvent, EventModel updatedEvent){
 
         DatabaseReference mDatabaseReference  =  mRootRef.child("Journeys");
         ArrayList<Map<String, Object>> rawEventModels = null;
-        DatabaseReference eventReference = mDatabaseReference.child(mEvent.journeyID).child("eventModels").child(String.valueOf(mEvent.FIRNumber));
+        DatabaseReference eventReference = mDatabaseReference.child(originalEvent.journeyID).child("eventModels").child(String.valueOf(originalEvent.FIRNumber));
         // From here we can modify the data in FIR Database.
+
+        Map<String, Object> eventUpdates = new HashMap<String, Object>();
+        eventUpdates.put("title", updatedEvent.title);
+        eventUpdates.put("summary", updatedEvent.summary);
+        eventUpdates.put("location/latitude", updatedEvent.eventLatLng.latitude);
+        eventUpdates.put("location/longitude", updatedEvent.eventLatLng.longitude);
+        eventReference.updateChildren(eventUpdates);
+
     }
 
 

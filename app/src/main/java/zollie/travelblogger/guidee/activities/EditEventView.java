@@ -1,6 +1,8 @@
 package zollie.travelblogger.guidee.activities;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -32,6 +35,7 @@ import java.util.ArrayList;
 
 import zollie.travelblogger.guidee.R;
 import zollie.travelblogger.guidee.adapters.CarouselAdapter;
+import zollie.travelblogger.guidee.adapters.DataHandler;
 import zollie.travelblogger.guidee.models.CarouselModel;
 import zollie.travelblogger.guidee.models.EventModel;
 
@@ -43,17 +47,19 @@ public class EditEventView extends YouTubeBaseActivity {
     final int locationPermission = 0;
     MapView mMapView;
     public GoogleMap googleMap;
+    Context mContext = this;
+    LatLng updatedLatLng = new LatLng(19,46);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_view);
+        setContentView(R.layout.activity_edit_event_view);
 
         Bundle intentData = getIntent().getExtras();
         final EventModel mEvent = (EventModel) intentData.getParcelable("ser_event");
         if(mEvent.carouselModels.get(0).imageUrl != null) {
             if (mEvent.carouselModels.get(0).carouselType == CarouselModel.CarouselType.IMAGE) {
-                ImageView coverImage = (ImageView) findViewById(R.id.event_imgFirst);
+                ImageView coverImage = (ImageView) findViewById(R.id.edit_event_imgFirst);
                 //===================== Adding Image to to Horizontal Slide via Glide =========
                 Glide
                         .with(this)
@@ -63,23 +69,57 @@ public class EditEventView extends YouTubeBaseActivity {
                 //=============================================================================
             }
         }
-        TextView mEventSummary = (TextView) findViewById(R.id.event_summary_content);
+        // Get initial LatLng value in case user edits the journey but leaves the marker as is
+        updatedLatLng = new LatLng(mEvent.eventLatLng.latitude, mEvent.eventLatLng.longitude);
+
+        final EditText mEventSummary = (EditText) findViewById(R.id.edit_event_summary_content);
         try {
             mEventSummary.setText(mEvent.summary);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        final EditText mEventTitle = (EditText) findViewById((R.id.edit_event_name));
+        try {
+            mEventTitle.setText(mEvent.title);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         // Testing purpose for writing to database
-        mEventSummary.setText("Text pushed from code into Firebase.");
+        FloatingActionButton saveButton = (FloatingActionButton) findViewById(R.id.edit_event_save_FAB);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EventModel updatedEvent = new EventModel(mEvent);
+                updatedEvent.summary = mEventSummary.getText().toString();
+                updatedEvent.title = mEventTitle.getText().toString();
+                updatedEvent.eventLatLng = new LatLng(updatedLatLng.latitude, updatedLatLng.longitude);
+                DataHandler.getInstance().setEventInFIR(mEvent, updatedEvent);
+
+                Intent toEventIntent = new Intent(mContext, EventView.class);
+                toEventIntent.putExtra("ser_event", updatedEvent);
+                mContext.startActivity(toEventIntent);
+            }
+        });
+
+        FloatingActionButton cancelButton = (FloatingActionButton) findViewById(R.id.edit_event_cancel_FAB);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent toEventIntent = new Intent(mContext, EventView.class);
+                toEventIntent.putExtra("ser_event", mEvent);
+                mContext.startActivity(toEventIntent);
+            }
+        });
+
 
 //        FloatingActionButton editEventFAB = (FloatingActionButton) findViewById(R.id.event_edit_FAB);
 //        editEventFAB.setVisibility(View.INVISIBLE);
 
-        fillRecyclerView(R.id.event_pictures_recycle_test, R.id.event_pictures_recycle_placeholder, mEvent.carouselModels);
+        fillRecyclerView(R.id.edit_event_pictures_recycle_test, R.id.edit_event_pictures_recycle_placeholder, mEvent.carouselModels);
 
-        mMapView = (MapView) findViewById(R.id.event_Map);
+        mMapView = (MapView) findViewById(R.id.edit_event_Map);
         mMapView.onCreate(savedInstanceState);
-        final ScrollView scrollView = (ScrollView) findViewById(R.id.event_scroll_view);
+        final ScrollView scrollView = (ScrollView) findViewById(R.id.edit_event_scroll_view);
         ImageView transparent = (ImageView)findViewById(R.id.imagetrans);
 
         // Method to deprecate touch events of ScrollView in case the user touches the map
@@ -137,6 +177,16 @@ public class EditEventView extends YouTubeBaseActivity {
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mEvent.eventLatLng, 16);
                 googleMap.moveCamera(CameraUpdateFactory.newLatLng(mEvent.eventLatLng ));
                 googleMap.animateCamera(cameraUpdate);
+
+                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                    @Override
+                    public void onMapClick(LatLng latLng) {
+                        updatedLatLng = latLng;
+                        googleMap.clear();
+                        googleMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+
+                    }
+                });
             }
         });
 

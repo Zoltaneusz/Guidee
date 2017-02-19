@@ -70,6 +70,17 @@ public class EventModel implements Parcelable{
         }
     }
 
+    public EventModel(EventModel updatedEvent){
+        this.title = updatedEvent.title;
+        this.summary = updatedEvent.summary;
+        this.eventLatLng = updatedEvent.eventLatLng;
+        this.journeyID = updatedEvent.journeyID;
+        this.FIRNumber = updatedEvent.FIRNumber;
+        this.userEligible = updatedEvent.userEligible;
+        this.carouselModels = updatedEvent.carouselModels;
+
+    }
+
     public EventModel(Parcel in){
         try {
             this.summary = in.readString();

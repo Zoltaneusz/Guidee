@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:id="@+id/event_scroll_view"
+    android:id="@+id/edit_event_scroll_view"
     android:background="@color/colorPrimary100">
     <RelativeLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -14,9 +14,9 @@
         <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="wrap_content"
             android:layout_height="150dp"
-            android:id="@+id/event_frameLayout">
+            android:id="@+id/edit_event_frameLayout">
             <ImageView
-                android:id="@+id/event_imgFirst"
+                android:id="@+id/edit_event_imgFirst"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scaleType="fitXY"
@@ -29,60 +29,72 @@
                 <ImageView
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:id="@+id/event_prof_pic"
+                    android:id="@+id/edit_event_prof_pic"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true">
                 </ImageView>
 
-                <TextView
+                <EditText
                     android:text=""
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:id="@+id/event_name"
+                    android:id="@+id/edit_event_name"
                     android:layout_marginTop="15dp"
                     android:textSize="25dp"
                     android:textColor="#000000"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"/>
+
                 <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/event_edit_FAB"
-                    android:visibility="invisible"
-                    android:src="@drawable/ic_edit_black_36dp"
+                    android:id="@+id/edit_event_save_FAB"
+                    android:visibility="visible"
+                    android:src="@drawable/ic_save_black_36dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
+                    android:layout_below="@+id/edit_event_cancel_FAB"
+                    android:layout_marginTop="10dp"
+                    app:backgroundTint="@color/lightGreen"/>
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/edit_event_cancel_FAB"
+                    android:visibility="visible"
+                    android:src="@drawable/ic_cancel_black_36dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:paddingBottom="10dp"
                     app:backgroundTint="@color/lightGreen"/>
             </RelativeLayout>
         </FrameLayout>
 
         <TextView
-            android:id="@+id/event_summary_title"
+            android:id="@+id/edit_event_summary_title"
             android:text="Summary"
             android:textColor="#000000"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_below="@+id/event_frameLayout"
+            android:layout_below="@+id/edit_event_frameLayout"
             android:textSize="20dp"
             android:paddingTop="10dp"
             android:paddingLeft="10dp"/>
-        <TextView
-            android:id="@+id/event_summary_content"
+        <EditText
+            android:id="@+id/edit_event_summary_content"
             android:text=""
             android:textColor="#000000"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_below="@+id/event_summary_title"
+            android:layout_below="@+id/edit_event_summary_title"
             android:textSize="14dp"
             android:paddingTop="10dp"
             android:paddingLeft="10dp"/>
         <TextView
-            android:id="@+id/event_pictures_title"
+            android:id="@+id/edit_event_pictures_title"
             android:text="Highlights"
             android:textColor="#000000"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_below="@+id/event_summary_content"
+            android:layout_below="@+id/edit_event_summary_content"
             android:textSize="20dp"
             android:paddingTop="10dp"
             android:paddingLeft="10dp"/>
@@ -90,39 +102,39 @@
         <android.support.v7.widget.RecyclerView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/event_pictures_recycle_test"
+            android:id="@+id/edit_event_pictures_recycle_test"
             android:orientation="horizontal"
-            android:layout_below="@+id/event_pictures_title"
+            android:layout_below="@+id/edit_event_pictures_title"
             android:scrollbars="none"
             android:paddingStart="10dp"
             />
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/event_pictures_recycle_placeholder"
+            android:id="@+id/edit_event_pictures_recycle_placeholder"
             android:orientation="horizontal"
-            android:layout_below="@+id/event_pictures_title">
+            android:layout_below="@+id/edit_event_pictures_title">
         </LinearLayout>
 
         <com.google.android.gms.maps.MapView
-            android:id="@+id/event_Map"
+            android:id="@+id/edit_event_Map"
             android:layout_width="fill_parent"
             android:layout_height="350dp"
             android:paddingTop="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_below="@+id/event_pictures_recycle_test" />
+            android:layout_below="@+id/edit_event_pictures_recycle_test" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imagetrans"
-            android:layout_alignTop="@+id/event_Map"
-            android:layout_alignBottom="@+id/event_Map"
-            android:layout_alignEnd="@+id/event_Map"
-            android:layout_alignRight="@+id/event_Map"
-            android:layout_alignLeft="@+id/event_Map"
-            android:layout_alignStart="@+id/event_Map"
+            android:layout_alignTop="@+id/edit_event_Map"
+            android:layout_alignBottom="@+id/edit_event_Map"
+            android:layout_alignEnd="@+id/edit_event_Map"
+            android:layout_alignRight="@+id/edit_event_Map"
+            android:layout_alignLeft="@+id/edit_event_Map"
+            android:layout_alignStart="@+id/edit_event_Map"
             android:src="#00FFFFFF"/>
 
     </RelativeLayout>
