@@ -55,10 +55,12 @@ public class EventModel implements Parcelable{
             e.printStackTrace();
         }
         try {
+            int i = 0;
             rawCarouselModels = (ArrayList<Map<String, Object>>) rawEventModel.get("carouselModels");
             for(Map<String, Object> rawCarouselModel : rawCarouselModels ){
-                CarouselModel carouselModel = new CarouselModel(rawCarouselModel);
+                CarouselModel carouselModel = new CarouselModel(rawCarouselModel, i);
                 this.carouselModels.add(carouselModel);
+                i++;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -212,4 +214,29 @@ public class EventModel implements Parcelable{
             return new EventModel[0];
         }
     };
+
+    public int getHighestCarouselID(EventModel eventModel){
+        int Nr = 0;
+        int i = 0;
+        for(CarouselModel mCarouselModel : this.carouselModels){
+            if(this.carouselModels.get(i).FIRNumber > Nr)
+                Nr = this.carouselModels.get(i).FIRNumber;
+        }
+        return Nr;
+    }
+
+    public int addItemToCarousels(String item){
+        CarouselModel mCarouselModel = new CarouselModel();
+        if(item.contains("https://firebasestorage")){
+            mCarouselModel.carouselType = CarouselModel.CarouselType.IMAGE;
+        }
+        else {
+            mCarouselModel.carouselType = CarouselModel.CarouselType.VIDEO;
+        }
+        mCarouselModel.imageUrl = item;
+        mCarouselModel.FIRNumber = this.getHighestCarouselID(this) + 1;
+        this.carouselModels.add(mCarouselModel);
+
+        return mCarouselModel.FIRNumber;
+    }
 }

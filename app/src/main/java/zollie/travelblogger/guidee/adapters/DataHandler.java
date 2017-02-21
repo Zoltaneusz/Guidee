@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import zollie.travelblogger.guidee.models.CarouselModel;
 import zollie.travelblogger.guidee.models.EventModel;
 import zollie.travelblogger.guidee.models.JourneyModel;
 
@@ -169,6 +170,14 @@ public class DataHandler {
         eventUpdates.put("summary", updatedEvent.summary);
         eventUpdates.put("location/latitude", updatedEvent.eventLatLng.latitude);
         eventUpdates.put("location/longitude", updatedEvent.eventLatLng.longitude);
+        int carouselID = updatedEvent.getHighestCarouselID(updatedEvent);
+        if(updatedEvent.carouselModels.get(carouselID).carouselType == CarouselModel.CarouselType.IMAGE){
+            eventUpdates.put("carouselModels/" + carouselID + "/imageURL", updatedEvent.carouselModels.get(carouselID).imageUrl);
+        }
+        else {
+            eventUpdates.put("carouselModels/" + carouselID + "/videoYoutubeId", updatedEvent.carouselModels.get(carouselID).videoUrl);
+        }
+
         eventReference.updateChildren(eventUpdates);
 
     }

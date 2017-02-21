@@ -1,13 +1,20 @@
 package zollie.travelblogger.guidee.activities;
 
 import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,10 +36,18 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.youtube.player.YouTubeBaseActivity;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.util.ArrayList;
 
+import droidninja.filepicker.FilePickerBuilder;
+import droidninja.filepicker.FilePickerConst;
 import zollie.travelblogger.guidee.R;
 import zollie.travelblogger.guidee.adapters.CarouselAdapter;
 import zollie.travelblogger.guidee.adapters.DataHandler;
@@ -49,6 +64,10 @@ public class EditEventView extends YouTubeBaseActivity {
     public GoogleMap googleMap;
     Context mContext = this;
     LatLng updatedLatLng = new LatLng(19,46);
+    ArrayList<String> photoPaths = new ArrayList<String>();
+    public static final int READ_EXTERNAL_STORAGE_PERMISSION = 1;
+    boolean storagePermission = false;
+    String imageUrl = new String();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +91,8 @@ public class EditEventView extends YouTubeBaseActivity {
         // Get initial LatLng value in case user edits the journey but leaves the marker as is
         updatedLatLng = new LatLng(mEvent.eventLatLng.latitude, mEvent.eventLatLng.longitude);
 
+
+
         final EditText mEventSummary = (EditText) findViewById(R.id.edit_event_summary_content);
         try {
             mEventSummary.setText(mEvent.summary);
@@ -84,6 +105,22 @@ public class EditEventView extends YouTubeBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        // ========================= Method for uploading pictures =================================
+        checkPermission();
+        TextView highlightTitle = (TextView) findViewById(R.id.edit_event_pictures_title);
+        highlightTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(storagePermission) {
+                    FilePickerBuilder.getInstance().setMaxCount(5)
+                            .setSelectedFiles(photoPaths)
+                            .setActivityTheme(R.style.AppTheme)
+                            .pickPhoto((Activity) mContext);
+                }
+            }
+        });
+
         // Testing purpose for writing to database
         FloatingActionButton saveButton = (FloatingActionButton) findViewById(R.id.edit_event_save_FAB);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +130,7 @@ public class EditEventView extends YouTubeBaseActivity {
                 updatedEvent.summary = mEventSummary.getText().toString();
                 updatedEvent.title = mEventTitle.getText().toString();
                 updatedEvent.eventLatLng = new LatLng(updatedLatLng.latitude, updatedLatLng.longitude);
+                updatedEvent.addItemToCarousels(imageUrl);
                 DataHandler.getInstance().setEventInFIR(mEvent, updatedEvent);
 
                 Intent toEventIntent = new Intent(mContext, EventView.class);
@@ -120,9 +158,9 @@ public class EditEventView extends YouTubeBaseActivity {
         mMapView = (MapView) findViewById(R.id.edit_event_Map);
         mMapView.onCreate(savedInstanceState);
         final ScrollView scrollView = (ScrollView) findViewById(R.id.edit_event_scroll_view);
-        ImageView transparent = (ImageView)findViewById(R.id.imagetrans);
 
-        // Method to deprecate touch events of ScrollView in case the user touches the map
+        // Method to deprecate touch events of ScrollView in case the user touches the map =========
+        ImageView transparent = (ImageView)findViewById(R.id.imagetrans);
         transparent.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -148,6 +186,7 @@ public class EditEventView extends YouTubeBaseActivity {
                 }
             }
         });
+        // =========================================================================================
 
         mMapView.onResume(); // needed to get the map to display immediately
         mMapView.getMapAsync(new OnMapReadyCallback() {
@@ -233,7 +272,7 @@ public class EditEventView extends YouTubeBaseActivity {
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case locationPermission: {
+            case locationPermission:
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -247,10 +286,96 @@ public class EditEventView extends YouTubeBaseActivity {
                     // functionality that depends on this permission.
                 }
                 return;
+
+
+            case READ_EXTERNAL_STORAGE_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    //  Method for uploading pictures
+                    storagePermission = true;
+
+                } else {
+
+                        // permission denied, boo! Disable the
+                        // functionality that depends on this permission.
+                    }
+                    return;
             }
 
             // other 'case' lines to check for other
             // permissions this app might request
+        }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode)
+        {
+            case FilePickerConst.REQUEST_CODE_PHOTO:
+                if(resultCode== Activity.RESULT_OK && data!=null)
+                {
+                    //photoPaths = new ArrayList<>();
+                    photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_PHOTOS));
+                }
+                break;
+            case FilePickerConst.REQUEST_CODE_DOC:
+                if(resultCode== Activity.RESULT_OK && data!=null)
+                {
+                    ArrayList<String> docPaths  = new ArrayList<>();
+                    docPaths .addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS));
+                }
+                break;
+        }
+        StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://guidee-f0453.appspot.com");
+        Uri file = Uri.fromFile(new File(photoPaths.get(0)));
+        StorageReference pictureRef = storageRef.child("images/"+file.getLastPathSegment());
+        UploadTask uploadTask = pictureRef.putFile(file);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                // Upload download URL to Firebase database
+                imageUrl = downloadUrl.toString();
+            }
+        });
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public boolean checkPermission()
+    {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if(currentAPIVersion>=android.os.Build.VERSION_CODES.M)
+        {
+            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) mContext, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+                    alertBuilder.setCancelable(true);
+                    alertBuilder.setTitle("Permission necessary");
+                    alertBuilder.setMessage("Reading the storage is needed to choose files for uploading.");
+                    alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions((Activity)mContext, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGE_PERMISSION);
+                        }
+                    });
+                    AlertDialog alert = alertBuilder.create();
+                    alert.show();
+                } else {
+                    ActivityCompat.requestPermissions((Activity)mContext, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGE_PERMISSION);
+                }
+                return false;
+            } else {
+                storagePermission = true;
+                return true;
+            }
+        } else {
+            return true;
         }
     }
 }

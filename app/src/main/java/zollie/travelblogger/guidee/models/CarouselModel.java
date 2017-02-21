@@ -16,13 +16,18 @@ public class CarouselModel implements Parcelable{
 
     public String imageUrl;
     public String videoUrl;
+    public int FIRNumber;
     public enum CarouselType{
         IMAGE,
         VIDEO
     }
     public CarouselType carouselType;
 
-    public CarouselModel(Map<String, Object> rawCarouselModel) {
+    public CarouselModel(){
+
+    }
+
+    public CarouselModel(Map<String, Object> rawCarouselModel, int number) {
 
         try {
             this.imageUrl = (String) rawCarouselModel.get("imageURL");
@@ -40,6 +45,11 @@ public class CarouselModel implements Parcelable{
         if(videoUrl != null) {
             this.carouselType = CarouselType.VIDEO;
         }
+        try {
+            this.FIRNumber = number;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -52,6 +62,11 @@ public class CarouselModel implements Parcelable{
         }
         try {
             this.videoUrl = in.readString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.FIRNumber = in.readInt();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -77,6 +92,11 @@ public class CarouselModel implements Parcelable{
         }
         try {
             parcel.writeString(videoUrl);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            parcel.writeInt(FIRNumber);
         } catch (Exception e) {
             e.printStackTrace();
         }
