@@ -158,11 +158,11 @@ public class DataHandler {
             }
         });
     }
-    public void setEventInFIR(EventModel originalEvent, EventModel updatedEvent){
+    public void setEventInFIR(int originalCarouselNr, EventModel updatedEvent){
 
         DatabaseReference mDatabaseReference  =  mRootRef.child("Journeys");
         ArrayList<Map<String, Object>> rawEventModels = null;
-        DatabaseReference eventReference = mDatabaseReference.child(originalEvent.journeyID).child("eventModels").child(String.valueOf(originalEvent.FIRNumber));
+        DatabaseReference eventReference = mDatabaseReference.child(updatedEvent.journeyID).child("eventModels").child(String.valueOf(updatedEvent.FIRNumber));
         // From here we can modify the data in FIR Database.
 
         Map<String, Object> eventUpdates = new HashMap<String, Object>();
@@ -170,12 +170,13 @@ public class DataHandler {
         eventUpdates.put("summary", updatedEvent.summary);
         eventUpdates.put("location/latitude", updatedEvent.eventLatLng.latitude);
         eventUpdates.put("location/longitude", updatedEvent.eventLatLng.longitude);
-        int carouselID = updatedEvent.getHighestCarouselID(updatedEvent);
-        if(updatedEvent.carouselModels.get(carouselID).carouselType == CarouselModel.CarouselType.IMAGE){
-            eventUpdates.put("carouselModels/" + carouselID + "/imageURL", updatedEvent.carouselModels.get(carouselID).imageUrl);
-        }
-        else {
-            eventUpdates.put("carouselModels/" + carouselID + "/videoYoutubeId", updatedEvent.carouselModels.get(carouselID).videoUrl);
+        int updatedCarouselNr = updatedEvent.getHighestCarouselID(updatedEvent);
+        for(int i=originalCarouselNr; i<updatedCarouselNr+1; i++) {
+            if (updatedEvent.carouselModels.get(i).carouselType == CarouselModel.CarouselType.IMAGE) {
+                eventUpdates.put("carouselModels/" + String.valueOf(i) + "/imageURL", updatedEvent.carouselModels.get(i).imageUrl);
+            } else {
+                eventUpdates.put("carouselModels/" + String.valueOf(i) + "/videoYoutubeId", updatedEvent.carouselModels.get(i).videoUrl);
+            }
         }
 
         eventReference.updateChildren(eventUpdates);

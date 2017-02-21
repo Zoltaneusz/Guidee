@@ -72,14 +72,14 @@ public class EventModel implements Parcelable{
         }
     }
 
-    public EventModel(EventModel updatedEvent){
-        this.title = updatedEvent.title;
-        this.summary = updatedEvent.summary;
-        this.eventLatLng = updatedEvent.eventLatLng;
-        this.journeyID = updatedEvent.journeyID;
-        this.FIRNumber = updatedEvent.FIRNumber;
-        this.userEligible = updatedEvent.userEligible;
-        this.carouselModels = updatedEvent.carouselModels;
+    public EventModel(EventModel event){
+        this.title = event.title;
+        this.summary = event.summary;
+        this.eventLatLng = event.eventLatLng;
+        this.journeyID = event.journeyID;
+        this.FIRNumber = event.FIRNumber;
+        this.userEligible = event.userEligible;
+        this.carouselModels = event.carouselModels;
 
     }
 
@@ -219,24 +219,30 @@ public class EventModel implements Parcelable{
         int Nr = 0;
         int i = 0;
         for(CarouselModel mCarouselModel : this.carouselModels){
-            if(this.carouselModels.get(i).FIRNumber > Nr)
-                Nr = this.carouselModels.get(i).FIRNumber;
+            if(mCarouselModel.FIRNumber > Nr) {
+                Nr = mCarouselModel.FIRNumber;
+            }
+            i++;
         }
         return Nr;
     }
 
-    public int addItemToCarousels(String item){
-        CarouselModel mCarouselModel = new CarouselModel();
-        if(item.contains("https://firebasestorage")){
+    public void addItemToCarousels(ArrayList<String> images, String video){
+        int i = 0;
+        for(String image : images) {
+            CarouselModel mCarouselModel = new CarouselModel();
             mCarouselModel.carouselType = CarouselModel.CarouselType.IMAGE;
+            mCarouselModel.imageUrl = image;
+            mCarouselModel.FIRNumber = this.getHighestCarouselID(this) + 1;
+            this.carouselModels.add(mCarouselModel);
         }
+        if(video.equals("ytQ5CYE1VZw")){}
         else {
+            CarouselModel mCarouselModel = new CarouselModel();
             mCarouselModel.carouselType = CarouselModel.CarouselType.VIDEO;
+            mCarouselModel.videoUrl = video;
+            mCarouselModel.FIRNumber = this.getHighestCarouselID(this) + 1;
+            this.carouselModels.add(mCarouselModel);
         }
-        mCarouselModel.imageUrl = item;
-        mCarouselModel.FIRNumber = this.getHighestCarouselID(this) + 1;
-        this.carouselModels.add(mCarouselModel);
-
-        return mCarouselModel.FIRNumber;
     }
 }

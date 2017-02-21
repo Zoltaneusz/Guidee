@@ -22,6 +22,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -67,7 +68,8 @@ public class EditEventView extends YouTubeBaseActivity {
     ArrayList<String> photoPaths = new ArrayList<String>();
     public static final int READ_EXTERNAL_STORAGE_PERMISSION = 1;
     boolean storagePermission = false;
-    String imageUrl = new String();
+    ArrayList<String> imageUrls = new ArrayList<String>();
+    int saveVisible = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +108,8 @@ public class EditEventView extends YouTubeBaseActivity {
             e.printStackTrace();
         }
 
+        final EditText mEventVideoUrl = (EditText) findViewById((R.id.edit_event_video_content));
+        mEventVideoUrl.setText("ytQ5CYE1VZw");
         // ========================= Method for uploading pictures =================================
         checkPermission();
         TextView highlightTitle = (TextView) findViewById(R.id.edit_event_pictures_title);
@@ -126,12 +130,14 @@ public class EditEventView extends YouTubeBaseActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EventModel updatedEvent = new EventModel(mEvent);
+                EventModel updatedEvent = new EventModel(mEvent); // only copies reference, nor real clone!!!
                 updatedEvent.summary = mEventSummary.getText().toString();
                 updatedEvent.title = mEventTitle.getText().toString();
                 updatedEvent.eventLatLng = new LatLng(updatedLatLng.latitude, updatedLatLng.longitude);
-                updatedEvent.addItemToCarousels(imageUrl);
-                DataHandler.getInstance().setEventInFIR(mEvent, updatedEvent);
+                String eventVideoURL = mEventVideoUrl.getText().toString();
+                int carousels = mEvent.carouselModels.size();
+                updatedEvent.addItemToCarousels(imageUrls, eventVideoURL);
+                DataHandler.getInstance().setEventInFIR(carousels, updatedEvent);
 
                 Intent toEventIntent = new Intent(mContext, EventView.class);
                 toEventIntent.putExtra("ser_event", updatedEvent);
@@ -199,20 +205,6 @@ public class EditEventView extends YouTubeBaseActivity {
                         .title(mEvent.title)
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
- /*               CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(mEvent.eventLatLng)      // Sets the center of the map to location user
-                        .zoom(19f)                   // Sets the zoom
-                        .bearing(90)                // Sets the orientation of the camera to east
-                        .tilt(40)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-*/
-     /*           CameraUpdate center=
-                        CameraUpdateFactory.newLatLng(mEvent.eventLatLng);
-                CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
-                googleMap.moveCamera(center);
-                googleMap.animateCamera(zoom);
-*/
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mEvent.eventLatLng, 16);
                 googleMap.moveCamera(CameraUpdateFactory.newLatLng(mEvent.eventLatLng ));
                 googleMap.animateCamera(cameraUpdate);
@@ -327,23 +319,37 @@ public class EditEventView extends YouTubeBaseActivity {
                 break;
         }
         StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://guidee-f0453.appspot.com");
-        Uri file = Uri.fromFile(new File(photoPaths.get(0)));
-        StorageReference pictureRef = storageRef.child("images/"+file.getLastPathSegment());
-        UploadTask uploadTask = pictureRef.putFile(file);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                // Upload download URL to Firebase database
-                imageUrl = downloadUrl.toString();
-            }
-        });
+        int i = 0;
+        final FloatingActionButton saveButton = (FloatingActionButton) findViewById(R.id.edit_event_save_FAB);
+        final ProgressBar progressbar = (ProgressBar) findViewById(R.id.edit_event_progressbar);
+        for(String photoPath : photoPaths) {
+
+            saveButton.setVisibility(View.INVISIBLE);
+            progressbar.setVisibility(View.VISIBLE);
+            final Uri file = Uri.fromFile(new File(photoPath));
+            StorageReference pictureRef = storageRef.child("images/" + file.getLastPathSegment());
+            UploadTask uploadTask = pictureRef.putFile(file);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    // Upload download URL to Firebase database
+                    imageUrls.add(downloadUrl.toString());
+                    saveVisible++;
+                    if(saveVisible == photoPaths.size()) {
+                        saveButton.setVisibility(View.VISIBLE);
+                        progressbar.setVisibility(View.INVISIBLE);
+                    }
+                }
+            });
+            i++;
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
