@@ -54,6 +54,7 @@ public class AnnotationModel implements Parcelable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     public AnnotationModel(Parcel in){
@@ -62,6 +63,17 @@ public class AnnotationModel implements Parcelable {
         this.markerLikes = in.readLong();
         this.markerSubtitle = in.readString();
         this.markerTitle = in.readString();
+        LatLng mLatLng = null;
+        try {
+            mLatLng = new LatLng(in.readDouble(), in.readDouble());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.markerLatLng = mLatLng;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String getMarkerIconURL() {
@@ -139,6 +151,16 @@ public class AnnotationModel implements Parcelable {
             parcel.writeLong(markerLikes);
             parcel.writeString(markerSubtitle);
             parcel.writeString(markerTitle);
+        try {
+            parcel.writeDouble(markerLatLng.latitude);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            parcel.writeDouble(markerLatLng.longitude);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
             }
     public static final Parcelable.Creator<AnnotationModel> CREATOR = new Parcelable.Creator<AnnotationModel>() {
         public AnnotationModel createFromParcel(Parcel in){
