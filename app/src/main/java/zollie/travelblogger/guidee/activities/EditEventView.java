@@ -299,6 +299,12 @@ public class EditEventView extends YouTubeBaseActivity {
         }
 
 
+    /* Problem with uploading more pictures: when the user selects more pictures, they will be uploaded after selection.
+    After that, when he opens the upload dialog box again, he may choose up to another 5 pictures. These will be uploaded aswell after closing the dialog.
+    Clicking the save button and navigating back to EventView will however only save the last 5 uploaded pictures to Firebase! <--- BAROMSÁG!
+    */
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode)

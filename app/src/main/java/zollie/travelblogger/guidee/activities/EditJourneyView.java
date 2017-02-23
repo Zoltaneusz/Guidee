@@ -1,7 +1,6 @@
 package zollie.travelblogger.guidee.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -11,6 +10,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,21 +37,19 @@ import zollie.travelblogger.guidee.utils.ProfileHandlerUtility;
  * Created by FuszeneckerZ on 2016.12.31..
  */
 
-public class JourneyView extends Activity{
+public class EditJourneyView extends Activity{
 
     ArrayList<CommentModel> allComments = new ArrayList<CommentModel>();
-    boolean userEditRight = false;
-    public Context mContext;
+    boolean userEditEight = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext = this;
-        setContentView(R.layout.activity_journey_view);
+        setContentView(R.layout.activity_edit_journey_view);
         Bundle intentData = getIntent().getExtras();
-        final JourneyModel mJourney = (JourneyModel) intentData.getParcelable("ser_journey");
+        JourneyModel mJourney = (JourneyModel) intentData.getParcelable("ser_journey");
         if(mJourney.coverImageUrl != null){
-            ImageView coverImage = (ImageView ) findViewById(R.id.journey_imgFirst);
+            ImageView coverImage = (ImageView ) findViewById(R.id.edit_journey_imgFirst);
             //===================== Adding Image to to Horizontal Slide via Glide =========
             Glide
                     .with(this)
@@ -62,24 +60,39 @@ public class JourneyView extends Activity{
 
         }
 
-        //Get user eligibility for writing this journey
-        new AsyncEditRightCheck().execute(mJourney);
-
-        TextView mJourneySummary = (TextView) findViewById(R.id.journey_summary_content);
+        EditText  mJourneySummary = (EditText) findViewById(R.id.edit_journey_summary_content);
         try {
             mJourneySummary.setText(mJourney.summary);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        TextView mJourneyTitle = (TextView) findViewById(R.id.journey_title);
+        EditText mJourneyTitle = (EditText) findViewById(R.id.edit_journey_name);
         try {
             mJourneyTitle.setText(mJourney.title);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        fillRecyclerView(R.id.journey_events_recycle, R.id.journey_events_recycle_placeholder, mJourney.eventModels);
+        FloatingActionButton saveButton = (FloatingActionButton) findViewById(R.id.edit_journey_save_FAB);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        FloatingActionButton cancelButton = (FloatingActionButton) findViewById(R.id.edit_journey_cancel_FAB);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                
+            }
+        });
+
+        //Get user eligibility for writing this journey
+        new AsyncEditRightCheck().execute(mJourney);
+
+        fillRecyclerView(R.id.edit_journey_events_recycle, R.id.edit_journey_events_recycle_placeholder, mJourney.eventModels);
 
         DataHandler.getInstance().getCommentsWithID(mJourney.ID, new DataHandlerListener() {
             @Override
@@ -96,7 +109,7 @@ public class JourneyView extends Activity{
             public void onCommentData(Map<String, Object> rawCommentData) {
                 CommentModel commentModel = new CommentModel(rawCommentData);
                 allComments.add(commentModel);
-                fillCommentsRecyclerView(R.id.journey_comments_recycle, R.id.journey_comments_recycle_placeholder, allComments);
+                fillCommentsRecyclerView(R.id.edit_journey_comments_recycle, R.id.edit_journey_comments_recycle_placeholder, allComments);
 
             }
         });
@@ -123,7 +136,7 @@ public class JourneyView extends Activity{
         RecyclerView.ItemDecoration itemDecoration = new
                 DividerItemDecoration(this, zollie.travelblogger.guidee.utils.DividerItemDecoration.VERTICAL_LIST);
         rvEvents.addItemDecoration(itemDecoration);
-  //      if(eventModels.isEmpty() == true ) showPlaceholderCards(emptyResource);
+        //      if(eventModels.isEmpty() == true ) showPlaceholderCards(emptyResource);
         //     rvJourneys.setVisibility(View.INVISIBLE);
     }
     public void fillCommentsRecyclerView(int primaryResource, int emptyResource, ArrayList<CommentModel> commentModels){
@@ -165,18 +178,6 @@ public class JourneyView extends Activity{
                             if(string.matches(mJourney.ID)) {
                                 mJourney.userEligible = true;
                                 mJourney.setEventsEligibility();
-                                if(mJourney.userEligible) {
-                                    FloatingActionButton editEventFAB = (FloatingActionButton) findViewById(R.id.journey_edit_FAB);
-                                    editEventFAB.setVisibility(View.VISIBLE);
-                                    editEventFAB.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            Intent toJourneyIntent = new Intent(mContext, EditJourneyView.class);
-                                            toJourneyIntent.putExtra("ser_journey", mJourney);
-                                            mContext.startActivity(toJourneyIntent);
-                                        }
-                                    });
-                                }
                             }
                         }
                     }
@@ -193,8 +194,8 @@ public class JourneyView extends Activity{
         }
 
         @Override
-        protected void onPostExecute(final JourneyModel mJourney) {
-
+        protected void onPostExecute(JourneyModel mJourney) {
+            userEditEight = mJourney.userEligible;
         }
     }
 }
