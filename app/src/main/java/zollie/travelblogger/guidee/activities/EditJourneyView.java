@@ -2,6 +2,7 @@ package zollie.travelblogger.guidee.activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -28,6 +29,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -56,12 +58,15 @@ public class EditJourneyView extends Activity{
     final int locationPermission = 0;
     MapView mMapView;
     public GoogleMap googleMap;
+    LatLng updatedLatLng = new LatLng(19,46);
     ArrayList<CommentModel> allComments = new ArrayList<CommentModel>();
     boolean userEditEight = false;
+    Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
         setContentView(R.layout.activity_edit_journey_view);
         Bundle intentData = getIntent().getExtras();
         final JourneyModel mJourney = (JourneyModel) intentData.getParcelable("ser_journey");
@@ -77,13 +82,16 @@ public class EditJourneyView extends Activity{
 
         }
 
-        EditText  mJourneySummary = (EditText) findViewById(R.id.edit_journey_summary_content);
+        // Get initial LatLng value in case user edits the journey but leaves the marker as is
+        updatedLatLng = new LatLng(mJourney.annotationModel.markerLatLng.latitude, mJourney.annotationModel.markerLatLng.longitude);
+
+        final EditText  mJourneySummary = (EditText) findViewById(R.id.edit_journey_summary_content);
         try {
             mJourneySummary.setText(mJourney.summary);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        EditText mJourneyTitle = (EditText) findViewById(R.id.edit_journey_name);
+        final EditText mJourneyTitle = (EditText) findViewById(R.id.edit_journey_name);
         try {
             mJourneyTitle.setText(mJourney.title);
         } catch (Exception e) {
@@ -94,6 +102,15 @@ public class EditJourneyView extends Activity{
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mJourney.summary = mJourneySummary.getText().toString();
+                mJourney.title = mJourneyTitle.getText().toString();
+                mJourney.annotationModel.markerLatLng = new LatLng(updatedLatLng.latitude, updatedLatLng.longitude);
+
+                // Change comments, profile picture and events needed
+
+                Intent toJourneyIntent = new Intent(mContext, JourneyView.class);
+                toJourneyIntent.putExtra("ser_journey", mJourney);
+                mContext.startActivity(toJourneyIntent);
 
             }
         });
@@ -102,6 +119,9 @@ public class EditJourneyView extends Activity{
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent toJourneyIntent = new Intent(mContext, JourneyView.class);
+                toJourneyIntent.putExtra("ser_journey", mJourney);
+                mContext.startActivity(toJourneyIntent);
 
             }
         });
@@ -172,21 +192,15 @@ public class EditJourneyView extends Activity{
                         .position(mJourney.annotationModel.markerLatLng)
                         .title(mJourney.title)
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                    @Override
+                    public void onMapClick(LatLng latLng) {
+                        updatedLatLng = latLng;
+                        googleMap.clear();
+                        googleMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
- /*               CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(mEvent.eventLatLng)      // Sets the center of the map to location user
-                        .zoom(19f)                   // Sets the zoom
-                        .bearing(90)                // Sets the orientation of the camera to east
-                        .tilt(40)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-*/
-     /*           CameraUpdate center=
-                        CameraUpdateFactory.newLatLng(mEvent.eventLatLng);
-                CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
-                googleMap.moveCamera(center);
-                googleMap.animateCamera(zoom);
-*/
+                    }
+                });
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mJourney.annotationModel.markerLatLng, 10);
                 googleMap.moveCamera(CameraUpdateFactory.newLatLng(mJourney.annotationModel.markerLatLng));
                 googleMap.animateCamera(cameraUpdate);
