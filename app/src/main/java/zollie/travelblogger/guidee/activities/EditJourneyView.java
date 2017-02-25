@@ -126,7 +126,9 @@ public class EditJourneyView extends Activity{
                 mJourney.summary = mJourneySummary.getText().toString();
                 mJourney.title = mJourneyTitle.getText().toString();
                 mJourney.annotationModel.markerLatLng = new LatLng(updatedLatLng.latitude, updatedLatLng.longitude);
-                mJourney.coverImageUrl = imageUrls.get(0);
+                if(!imageUrls.isEmpty()) {
+                    mJourney.coverImageUrl = imageUrls.get(0);
+                }
                 int eventsCount = mJourney.eventModels.size();
                 DataHandler.getInstance().setJourneyInFIR(eventsCount, mJourney);
                 // Change comments, profile picture and events needed
@@ -143,6 +145,9 @@ public class EditJourneyView extends Activity{
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                // If new empty event was created, then delete it.
+
                 Intent toJourneyIntent = new Intent(mContext, JourneyView.class);
                 toJourneyIntent.putExtra("ser_journey", mJourney);
                 mContext.startActivity(toJourneyIntent);
@@ -156,6 +161,15 @@ public class EditJourneyView extends Activity{
             @Override
             public void onClick(View view) {
 
+                DataHandler.getInstance().createEventInFIR(9, mJourney);
+                EventModel emptyEvent = new EventModel(mJourney);
+                mJourney.eventModels.add(emptyEvent);
+
+                Intent toEventIntent = new Intent(mContext, EditEventView.class);
+                toEventIntent.putExtra("ser_event", emptyEvent);
+                toEventIntent.putExtra("ser_journey", mJourney);
+                toEventIntent.putExtra("parent", "EditJourneyView");
+                mContext.startActivity(toEventIntent);
             }
         });
         //==========================================================================================

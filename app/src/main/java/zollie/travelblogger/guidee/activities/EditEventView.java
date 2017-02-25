@@ -54,6 +54,7 @@ import zollie.travelblogger.guidee.adapters.CarouselAdapter;
 import zollie.travelblogger.guidee.adapters.DataHandler;
 import zollie.travelblogger.guidee.models.CarouselModel;
 import zollie.travelblogger.guidee.models.EventModel;
+import zollie.travelblogger.guidee.models.JourneyModel;
 
 /**
  * Created by FuszeneckerZ on 2017.01.09..
@@ -70,6 +71,7 @@ public class EditEventView extends YouTubeBaseActivity {
     boolean storagePermission = false;
     ArrayList<String> imageUrls = new ArrayList<String>();
     int saveVisible = 0;
+    String parentActivity = new String();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,16 +80,20 @@ public class EditEventView extends YouTubeBaseActivity {
 
         Bundle intentData = getIntent().getExtras();
         final EventModel mEvent = (EventModel) intentData.getParcelable("ser_event");
-        if(mEvent.carouselModels.get(0).imageUrl != null) {
-            if (mEvent.carouselModels.get(0).carouselType == CarouselModel.CarouselType.IMAGE) {
-                ImageView coverImage = (ImageView) findViewById(R.id.edit_event_imgFirst);
-                //===================== Adding Image to to Horizontal Slide via Glide =========
-                Glide
-                        .with(this)
-                        .load(mEvent.carouselModels.get(0).imageUrl)
-                        .crossFade()
-                        .into(coverImage);
-                //=============================================================================
+
+        parentActivity = intentData.getString("parent");
+        if(mEvent.carouselModels != null) {
+            if (mEvent.carouselModels.get(0).imageUrl != null) {
+                if (mEvent.carouselModels.get(0).carouselType == CarouselModel.CarouselType.IMAGE) {
+                    ImageView coverImage = (ImageView) findViewById(R.id.edit_event_imgFirst);
+                    //===================== Adding Image to to Horizontal Slide via Glide =========
+                    Glide
+                            .with(this)
+                            .load(mEvent.carouselModels.get(0).imageUrl)
+                            .crossFade()
+                            .into(coverImage);
+                    //=============================================================================
+                }
             }
         }
         // Get initial LatLng value in case user edits the journey but leaves the marker as is
@@ -139,9 +145,19 @@ public class EditEventView extends YouTubeBaseActivity {
                 updatedEvent.addItemToCarousels(imageUrls, eventVideoURL);
                 DataHandler.getInstance().setEventInFIR(carousels, updatedEvent);
 
-                Intent toEventIntent = new Intent(mContext, EventView.class);
-                toEventIntent.putExtra("ser_event", updatedEvent);
-                mContext.startActivity(toEventIntent);
+                if(parentActivity.equals("EditJourneyView")) {
+                    Intent toJourneyIntent = new Intent(mContext, EditJourneyView.class);
+                    Bundle intentData = getIntent().getExtras();
+                    JourneyModel parentJourney = (JourneyModel) intentData.getParcelable("ser_journey");
+                    parentJourney.eventModels.add(updatedEvent);
+                    toJourneyIntent.putExtra("ser_journey", parentJourney);
+                    mContext.startActivity(toJourneyIntent);
+
+                }else {
+                    Intent toEventIntent = new Intent(mContext, EventView.class);
+                    toEventIntent.putExtra("ser_event", updatedEvent);
+                    mContext.startActivity(toEventIntent);
+                }
             }
         });
         //==========================================================================================
@@ -205,7 +221,7 @@ public class EditEventView extends YouTubeBaseActivity {
                         .title(mEvent.title)
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mEvent.eventLatLng, 16);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mEvent.eventLatLng, 9);
                 googleMap.moveCamera(CameraUpdateFactory.newLatLng(mEvent.eventLatLng ));
                 googleMap.animateCamera(cameraUpdate);
 
