@@ -125,7 +125,7 @@ public class EditEventView extends YouTubeBaseActivity {
             }
         });
 
-        // Testing purpose for writing to database
+        //================================== Writes data to FIR database and navigates user back ===
         FloatingActionButton saveButton = (FloatingActionButton) findViewById(R.id.edit_event_save_FAB);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,7 +144,7 @@ public class EditEventView extends YouTubeBaseActivity {
                 mContext.startActivity(toEventIntent);
             }
         });
-
+        //==========================================================================================
         FloatingActionButton cancelButton = (FloatingActionButton) findViewById(R.id.edit_event_cancel_FAB);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -292,11 +292,11 @@ public class EditEventView extends YouTubeBaseActivity {
                         // functionality that depends on this permission.
                     }
                     return;
-            }
+        }
 
             // other 'case' lines to check for other
             // permissions this app might request
-        }
+    }
 
 
     /* Problem with uploading more pictures: when the user selects more pictures, they will be uploaded after selection.

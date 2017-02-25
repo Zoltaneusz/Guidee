@@ -1,16 +1,21 @@
 package zollie.travelblogger.guidee.activities;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,10 +23,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -31,12 +38,20 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 
+import droidninja.filepicker.FilePickerBuilder;
+import droidninja.filepicker.FilePickerConst;
 import zollie.travelblogger.guidee.R;
 import zollie.travelblogger.guidee.adapters.CommentAdapter;
 import zollie.travelblogger.guidee.adapters.DataHandler;
@@ -59,7 +74,12 @@ public class EditJourneyView extends Activity{
     MapView mMapView;
     public GoogleMap googleMap;
     LatLng updatedLatLng = new LatLng(19,46);
+    ArrayList<String> photoPaths = new ArrayList<String>();
     ArrayList<CommentModel> allComments = new ArrayList<CommentModel>();
+    public static final int READ_EXTERNAL_STORAGE_PERMISSION = 1;
+    boolean storagePermission = false;
+    ArrayList<String> imageUrls = new ArrayList<String>();
+    int saveVisible = 0;
     boolean userEditEight = false;
     Context mContext;
 
@@ -98,6 +118,7 @@ public class EditJourneyView extends Activity{
             e.printStackTrace();
         }
 
+        // ============================== Upload data to FIR and navigate back =====================
         FloatingActionButton saveButton = (FloatingActionButton) findViewById(R.id.edit_journey_save_FAB);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,7 +126,9 @@ public class EditJourneyView extends Activity{
                 mJourney.summary = mJourneySummary.getText().toString();
                 mJourney.title = mJourneyTitle.getText().toString();
                 mJourney.annotationModel.markerLatLng = new LatLng(updatedLatLng.latitude, updatedLatLng.longitude);
-
+                mJourney.coverImageUrl = imageUrls.get(0);
+                int eventsCount = mJourney.eventModels.size();
+                DataHandler.getInstance().setJourneyInFIR(eventsCount, mJourney);
                 // Change comments, profile picture and events needed
 
                 Intent toJourneyIntent = new Intent(mContext, JourneyView.class);
@@ -114,7 +137,8 @@ public class EditJourneyView extends Activity{
 
             }
         });
-
+        //==========================================================================================
+        // ============================== Navigate back ============================================
         FloatingActionButton cancelButton = (FloatingActionButton) findViewById(R.id.edit_journey_cancel_FAB);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,10 +149,34 @@ public class EditJourneyView extends Activity{
 
             }
         });
+        //==========================================================================================
+        //=============================== Method for adding new event ==============================
+        TextView highlightTitle = (TextView) findViewById(R.id.edit_journey_events_title);
+        highlightTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-        //Get user eligibility for writing this journey
+            }
+        });
+        //==========================================================================================
+        //=============================== Upload cover image =======================================
+        checkPermission();
+        ImageView coverImage = (ImageView) findViewById(R.id.edit_journey_imgFirst);
+        coverImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(storagePermission) {
+                    FilePickerBuilder.getInstance().setMaxCount(1)
+                            .setSelectedFiles(photoPaths)
+                            .setActivityTheme(R.style.AppTheme)
+                            .pickPhoto((Activity) mContext);
+                }
+            }
+        });
+        //==========================================================================================
+        //================== Get user eligibility for writing this journey =========================
         new AsyncEditRightCheck().execute(mJourney);
-
+        //==========================================================================================
         fillRecyclerView(R.id.edit_journey_events_recycle, R.id.edit_journey_events_recycle_placeholder, mJourney.eventModels);
 
         DataHandler.getInstance().getCommentsWithID(mJourney.ID, new DataHandlerListener() {
@@ -251,6 +299,18 @@ public class EditJourneyView extends Activity{
                 }
                 return;
             }
+            case READ_EXTERNAL_STORAGE_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    //  Method for uploading pictures
+                    storagePermission = true;
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
 
             // other 'case' lines to check for other
             // permissions this app might request
@@ -337,6 +397,91 @@ public class EditJourneyView extends Activity{
         @Override
         protected void onPostExecute(JourneyModel mJourney) {
             userEditEight = mJourney.userEligible;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode)
+        {
+            case FilePickerConst.REQUEST_CODE_PHOTO:
+                if(resultCode== Activity.RESULT_OK && data!=null)
+                {
+                    //photoPaths = new ArrayList<>();
+                    photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_PHOTOS));
+                }
+                break;
+            case FilePickerConst.REQUEST_CODE_DOC:
+                if(resultCode== Activity.RESULT_OK && data!=null)
+                {
+                    ArrayList<String> docPaths  = new ArrayList<>();
+                    docPaths .addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS));
+                }
+                break;
+        }
+        StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://guidee-f0453.appspot.com");
+        int i = 0;
+        final FloatingActionButton saveButton = (FloatingActionButton) findViewById(R.id.edit_journey_save_FAB);
+        final ProgressBar progressbar = (ProgressBar) findViewById(R.id.edit_journey_progressbar);
+        for(String photoPath : photoPaths) {
+
+            saveButton.setVisibility(View.INVISIBLE);
+            progressbar.setVisibility(View.VISIBLE);
+            final Uri file = Uri.fromFile(new File(photoPath));
+            StorageReference pictureRef = storageRef.child("images/" + file.getLastPathSegment());
+            UploadTask uploadTask = pictureRef.putFile(file);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    // Upload download URL to Firebase database
+                    imageUrls.add(downloadUrl.toString());
+                    saveVisible++;
+                    if(saveVisible == photoPaths.size()) {
+                        saveButton.setVisibility(View.VISIBLE);
+                        progressbar.setVisibility(View.INVISIBLE);
+                    }
+                }
+            });
+            i++;
+        }
+    }
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public boolean checkPermission()
+    {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if(currentAPIVersion>=android.os.Build.VERSION_CODES.M)
+        {
+            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) mContext, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mContext);
+                    alertBuilder.setCancelable(true);
+                    alertBuilder.setTitle("Permission necessary");
+                    alertBuilder.setMessage("Reading the storage is needed to choose files for uploading.");
+                    alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions((Activity)mContext, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGE_PERMISSION);
+                        }
+                    });
+                    AlertDialog alert = alertBuilder.create();
+                    alert.show();
+                } else {
+                    ActivityCompat.requestPermissions((Activity)mContext, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGE_PERMISSION);
+                }
+                return false;
+            } else {
+                storagePermission = true;
+                return true;
+            }
+        } else {
+            return true;
         }
     }
 }

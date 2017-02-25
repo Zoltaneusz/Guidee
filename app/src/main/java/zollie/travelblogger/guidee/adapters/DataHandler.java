@@ -1,5 +1,6 @@
 package zollie.travelblogger.guidee.adapters;
 
+import com.google.api.client.util.Data;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -182,6 +183,22 @@ public class DataHandler {
 
         eventReference.updateChildren(eventUpdates);
 
+    }
+
+    public void setJourneyInFIR(int originalEventNr, JourneyModel updatedJourney){
+
+        DatabaseReference mDatabaseReference = mRootRef.child("Journeys");
+        DatabaseReference journeyReference = mDatabaseReference.child(updatedJourney.ID);
+        // From here we can modify the data in FIR Database
+
+        Map<String, Object> journeyUpdates = new HashMap<String, Object>();
+        journeyUpdates.put("title", updatedJourney.title);
+        journeyUpdates.put("summary", updatedJourney.summary);
+        journeyUpdates.put("annotationModel/location/latitude", updatedJourney.annotationModel.markerLatLng.latitude);
+        journeyUpdates.put("annotationModel/location/longitude", updatedJourney.annotationModel.markerLatLng.longitude);
+        journeyUpdates.put("imageURL", updatedJourney.coverImageUrl);
+
+        journeyReference.updateChildren(journeyUpdates);
     }
 
 
