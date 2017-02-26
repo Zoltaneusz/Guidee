@@ -107,6 +107,18 @@ public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         newFragment.show(ft, "imageViewer");
                     }
                 });
+
+                ((ViewHolderImage) holder).mCarousel.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        if(mCarousel.toDelete == 1){  // Long click happened in EditEventView, therefore Carousel model is deletable
+                            mCarousel.toDelete = 2; // Prepare Carousel model for deletion
+
+                        }
+                        return true;
+                    }
+                });
+
                 break;
             case VIDEO:
 

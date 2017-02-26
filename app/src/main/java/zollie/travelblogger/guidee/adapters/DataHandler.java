@@ -171,18 +171,31 @@ public class DataHandler {
         eventUpdates.put("summary", updatedEvent.summary);
         eventUpdates.put("location/latitude", updatedEvent.eventLatLng.latitude);
         eventUpdates.put("location/longitude", updatedEvent.eventLatLng.longitude);
-        int updatedCarouselNr = updatedEvent.getHighestCarouselID(updatedEvent);
-        for(int i=originalCarouselNr; i<updatedCarouselNr+1; i++) {
-            if (updatedEvent.carouselModels.get(i).carouselType == CarouselModel.CarouselType.IMAGE) {
-                eventUpdates.put("carouselModels/" + String.valueOf(i) + "/imageURL", updatedEvent.carouselModels.get(i).imageUrl);
-            } else {
-                if(updatedEvent.carouselModels.get(i).videoUrl.length() == 11)  // Only 11 characted long videos will be allowed (yet)
-                eventUpdates.put("carouselModels/" + String.valueOf(i) + "/videoYoutubeId", updatedEvent.carouselModels.get(i).videoUrl);
+        //int updatedCarouselNr = updatedEvent.getHighestCarouselID(updatedEvent);
+        int updatedCarouselNr = updatedEvent.carouselModels.size() + updatedEvent.deletedIndexes;
+        if(originalCarouselNr != updatedCarouselNr) {
+            for (int i = originalCarouselNr; i < updatedCarouselNr + 1; i++) {
+                if (updatedEvent.carouselModels.get(i).carouselType == CarouselModel.CarouselType.IMAGE) {
+                    eventUpdates.put("carouselModels/" + String.valueOf(i) + "/imageURL", updatedEvent.carouselModels.get(i).imageUrl);
+                } else {
+                    if (updatedEvent.carouselModels.get(i).videoUrl.length() == 11)  // Only 11 characted long videos will be allowed (yet)
+                        eventUpdates.put("carouselModels/" + String.valueOf(i) + "/videoYoutubeId", updatedEvent.carouselModels.get(i).videoUrl);
+                }
             }
         }
-
         eventReference.updateChildren(eventUpdates);
 
+    }
+
+    public void deleteCarouselInFIR(int index, EventModel updatedEvent){
+        DatabaseReference mDatabaseReference  =  mRootRef.child("Journeys");
+        ArrayList<Map<String, Object>> rawEventModels = null;
+        DatabaseReference eventReference = mDatabaseReference.child(updatedEvent.journeyID).child("eventModels").child(String.valueOf(updatedEvent.FIRNumber));
+        // From here we can modify the data in FIR Database.
+
+        Map<String, Object> eventUpdates = new HashMap<String, Object>();
+        eventUpdates.put("carouselModels/" + index, null);
+        eventReference.updateChildren(eventUpdates);
     }
 
     public void setJourneyInFIR(int originalEventNr, JourneyModel updatedJourney){

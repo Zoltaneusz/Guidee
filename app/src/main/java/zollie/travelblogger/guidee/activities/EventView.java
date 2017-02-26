@@ -92,6 +92,7 @@ public class EventView extends YouTubeBaseActivity {
                 public void onClick(View view) {
                     Intent toEventIntent = new Intent(mContext, EditEventView.class);
                     toEventIntent.putExtra("ser_event", mEvent);
+                    toEventIntent.putExtra("parent", "EventView");
                     mContext.startActivity(toEventIntent);
                 }
             });

@@ -17,6 +17,7 @@ public class CarouselModel implements Parcelable{
     public String imageUrl;
     public String videoUrl;
     public int FIRNumber;
+    public int toDelete = 0; // 0: NO; 1: opened in edit mode, don't delete yet; 2: YES
     public enum CarouselType{
         IMAGE,
         VIDEO
@@ -76,6 +77,11 @@ public class CarouselModel implements Parcelable{
         if(videoUrl != null) {
             this.carouselType = CarouselType.VIDEO;
         }
+        try {
+            this.toDelete = in.readInt();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -97,6 +103,11 @@ public class CarouselModel implements Parcelable{
         }
         try {
             parcel.writeInt(FIRNumber);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            parcel.writeInt(toDelete);
         } catch (Exception e) {
             e.printStackTrace();
         }

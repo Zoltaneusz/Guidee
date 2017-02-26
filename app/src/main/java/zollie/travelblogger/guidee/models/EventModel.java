@@ -17,6 +17,7 @@ public class EventModel implements Parcelable{
     public String title;
     public String journeyID;
     public int FIRNumber;
+    public int deletedIndexes = 0;
     public LatLng eventLatLng;
     public boolean userEligible; // deprecated, remove in future !
     public ArrayList<CarouselModel> carouselModels;
@@ -34,6 +35,7 @@ public class EventModel implements Parcelable{
         emptyCarouselModel.carouselType = CarouselModel.CarouselType.IMAGE;
         this.carouselModels = new ArrayList<CarouselModel>();
         this.carouselModels.add(emptyCarouselModel);
+        this.deletedIndexes = 0;
     }
 
     public EventModel(Map<String, Object> rawEventModel, boolean journeyEligible, String ID, int number) {
@@ -73,9 +75,11 @@ public class EventModel implements Parcelable{
             int i = 0;
             rawCarouselModels = (ArrayList<Map<String, Object>>) rawEventModel.get("carouselModels");
             for(Map<String, Object> rawCarouselModel : rawCarouselModels ){
-                CarouselModel carouselModel = new CarouselModel(rawCarouselModel, i);
-                this.carouselModels.add(carouselModel);
-                i++;
+                if(rawCarouselModel != null) {
+                    CarouselModel carouselModel = new CarouselModel(rawCarouselModel, i);
+                    this.carouselModels.add(carouselModel);
+                    i++;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -93,6 +97,7 @@ public class EventModel implements Parcelable{
         this.eventLatLng = event.eventLatLng;
         this.journeyID = event.journeyID;
         this.FIRNumber = event.FIRNumber;
+        this.deletedIndexes = event.deletedIndexes;
         this.userEligible = event.userEligible;
         this.carouselModels = event.carouselModels;
 
@@ -119,6 +124,11 @@ public class EventModel implements Parcelable{
         } catch (Exception e) {
             e.printStackTrace();
         }
+        try {
+            this.deletedIndexes = in.readInt();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         LatLng mLatLng = null;
         try {
             mLatLng = new LatLng(in.readDouble(), in.readDouble());
@@ -136,7 +146,11 @@ public class EventModel implements Parcelable{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        this.userEligible = data2[0];
+        try {
+            this.userEligible = data2[0];
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         carouselModels= new ArrayList<CarouselModel>();
         try {
             in.readTypedList(carouselModels, CarouselModel.CREATOR);
@@ -193,6 +207,11 @@ public class EventModel implements Parcelable{
         }
         try {
             parcel.writeInt(FIRNumber);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            parcel.writeInt(deletedIndexes);
         } catch (Exception e) {
             e.printStackTrace();
         }
