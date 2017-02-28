@@ -25,6 +25,7 @@ public class JourneyModel implements Parcelable {
     public String userAvatarUrl;
     public String identifier;
     public String ID;
+    public int deletedIndexes = 0;
     public boolean userEligible;
     public AnnotationModel annotationModel;
     public ArrayList<EventModel> eventModels= new ArrayList<EventModel>();
@@ -106,6 +107,7 @@ public class JourneyModel implements Parcelable {
         this.userAvatarUrl = data[3];
         this.identifier = data[4];
         this.ID = data[5];
+        this.deletedIndexes = in.readInt();
         boolean[] data2 = new boolean[1];
         in.readBooleanArray(data2);
         this.userEligible = data2[0];
@@ -184,6 +186,7 @@ public class JourneyModel implements Parcelable {
                 this.userAvatarUrl,
                 this.identifier,
                 this.ID});
+        parcel.writeInt(this.deletedIndexes);
         parcel.writeBooleanArray(new boolean[]{this.userEligible});
         parcel.writeParcelable(annotationModel, i);
         parcel.writeTypedList(eventModels);

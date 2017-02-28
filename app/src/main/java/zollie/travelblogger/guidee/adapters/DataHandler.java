@@ -214,6 +214,17 @@ public class DataHandler {
         journeyReference.updateChildren(journeyUpdates);
     }
 
+    public void deleteEventInFIR(int index, JourneyModel updatedJourney){
+        DatabaseReference mDatabaseReference = mRootRef.child("Journeys");
+        DatabaseReference journeyReference = mDatabaseReference.child(updatedJourney.ID);
+        // From here we can modify the data in FIR Database
+
+        Map<String, Object> journeyUpdates = new HashMap<String, Object>();
+        journeyUpdates.put("eventModels/" + index, null);
+        journeyReference.updateChildren(journeyUpdates);
+
+    }
+
     public void createEventInFIR(int originalEventNr, JourneyModel updatedJourney){
         DatabaseReference mDatabaseReference = mRootRef.child("Journeys");
         DatabaseReference journeyReference = mDatabaseReference.child(updatedJourney.ID);

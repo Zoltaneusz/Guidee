@@ -2,6 +2,8 @@ package zollie.travelblogger.guidee.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,7 +74,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder>{
         coverText.setText("#" + String.valueOf(position+1) + " " + mEvent.title);
         TextView summaryText = holder.mSummary;
         summaryText.setText(mEvent.summary);
-        ImageView imageView = holder.mCoverImage;
+        final ImageView imageView = holder.mCoverImage;
         if(!mEvent.carouselModels.isEmpty()) {
             if (mEvent.carouselModels.get(0).carouselType == CarouselModel.CarouselType.IMAGE) {
                 if (mEvent.carouselModels.get(0).imageUrl != null) {
@@ -99,6 +101,22 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder>{
                 Intent toEventIntent = new Intent(mContext, EventView.class);
                 toEventIntent.putExtra("ser_event", mEvent);
                 mContext.startActivity(toEventIntent);
+            }
+        });
+
+        holder.mEvent.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if(mEvent.toDelete == 1){  // Long click happened in EditEventView, therefore Carousel model is deletable
+                    mEvent.toDelete = 2; // Prepare Carousel model for deletion
+                    imageView.setColorFilter(ContextCompat.getColor(mContext,R.color.PressedTint));
+                    //                   holder.itemView.setPressed(true);
+                }
+                else if(mEvent.toDelete == 2) {  // Second long click happened; user doesn't want to delete the item any more.
+                    mEvent.toDelete = 1;
+                    imageView.setColorFilter(Color.argb(0, 255, 255, 255));
+                }
+                return true;
             }
         });
 

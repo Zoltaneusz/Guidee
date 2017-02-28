@@ -84,7 +84,7 @@ public class EditEventView extends YouTubeBaseActivity {
         final EventModel mEvent = (EventModel) intentData.getParcelable("ser_event");
 
         parentActivity = intentData.getString("parent");
-        if(mEvent.carouselModels != null) {
+        if(mEvent.carouselModels.size() != 0) {
             if (mEvent.carouselModels.get(0).imageUrl != null) {
                 if (mEvent.carouselModels.get(0).carouselType == CarouselModel.CarouselType.IMAGE) {
                     ImageView coverImage = (ImageView) findViewById(R.id.edit_event_imgFirst);
@@ -142,7 +142,6 @@ public class EditEventView extends YouTubeBaseActivity {
             @Override
             public void onClick(View view) {
                 Iterator<CarouselModel> iterator = mEvent.carouselModels.iterator();
-
                 while(iterator.hasNext()){
                     CarouselModel carouselM = iterator.next();
                     if(carouselM.toDelete == 2) {

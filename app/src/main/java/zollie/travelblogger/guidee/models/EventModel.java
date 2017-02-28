@@ -18,6 +18,7 @@ public class EventModel implements Parcelable{
     public String journeyID;
     public int FIRNumber;
     public int deletedIndexes = 0;
+    public int toDelete = 0; // 0: NO; 1: opened in edit mode, don't delete yet; 2: YES
     public LatLng eventLatLng;
     public boolean userEligible; // deprecated, remove in future !
     public ArrayList<CarouselModel> carouselModels;
@@ -100,6 +101,7 @@ public class EventModel implements Parcelable{
         this.deletedIndexes = event.deletedIndexes;
         this.userEligible = event.userEligible;
         this.carouselModels = event.carouselModels;
+        this.toDelete = event.toDelete;
 
     }
 
@@ -126,6 +128,11 @@ public class EventModel implements Parcelable{
         }
         try {
             this.deletedIndexes = in.readInt();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.toDelete = in.readInt();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -212,6 +219,11 @@ public class EventModel implements Parcelable{
         }
         try {
             parcel.writeInt(deletedIndexes);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            parcel.writeInt(toDelete);
         } catch (Exception e) {
             e.printStackTrace();
         }

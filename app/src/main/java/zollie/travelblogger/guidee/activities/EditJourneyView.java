@@ -48,6 +48,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 
 import droidninja.filepicker.FilePickerBuilder;
@@ -105,6 +106,11 @@ public class EditJourneyView extends Activity{
         // Get initial LatLng value in case user edits the journey but leaves the marker as is
         updatedLatLng = new LatLng(mJourney.annotationModel.markerLatLng.latitude, mJourney.annotationModel.markerLatLng.longitude);
 
+        // Change all event models to be deletable
+        for(EventModel eventM : mJourney.eventModels){
+            eventM.toDelete = 1;
+        }
+
         final EditText  mJourneySummary = (EditText) findViewById(R.id.edit_journey_summary_content);
         try {
             mJourneySummary.setText(mJourney.summary);
@@ -123,6 +129,22 @@ public class EditJourneyView extends Activity{
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Iterator<EventModel> iterator = mJourney.eventModels.iterator();
+                while(iterator.hasNext()){
+                    EventModel eventM = iterator.next();
+                    if(eventM.toDelete == 2) {
+                        iterator.remove();
+                        DataHandler.getInstance().deleteEventInFIR(eventM.FIRNumber, mJourney);
+                        mJourney.deletedIndexes++;
+                    }
+                }
+                int i = 0;
+                for(EventModel eventM : mJourney.eventModels){
+                    mJourney.eventModels.get(i).toDelete = 0;
+                    i++;
+                }
+
+
                 mJourney.summary = mJourneySummary.getText().toString();
                 mJourney.title = mJourneyTitle.getText().toString();
                 mJourney.annotationModel.markerLatLng = new LatLng(updatedLatLng.latitude, updatedLatLng.longitude);
