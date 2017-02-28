@@ -5,6 +5,8 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,11 +80,11 @@ public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         final CarouselModel mCarousel = allCarousels.get(position);
         switch(holder.getItemViewType()) {
             case IMAGE:
-                ImageView mCarouselImage = ((ViewHolderImage) holder).getmImage();
+                final ImageView mCarouselImage = ((ViewHolderImage) holder).getmImage();
                 //===================== Adding Image to to Horizontal Slide via Glide =========
                 Glide
                         .with(mContext)
@@ -113,7 +115,12 @@ public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     public boolean onLongClick(View view) {
                         if(mCarousel.toDelete == 1){  // Long click happened in EditEventView, therefore Carousel model is deletable
                             mCarousel.toDelete = 2; // Prepare Carousel model for deletion
-
+                            mCarouselImage.setColorFilter(ContextCompat.getColor(mContext,R.color.PressedTint));
+         //                   holder.itemView.setPressed(true);
+                        }
+                        else if(mCarousel.toDelete == 2) {  // Second long click happened; user doesn't want to delete the item any more.
+                            mCarousel.toDelete = 1;
+                            mCarouselImage.setColorFilter(Color.argb(0, 255, 255, 255));
                         }
                         return true;
                     }

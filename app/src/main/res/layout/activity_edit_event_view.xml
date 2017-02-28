@@ -129,6 +129,11 @@
             android:layout_below="@+id/edit_event_pictures_hint"
             android:scrollbars="none"
             android:paddingStart="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:tint="@color/colorAccent"
+            android:backgroundTintMode="add"
+            android:focusableInTouchMode="true"
             />
         <LinearLayout
             android:layout_width="wrap_content"

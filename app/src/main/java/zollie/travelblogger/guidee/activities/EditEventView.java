@@ -40,12 +40,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.youtube.player.YouTubeBaseActivity;
+import com.google.api.client.util.Data;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
@@ -99,7 +101,10 @@ public class EditEventView extends YouTubeBaseActivity {
         // Get initial LatLng value in case user edits the journey but leaves the marker as is
         updatedLatLng = new LatLng(mEvent.eventLatLng.latitude, mEvent.eventLatLng.longitude);
 
-
+        // Change all carousel models to be deletable
+        for(CarouselModel carouselM : mEvent.carouselModels){
+            carouselM.toDelete = 1;
+        }
 
         final EditText mEventSummary = (EditText) findViewById(R.id.edit_event_summary_content);
         try {
@@ -136,12 +141,29 @@ public class EditEventView extends YouTubeBaseActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Iterator<CarouselModel> iterator = mEvent.carouselModels.iterator();
+
+                while(iterator.hasNext()){
+                    CarouselModel carouselM = iterator.next();
+                    if(carouselM.toDelete == 2) {
+                        iterator.remove();
+                        DataHandler.getInstance().deleteCarouselInFIR(carouselM.FIRNumber, mEvent);
+                        mEvent.deletedIndexes++;
+                    }
+                }
+                int i = 0;
+                for(CarouselModel carouselM : mEvent.carouselModels){
+                    mEvent.carouselModels.get(i).toDelete = 0;
+                    i++;
+                }
+
                 EventModel updatedEvent = new EventModel(mEvent); // only copies reference, nor real clone!!!
                 updatedEvent.summary = mEventSummary.getText().toString();
                 updatedEvent.title = mEventTitle.getText().toString();
                 updatedEvent.eventLatLng = new LatLng(updatedLatLng.latitude, updatedLatLng.longitude);
                 String eventVideoURL = mEventVideoUrl.getText().toString();
-                int carousels = mEvent.carouselModels.size();
+
+                int carousels = mEvent.carouselModels.size() + mEvent.deletedIndexes;
                 updatedEvent.addItemToCarousels(imageUrls, eventVideoURL);
                 DataHandler.getInstance().setEventInFIR(carousels, updatedEvent);
 

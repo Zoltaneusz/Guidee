@@ -5,11 +5,13 @@
     <color name="pastellRed">#FF6565</color>
     <color name="LightGreen">#C5E1A5</color>
     <color name="Link">#90C3D4</color>
+    <color name="PressedTint">#80f41537</color>
 
     <color name="colorPrimary">#CDDC39</color>
     <color name="colorPrimary100">#F0F4C3</color>
     <color name="colorPrimaryMiddle">#C0CA33</color>
     <color name="colorPrimaryDark">#827717</color>
     <color name="colorAccent">#F50057</color>
+
 
 </resources>
