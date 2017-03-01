@@ -127,8 +127,8 @@ public class ExploreFragment extends Fragment {
                         }
 
                         @Override
-                        public void onCommentData(Map<String, Object> rawCommentData, String commentReference) {
-                            CommentModel commentModel = new CommentModel(rawCommentData, commentReference);
+                        public void onCommentData(Map<String, Object> rawCommentData, String commentReference, String journeyIdent) {
+                            CommentModel commentModel = new CommentModel(rawCommentData, commentReference, journeyIdent);
                         }
                     });
 

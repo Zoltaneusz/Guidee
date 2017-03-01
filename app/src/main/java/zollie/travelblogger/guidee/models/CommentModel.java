@@ -11,9 +11,10 @@ public class CommentModel {
     public String avatarURL;
     public String comment;
     public String ID;
+    public String journeyID;
     public int toDelete=0;
 
-    public CommentModel(Map<String, Object> rawCommentModel, String commentID) {
+    public CommentModel(Map<String, Object> rawCommentModel, String commentID, String journeyIdent) {
         try {
             this.author = (String) rawCommentModel.get("author");
         } catch (Exception e) {
@@ -34,6 +35,11 @@ public class CommentModel {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        try {
+            this.journeyID = journeyIdent;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public CommentModel (CommentModel commentModel){
@@ -42,5 +48,6 @@ public class CommentModel {
         this.comment = commentModel.comment;
         this.toDelete = commentModel.toDelete;
         this.ID = commentModel.ID;
+        this.journeyID = commentModel.journeyID;
     }
 }

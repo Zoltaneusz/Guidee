@@ -46,7 +46,7 @@ public class ProfileHandlerUtility {
             }
 
             @Override
-            public void onCommentData(Map<String, Object> rawCommentData, String commentReference) {
+            public void onCommentData(Map<String, Object> rawCommentData, String commentReference, String journeyReference) {
 
             }
 

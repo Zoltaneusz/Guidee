@@ -110,7 +110,7 @@ public class ProfileFragment extends Fragment {
                     }
 
                     @Override
-                    public void onCommentData(Map<String, Object> rawCommentData, String commentReference) {
+                    public void onCommentData(Map<String, Object> rawCommentData, String commentReference, String journeyIdent) {
 
                     }
                 });
@@ -132,7 +132,7 @@ public class ProfileFragment extends Fragment {
                     }
 
                     @Override
-                    public void onCommentData(Map<String, Object> rawCommentData, String commentReference) {
+                    public void onCommentData(Map<String, Object> rawCommentData, String commentReference, String journeyIdent) {
 
                     }
                 });
@@ -153,14 +153,14 @@ public class ProfileFragment extends Fragment {
                     }
 
                     @Override
-                    public void onCommentData(Map<String, Object> rawCommentData, String commentReference) {
+                    public void onCommentData(Map<String, Object> rawCommentData, String commentReference, String journeyIdent) {
 
                     }
                 });
             }
 
             @Override
-            public void onCommentData(Map<String, Object> rawCommentData, String commentReference) {
+            public void onCommentData(Map<String, Object> rawCommentData, String commentReference, String journeyIdent) {
 
             }
         });

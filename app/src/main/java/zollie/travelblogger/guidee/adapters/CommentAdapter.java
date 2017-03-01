@@ -1,14 +1,18 @@
 package zollie.travelblogger.guidee.adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,6 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 import org.w3c.dom.Comment;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import zollie.travelblogger.guidee.R;
@@ -39,6 +44,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     ImageProcessor imageProcessor = new ImageProcessor();
     FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
     String firUserID = firUser.getUid();
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
@@ -88,20 +94,44 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             @Override
             public boolean onLongClick(View view) {
 
+                DataHandler.getInstance().getUserWithId(firUserID, new DataHandlerListener() {
+                    @Override
+                    public void onJourneyData(Map<String, Object> rawJourneyData, String journeyID) {
 
-                if(mComment.author.equals(firUserID)){
-                    if(mComment.toDelete == 1) { // Not needed??
+                    }
+
+                    @Override
+                    public void onUserData(Map<String, Object> rawUserData) {
+                        String userName = null;
+                        try {
+                            userName = (String) rawUserData.get("name");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (userName != null) {
+                            if (mComment.author.equals(userName)) {
+                  /*  if(mComment.toDelete == 1) { // Not needed??
                         mComment.toDelete = 2;
                         commentText.setBackgroundColor(ContextCompat.getColor(mContext, R.color.PressedTint));
                         //!!!!!!!!!! Implement a floating window here, where the user can click to EDIT, DELETE or LEAVE the selected comment. Also invoke DataHandler.getInstance().deleteCommentInFIR !!!!!!!!
+
                     }
                     else if(mComment.toDelete == 2){
                         mComment.toDelete = 1;
                         commentText.setBackgroundColor(ContextCompat.getColor(mContext, R.color.LightGreen));
 
+                    }*/
+                                commentPopup(mComment);
+                            }
+                        }
                     }
 
-                }
+                    @Override
+                    public void onCommentData(Map<String, Object> rawCommentData, String commentID, String journeyIdent) {
+
+                    }
+                });
+
 
                 return true;
             }
@@ -148,6 +178,45 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             circleBitmap = imageProcessor.pulseMarker(4, userAvatarGlobal, canvas1, scale*2, circleBitmap);
             imageView.setImageBitmap(circleBitmap);
         }
+    }
+
+    public void commentPopup(final CommentModel commentModel) {
+        LayoutInflater li = LayoutInflater.from(mContext);
+        View popupView = li.inflate(R.layout.comment_popup, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
+        alertDialogBuilder.setView(popupView);
+
+        final EditText userInput = (EditText) popupView.findViewById(R.id.c_popup_input);
+        alertDialogBuilder
+                .setCancelable(false)
+                .setTitle("Comment")
+                .setPositiveButton("Edit", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        commentModel.comment = userInput.getText().toString();
+                        DataHandler.getInstance().editCommentInFIR(commentModel);
+                    }
+                });
+        alertDialogBuilder
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+
+                });
+        alertDialogBuilder
+                .setNeutralButton("Remove", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        DataHandler.getInstance().deleteCommentInFIR(commentModel);
+
+                    }
+
+                });
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
     }
 
 }

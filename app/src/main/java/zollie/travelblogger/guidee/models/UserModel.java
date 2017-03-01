@@ -28,7 +28,7 @@ public class UserModel {
     public UserModel(Map<String, Object> rawUserModel) {
 
         try {
-            this.avatarUrl = (String) rawUserModel.get("avatarUrl");
+            this.avatarUrl = (String) rawUserModel.get("rawUserData");
         } catch (Exception e) {
             e.printStackTrace();
         }

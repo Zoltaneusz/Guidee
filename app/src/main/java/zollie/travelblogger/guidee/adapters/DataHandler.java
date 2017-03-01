@@ -130,14 +130,14 @@ public class DataHandler {
             });
         }
     }
-    public void getCommentsWithID(String journeyID, final DataHandlerListener dataHandlerListener) {
+    public void getCommentsWithID(final String journeyID, final DataHandlerListener dataHandlerListener) {
         DatabaseReference mCommentsReference = mRootRef.child("Comments");
         mCommentsReference.child(journeyID).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Map<String, Object> commentInfo = (Map<String, Object>) dataSnapshot.getValue();
                 String commentRef = dataSnapshot.getKey();
-                dataHandlerListener.onCommentData(commentInfo, commentRef);
+                dataHandlerListener.onCommentData(commentInfo, commentRef, journeyID);
             }
 
             @Override
@@ -161,6 +161,7 @@ public class DataHandler {
             }
         });
     }
+
     public void setEventInFIR(int originalCarouselNr, EventModel updatedEvent){
 
         DatabaseReference mDatabaseReference  =  mRootRef.child("Journeys");
@@ -252,19 +253,20 @@ public class DataHandler {
 
     }
 
-    public void deleteCommentInFIR(String journeyID, CommentModel updatedComment){
+    public void deleteCommentInFIR(CommentModel updatedComment){
         DatabaseReference mDatabaseReference = mRootRef.child("Comments");
         // From here we can modify the data in FIR Database
 
         Map<String, Object> commentUpdates = new HashMap<String, Object>();
-        commentUpdates.put("/" + journeyID, null);
+        commentUpdates.put("/" + updatedComment.journeyID + "/" + updatedComment.ID, null);
         mDatabaseReference.updateChildren(commentUpdates);
 
     }
 
-    public void editCommentInFIR(int originalCommentNr, CommentModel updatedComment){
+    public void editCommentInFIR(CommentModel updatedComment){
         DatabaseReference mDatabaseReference = mRootRef.child("Comments");
-        DatabaseReference commentReference = mDatabaseReference.child(updatedComment.ID);
+        DatabaseReference commentReferenceOuter = mDatabaseReference.child(updatedComment.journeyID);
+        DatabaseReference commentReference = commentReferenceOuter.child(updatedComment.ID);
         // From here we can modify the data in FIR Database
 
         Map<String, Object> commentUpdates = new HashMap<String, Object>();

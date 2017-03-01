@@ -227,8 +227,8 @@ public class EditJourneyView extends Activity{
             }
 
             @Override
-            public void onCommentData(Map<String, Object> rawCommentData, String commentReference) {
-                CommentModel commentModel = new CommentModel(rawCommentData, commentReference);
+            public void onCommentData(Map<String, Object> rawCommentData, String commentReference, String journeyIdent) {
+                CommentModel commentModel = new CommentModel(rawCommentData, commentReference, journeyIdent);
                 allComments.add(commentModel);
                 fillCommentsRecyclerView(R.id.edit_journey_comments_recycle, R.id.edit_journey_comments_recycle_placeholder, allComments);
 
@@ -421,7 +421,7 @@ public class EditJourneyView extends Activity{
                 }
 
                 @Override
-                public void onCommentData(Map<String, Object> rawCommentData, String commentReference) {
+                public void onCommentData(Map<String, Object> rawCommentData, String commentReference, String journeyIdent) {
 
                 }
 
