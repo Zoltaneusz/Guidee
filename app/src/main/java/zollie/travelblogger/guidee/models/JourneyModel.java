@@ -89,9 +89,11 @@ public class JourneyModel implements Parcelable {
             int i = 0;
             rawEventModels = (ArrayList<Map<String, Object>>) rawJourneyModel.get("eventModels");
             for(Map<String, Object> rawEventModel : rawEventModels ){
-                EventModel eventModel = new EventModel(rawEventModel, this.userEligible, this.ID, i);
-                this.eventModels.add(eventModel);
-                i++;
+                if(rawEventModel != null) {
+                    EventModel eventModel = new EventModel(rawEventModel, this.userEligible, this.ID, i);
+                    this.eventModels.add(eventModel);
+                    i++;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import zollie.travelblogger.guidee.models.CarouselModel;
+import zollie.travelblogger.guidee.models.CommentModel;
 import zollie.travelblogger.guidee.models.EventModel;
 import zollie.travelblogger.guidee.models.JourneyModel;
 
@@ -135,7 +136,8 @@ public class DataHandler {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Map<String, Object> commentInfo = (Map<String, Object>) dataSnapshot.getValue();
-                dataHandlerListener.onCommentData(commentInfo);
+                String commentRef = dataSnapshot.getKey();
+                dataHandlerListener.onCommentData(commentInfo, commentRef);
             }
 
             @Override
@@ -210,6 +212,14 @@ public class DataHandler {
         journeyUpdates.put("annotationModel/location/latitude", updatedJourney.annotationModel.markerLatLng.latitude);
         journeyUpdates.put("annotationModel/location/longitude", updatedJourney.annotationModel.markerLatLng.longitude);
         journeyUpdates.put("imageURL", updatedJourney.coverImageUrl);
+        // Events will be uploaded in EditEventView after
+        /*int updatedEventNr = updatedJourney.eventModels.size() + updatedJourney.deletedIndexes;
+        if(originalEventNr != updatedEventNr){
+            for(int i=originalEventNr; i<updatedEventNr + 1; i++){
+                journeyUpdates.put("eventModels/" + String.valueOf(i) + )
+            }
+
+        }*/
 
         journeyReference.updateChildren(journeyUpdates);
     }
@@ -231,7 +241,7 @@ public class DataHandler {
         //DatabaseReference eventReference = mDatabaseReference.child(updatedJourney.ID).child("eventModels").child(String.valueOf(updatedJourney.eventModels.size()));
         // From here we can modify the data in FIR Database
 
-        String eventIndex = String.valueOf(updatedJourney.eventModels.size());
+        String eventIndex = String.valueOf(updatedJourney.eventModels.size() + updatedJourney.deletedIndexes);
         Map<String, Object> journeyUpdates = new HashMap<String, Object>();
         journeyUpdates.put(eventIndex + "/title", "Your events title");
         journeyUpdates.put(eventIndex + "/summary", "Your events summary");
@@ -239,6 +249,30 @@ public class DataHandler {
         journeyUpdates.put(eventIndex + "/location/longitude", 16);
 
         journeyReference.updateChildren(journeyUpdates);
+
+    }
+
+    public void deleteCommentInFIR(String journeyID, CommentModel updatedComment){
+        DatabaseReference mDatabaseReference = mRootRef.child("Comments");
+        // From here we can modify the data in FIR Database
+
+        Map<String, Object> commentUpdates = new HashMap<String, Object>();
+        commentUpdates.put("/" + journeyID, null);
+        mDatabaseReference.updateChildren(commentUpdates);
+
+    }
+
+    public void editCommentInFIR(int originalCommentNr, CommentModel updatedComment){
+        DatabaseReference mDatabaseReference = mRootRef.child("Comments");
+        DatabaseReference commentReference = mDatabaseReference.child(updatedComment.ID);
+        // From here we can modify the data in FIR Database
+
+        Map<String, Object> commentUpdates = new HashMap<String, Object>();
+        commentUpdates.put("author", updatedComment.author);
+        commentUpdates.put("avatarURL", updatedComment.avatarURL);
+        commentUpdates.put("comment", updatedComment.comment);
+
+        commentReference.updateChildren(commentUpdates);
 
     }
 

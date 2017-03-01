@@ -110,8 +110,8 @@ public class JourneyView extends Activity{
             }
 
             @Override
-            public void onCommentData(Map<String, Object> rawCommentData) {
-                CommentModel commentModel = new CommentModel(rawCommentData);
+            public void onCommentData(Map<String, Object> rawCommentData, String commentReference) {
+                CommentModel commentModel = new CommentModel(rawCommentData, commentReference);
                 allComments.add(commentModel);
                 fillCommentsRecyclerView(R.id.journey_comments_recycle, R.id.journey_comments_recycle_placeholder, allComments);
 
@@ -311,7 +311,7 @@ public class JourneyView extends Activity{
                 }
 
                 @Override
-                public void onCommentData(Map<String, Object> rawCommentData) {
+                public void onCommentData(Map<String, Object> rawCommentData, String commentReference) {
 
                 }
 

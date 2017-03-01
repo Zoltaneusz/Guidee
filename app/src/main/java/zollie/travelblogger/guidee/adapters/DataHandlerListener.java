@@ -12,7 +12,7 @@ public interface DataHandlerListener {
 
     void onJourneyData(Map<String, Object> rawJourneyData, String journeyID);
     void onUserData(Map<String, Object> rawUserData);
-    void onCommentData(Map<String, Object> rawCommentData);
+    void onCommentData(Map<String, Object> rawCommentData, String commentID);
 
 
 }

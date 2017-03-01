@@ -151,7 +151,7 @@ public class EditJourneyView extends Activity{
                 if(!imageUrls.isEmpty()) {
                     mJourney.coverImageUrl = imageUrls.get(0);
                 }
-                int eventsCount = mJourney.eventModels.size();
+                int eventsCount = mJourney.eventModels.size() + mJourney.deletedIndexes;
                 DataHandler.getInstance().setJourneyInFIR(eventsCount, mJourney);
                 // Change comments, profile picture and events needed
 
@@ -227,8 +227,8 @@ public class EditJourneyView extends Activity{
             }
 
             @Override
-            public void onCommentData(Map<String, Object> rawCommentData) {
-                CommentModel commentModel = new CommentModel(rawCommentData);
+            public void onCommentData(Map<String, Object> rawCommentData, String commentReference) {
+                CommentModel commentModel = new CommentModel(rawCommentData, commentReference);
                 allComments.add(commentModel);
                 fillCommentsRecyclerView(R.id.edit_journey_comments_recycle, R.id.edit_journey_comments_recycle_placeholder, allComments);
 
@@ -421,7 +421,7 @@ public class EditJourneyView extends Activity{
                 }
 
                 @Override
-                public void onCommentData(Map<String, Object> rawCommentData) {
+                public void onCommentData(Map<String, Object> rawCommentData, String commentReference) {
 
                 }
 

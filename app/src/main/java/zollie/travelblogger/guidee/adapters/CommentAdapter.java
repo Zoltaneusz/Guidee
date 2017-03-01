@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.w3c.dom.Comment;
 
@@ -34,6 +37,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     private Context mContext;
     Bitmap userAvatarGlobal = null;
     ImageProcessor imageProcessor = new ImageProcessor();
+    FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
+    String firUserID = firUser.getUid();
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
@@ -70,14 +75,38 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(CommentAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final CommentAdapter.ViewHolder holder, int position) {
         final CommentModel mComment = allComments.get(position);
 
-        TextView commentText = holder.mComment;
+        final TextView commentText = holder.mComment;
         commentText.setText(mComment.comment);
         //===================== Adding Image to to Horizontal Slide via Glide =========
         new AsyncUserPic().execute(mComment, holder);
         //=============================================================================
+
+        commentText.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+
+
+                if(mComment.author.equals(firUserID)){
+                    if(mComment.toDelete == 1) { // Not needed??
+                        mComment.toDelete = 2;
+                        commentText.setBackgroundColor(ContextCompat.getColor(mContext, R.color.PressedTint));
+                        //!!!!!!!!!! Implement a floating window here, where the user can click to EDIT, DELETE or LEAVE the selected comment. Also invoke DataHandler.getInstance().deleteCommentInFIR !!!!!!!!
+                    }
+                    else if(mComment.toDelete == 2){
+                        mComment.toDelete = 1;
+                        commentText.setBackgroundColor(ContextCompat.getColor(mContext, R.color.LightGreen));
+
+                    }
+
+                }
+
+                return true;
+            }
+        });
+
     }
 
     @Override
