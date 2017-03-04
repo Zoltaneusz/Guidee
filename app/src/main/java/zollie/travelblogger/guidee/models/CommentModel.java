@@ -50,4 +50,12 @@ public class CommentModel {
         this.ID = commentModel.ID;
         this.journeyID = commentModel.journeyID;
     }
+
+    public CommentModel (String name, String avatar, String com, String jID){
+        this.author = name;
+        this.avatarURL = avatar;
+        this.comment = com;
+        this.journeyID = jID;
+
+    }
 }

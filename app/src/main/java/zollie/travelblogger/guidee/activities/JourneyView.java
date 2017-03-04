@@ -3,6 +3,7 @@ package zollie.travelblogger.guidee.activities;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -11,11 +12,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -29,6 +33,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -115,6 +120,14 @@ public class JourneyView extends Activity{
                 allComments.add(commentModel);
                 fillCommentsRecyclerView(R.id.journey_comments_recycle, R.id.journey_comments_recycle_placeholder, allComments);
 
+            }
+        });
+
+        TextView addComment = (TextView) findViewById(R.id.journey_comments_add);
+        addComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addCommentPopup(mJourney);
             }
         });
 
@@ -326,4 +339,68 @@ public class JourneyView extends Activity{
         }
     }
 
+    public void addCommentPopup(final JourneyModel journeyModel) {
+        LayoutInflater li = LayoutInflater.from(mContext);
+        View popupView = li.inflate(R.layout.comment_popup, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
+        alertDialogBuilder.setView(popupView);
+
+        TextView message = (TextView) popupView.findViewById(R.id.c_popup_info);
+        message.setText("Your comment");
+        final EditText userInput = (EditText) popupView.findViewById(R.id.c_popup_input);
+        alertDialogBuilder
+                .setCancelable(false)
+                .setTitle("Comment")
+                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
+                        String firUserID = firUser.getUid();
+                        DataHandler.getInstance().getUserWithId(firUserID, new DataHandlerListener() {
+                            @Override
+                            public void onJourneyData(Map<String, Object> rawJourneyData, String journeyID) {
+
+                            }
+
+                            @Override
+                            public void onUserData(Map<String, Object> rawUserData) {
+                                String author = null;
+                                String avatarURL = null;
+                                try {
+                                    author = (String) rawUserData.get("name");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    avatarURL = (String) rawUserData.get("avatarUrl");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                                String comment = userInput.getText().toString();
+                                CommentModel commentModel = new CommentModel(author, avatarURL, comment, journeyModel.ID);
+                                DataHandler.getInstance().createCommentInFIR(commentModel, journeyModel); // Problem: JourneyView still needs to be refreshed to show the new comment...
+                            }
+
+                            @Override
+                            public void onCommentData(Map<String, Object> rawCommentData, String commentID, String journeyIdent) {
+
+                            }
+                        });
+
+                    }
+                });
+        alertDialogBuilder
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+
+                });
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+    }
 }

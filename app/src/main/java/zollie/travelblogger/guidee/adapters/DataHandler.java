@@ -278,6 +278,19 @@ public class DataHandler {
 
     }
 
+    public void createCommentInFIR(CommentModel commentModel, JourneyModel updatedJourney){
+        DatabaseReference mDatabaseReference = mRootRef.child("Comments");
+        DatabaseReference commentReferenceOuter = mDatabaseReference.child(updatedJourney.ID);
+        String key = commentReferenceOuter.push().getKey();
+
+        Map<String, Object> commentUpdates = new HashMap<String, Object>();
+        commentUpdates.put(key + "/author", commentModel.author);
+        commentUpdates.put(key + "/avatarURL", commentModel.avatarURL);
+        commentUpdates.put(key + "/comment", commentModel.comment);
+
+        commentReferenceOuter.updateChildren(commentUpdates);
+    }
+
  /*    public  void getEvents(final DataHandlerListener dataHandlerListener){
 
      }*/
