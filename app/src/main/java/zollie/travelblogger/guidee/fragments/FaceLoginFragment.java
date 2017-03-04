@@ -44,6 +44,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 
 import zollie.travelblogger.guidee.R;
+import zollie.travelblogger.guidee.adapters.DataHandler;
 
 import static com.facebook.GraphRequest.TAG;
 
@@ -147,6 +148,8 @@ public class FaceLoginFragment extends Fragment {
                 handleFacebookAccessToken(accessToken);
                 Profile profile = Profile.getCurrentProfile();
                 FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
+                DataHandler.getInstance().createUserInFIR(firUser);
+
                 FragmentManager fm;
                 fm = getFragmentManager();
                 fm.beginTransaction().replace(R.id.contentContainer, _profileFrag).commit();

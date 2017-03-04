@@ -1,7 +1,6 @@
 package zollie.travelblogger.guidee.adapters;
 
-import com.google.api.client.util.Data;
-import com.google.api.client.util.ObjectParser;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -349,6 +348,21 @@ public class DataHandler {
         commentUpdates.put(key + "/comment", commentModel.comment);
 
         commentReferenceOuter.updateChildren(commentUpdates);
+    }
+
+    public void createUserInFIR(FirebaseUser firUser)
+    {
+        DatabaseReference mUserReference = mRootRef.child("Users");
+        String firUserId = firUser.getUid();
+
+        Map<String, Object> userUpdates = new HashMap<String, Object>();
+        userUpdates.put(firUserId + "summary", "Descroption about user");
+        userUpdates.put(firUserId + "/followedByCount", 0);
+        userUpdates.put(firUserId + "/following/0", "0");
+        userUpdates.put(firUserId + "/name", firUser.getDisplayName());
+        userUpdates.put(firUserId + "/avatarUrl", firUser.getPhotoUrl());
+
+
     }
 
  /*    public  void getEvents(final DataHandlerListener dataHandlerListener){
