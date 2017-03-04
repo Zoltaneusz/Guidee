@@ -1,6 +1,7 @@
 package zollie.travelblogger.guidee.adapters;
 
 import com.google.api.client.util.Data;
+import com.google.api.client.util.ObjectParser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -212,7 +213,10 @@ public class DataHandler {
         journeyUpdates.put("summary", updatedJourney.summary);
         journeyUpdates.put("annotationModel/location/latitude", updatedJourney.annotationModel.markerLatLng.latitude);
         journeyUpdates.put("annotationModel/location/longitude", updatedJourney.annotationModel.markerLatLng.longitude);
-        journeyUpdates.put("imageURL", updatedJourney.coverImageUrl);
+        journeyUpdates.put("annotationModel/imageURL", updatedJourney.userAvatarUrl);
+        journeyUpdates.put("annotationModel/title", updatedJourney.title);
+        journeyUpdates.put("userAvatarUrl", updatedJourney.userAvatarUrl);
+        journeyUpdates.put("coverImageUrl", updatedJourney.coverImageUrl);
         // Events will be uploaded in EditEventView after
         /*int updatedEventNr = updatedJourney.eventModels.size() + updatedJourney.deletedIndexes;
         if(originalEventNr != updatedEventNr){
@@ -221,8 +225,34 @@ public class DataHandler {
             }
 
         }*/
-
         journeyReference.updateChildren(journeyUpdates);
+    }
+
+    public String createJourneyInFIR(String FIRUser){
+        DatabaseReference mDatabaseReference = mRootRef.child("Journeys");
+        String journeyKey = mDatabaseReference.push().getKey();
+
+        Map<String, Object> journeyUpdates = new HashMap<String, Object>();
+        journeyUpdates.put(journeyKey + "/title", "Your journey title");           // These are not even needed...
+        journeyUpdates.put(journeyKey + "/summary", "Your journey summary");
+        journeyUpdates.put(journeyKey + "/userAvatarUrl", "Your avatar Url");
+        journeyUpdates.put(journeyKey + "/title", "Your journey title");
+        journeyUpdates.put(journeyKey + "/annotationModel/location/latitude", 42.993976403334706);
+        journeyUpdates.put(journeyKey + "/annotationModel/location/longitude", 16.40115687746871);
+        journeyUpdates.put(journeyKey + "/annotationModel/imageURL", "Your image URL");
+        journeyUpdates.put(journeyKey + "/annotationModel/title", "Your journey title");
+
+        mDatabaseReference.updateChildren(journeyUpdates);      // These are not even needed...
+
+        DatabaseReference mUserReference = mRootRef.child("Users").child(FIRUser);
+        DatabaseReference mJourneyReference = mUserReference.child("journeys");
+        String userJourneyKey = mJourneyReference.push().getKey();
+
+        Map<String, Object> userJourneyUpdates = new HashMap<String, Object>();
+        userJourneyUpdates.put(userJourneyKey, journeyKey);
+        mJourneyReference.updateChildren(userJourneyUpdates);
+
+        return journeyKey;
     }
 
     public void deleteEventInFIR(int index, JourneyModel updatedJourney){

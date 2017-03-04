@@ -59,6 +59,7 @@ import zollie.travelblogger.guidee.adapters.DataHandler;
 import zollie.travelblogger.guidee.adapters.DataHandlerListener;
 import zollie.travelblogger.guidee.adapters.EventAdapter;
 import zollie.travelblogger.guidee.adapters.JourneyAdapter;
+import zollie.travelblogger.guidee.fragments.ProfileFragment;
 import zollie.travelblogger.guidee.models.CommentModel;
 import zollie.travelblogger.guidee.models.EventModel;
 import zollie.travelblogger.guidee.models.JourneyModel;
@@ -83,6 +84,7 @@ public class EditJourneyView extends Activity{
     int saveVisible = 0;
     boolean userEditEight = false;
     Context mContext;
+    String parentActivity = new String();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +93,7 @@ public class EditJourneyView extends Activity{
         setContentView(R.layout.activity_edit_journey_view);
         Bundle intentData = getIntent().getExtras();
         final JourneyModel mJourney = (JourneyModel) intentData.getParcelable("ser_journey");
+        parentActivity = intentData.getString("parent");
         if(mJourney.coverImageUrl != null){
             ImageView coverImage = (ImageView ) findViewById(R.id.edit_journey_imgFirst);
             //===================== Adding Image to to Horizontal Slide via Glide =========
@@ -155,9 +158,15 @@ public class EditJourneyView extends Activity{
                 DataHandler.getInstance().setJourneyInFIR(eventsCount, mJourney);
                 // Change comments, profile picture and events needed
 
-                Intent toJourneyIntent = new Intent(mContext, JourneyView.class);
-                toJourneyIntent.putExtra("ser_journey", mJourney);
-                mContext.startActivity(toJourneyIntent);
+                if(parentActivity.equals("FragmentView")){
+                    Intent toProfileIntent = new Intent(mContext, ProfileFragment.class);
+                    mContext.startActivity(toProfileIntent);
+                }
+                else {
+                    Intent toJourneyIntent = new Intent(mContext, JourneyView.class);
+                    toJourneyIntent.putExtra("ser_journey", mJourney);
+                    mContext.startActivity(toJourneyIntent);
+                }
 
             }
         });

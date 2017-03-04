@@ -123,6 +123,25 @@ public class JourneyModel implements Parcelable {
         return this.userEligible;
     }
 
+    public JourneyModel(String FIRKey, String avatarURL){
+        this.title = "Your journey title";
+        this.summary = "Your journey summary";
+        this.coverImageUrl = "https://firebasestorage.googleapis.com/v0/b/guidee-f0453.appspot.com/o/images%2F9F4DD9C8-5465-464B-9249-9127AD09E729.jpg?alt=media&token=32a14ec9-a298-4c68-89b3-211eb0f86e7e";
+        try {
+            this.userAvatarUrl = avatarURL;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.ID = FIRKey;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.identifier = "XXX";
+        this.userEligible = true;
+        this.annotationModel = new AnnotationModel(avatarURL, title);
+    }
+
     public JourneyModel(JourneyModel journeyModel){
         this.title = journeyModel.title;
         this.summary = journeyModel.summary;

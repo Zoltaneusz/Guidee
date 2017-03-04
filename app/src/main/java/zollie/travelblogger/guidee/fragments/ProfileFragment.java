@@ -1,12 +1,16 @@
 package zollie.travelblogger.guidee.fragments;
 
 import android.app.Fragment;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import zollie.travelblogger.guidee.activities.EditJourneyView;
+import zollie.travelblogger.guidee.activities.JourneyView;
 import zollie.travelblogger.guidee.adapters.DataHandler;
 import zollie.travelblogger.guidee.adapters.DataHandlerListener;
 import zollie.travelblogger.guidee.utils.ImageProcessor;
@@ -49,6 +55,10 @@ public class ProfileFragment extends Fragment {
     ArrayList<JourneyModel> allPlans = new ArrayList<JourneyModel>();
     Bitmap userAvatarGlobal = null;
     ImageProcessor imageProcessor = new ImageProcessor();
+    //Getting Firebase user ID
+    FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
+    String firUserID = firUser.getUid();
+    String userAvatarUrl = new String();
 
     @Nullable
     @Override
@@ -76,9 +86,6 @@ public class ProfileFragment extends Fragment {
             window.setStatusBarColor(getActivity().getResources().getColor(R.color.colorPrimaryDark));
         }
         //================= Getting data of 1 profile =====================================
-        //Getting Firebase user ID
-        FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
-        String firUserID = firUser.getUid();
         DataHandler.getInstance().getUserWithId(new String(firUserID), new DataHandlerListener() {
             @Override
             public void onJourneyData(final Map<String, Object> rawJourneyData, String journeyReference) {
@@ -90,6 +97,11 @@ public class ProfileFragment extends Fragment {
                 allFavorites.clear();
                 allPlans.clear();
                 UserModel userModel = new UserModel(rawUserData);
+                try {
+                    userAvatarUrl = userModel.avatarUrl;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 new AsyncProfilePic().execute(userModel);
 
                 //================= Getting journeys of profile =====================================
@@ -164,6 +176,37 @@ public class ProfileFragment extends Fragment {
 
             }
         });
+
+        FloatingActionButton journeyFAB = (FloatingActionButton) getActivity().findViewById(R.id.profile_j_edit_FAB);
+        journeyFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                alertDialogBuilder.setItems(R.array.journey_edit_FAB, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch(i){
+                            case 0: { // Add new journey
+                                String FIRKey = DataHandler.getInstance().createJourneyInFIR(firUserID);
+                                JourneyModel mJourney = new JourneyModel(FIRKey, userAvatarUrl);
+
+
+                                Intent toJourneyIntent = new Intent(getActivity(), EditJourneyView.class);
+                                toJourneyIntent.putExtra("ser_journey", mJourney);
+                                toJourneyIntent.putExtra("parent", "ProfileFragment");
+                                getActivity().startActivity(toJourneyIntent);
+                            }
+                        }
+                    }
+                });
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+
+                // show it
+                alertDialog.show();
+            }
+        });
+
     }
     @Override
     public void onResume() {

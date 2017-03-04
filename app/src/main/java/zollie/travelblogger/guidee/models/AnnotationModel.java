@@ -24,6 +24,14 @@ public class AnnotationModel implements Parcelable {
     public LatLng markerLatLng;
     public Bitmap markerIcon;
 
+    public AnnotationModel(String iconUrl, String title){
+        this.markerID = "empty";
+        this.markerIconURL = iconUrl;
+        this.markerTitle = title;
+        this.markerLatLng = new LatLng(42.993976403334706,16.40115687746871);
+
+    }
+
     public AnnotationModel(Map<String, Object> rawAnnotationModel) {
         Map<String, Object> locationData = (Map<String, Object>) rawAnnotationModel.get("location");
         this.markerID = null;

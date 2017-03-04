@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="journey_edit_FAB">
+        <item>Add</item>
+        <item>Delete</item>
+        <item>Cancel</item>
+    </string-array>
+</resources>

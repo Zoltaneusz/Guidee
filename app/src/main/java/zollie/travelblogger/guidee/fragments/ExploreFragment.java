@@ -215,9 +215,17 @@ public class ExploreFragment extends Fragment {
 
     private void addMapMarker(JourneyModel journeyModel, GoogleMap mMap){
 
-        LatLng locationData = journeyModel.annotationModel.markerLatLng;
-        final double markerLat = locationData.latitude;
-        final double markerLng = locationData.longitude;
+        LatLng locationData = null;
+        try {
+            locationData = journeyModel.annotationModel.markerLatLng;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+            final double markerLat = locationData.latitude;
+            final double markerLng = locationData.longitude;
+
+
 //        final String markerImageSource = (String) mapMarkerData.get("imageURL");
         final String markerTitle = journeyModel.annotationModel.markerTitle;
 //        String markerSubtitle = (String) mapMarkerData.get("subtitle");
