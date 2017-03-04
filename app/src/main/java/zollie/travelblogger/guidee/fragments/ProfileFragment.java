@@ -32,6 +32,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -176,36 +177,7 @@ public class ProfileFragment extends Fragment {
 
             }
         });
-
-        FloatingActionButton journeyFAB = (FloatingActionButton) getActivity().findViewById(R.id.profile_j_edit_FAB);
-        journeyFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-                alertDialogBuilder.setItems(R.array.journey_edit_FAB, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        switch(i){
-                            case 0: { // Add new journey
-                                String FIRKey = DataHandler.getInstance().createJourneyInFIR(firUserID);
-                                JourneyModel mJourney = new JourneyModel(FIRKey, userAvatarUrl);
-
-
-                                Intent toJourneyIntent = new Intent(getActivity(), EditJourneyView.class);
-                                toJourneyIntent.putExtra("ser_journey", mJourney);
-                                toJourneyIntent.putExtra("parent", "ProfileFragment");
-                                getActivity().startActivity(toJourneyIntent);
-                            }
-                        }
-                    }
-                });
-                // create alert dialog
-                AlertDialog alertDialog = alertDialogBuilder.create();
-
-                // show it
-                alertDialog.show();
-            }
-        });
+        journeyEdit();
 
     }
     @Override
@@ -312,5 +284,52 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    public void journeyEdit(){
+        FloatingActionButton journeyFAB = (FloatingActionButton) getActivity().findViewById(R.id.profile_j_edit_FAB);
+        journeyFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                alertDialogBuilder.setItems(R.array.journey_edit_FAB, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch(i){
+                            case 0: { // Add new journey
+                                String FIRKey = DataHandler.getInstance().createJourneyInFIR(firUserID);
+                                JourneyModel mJourney = new JourneyModel(FIRKey, userAvatarUrl);
+
+                                Intent toJourneyIntent = new Intent(getActivity(), EditJourneyView.class);
+                                toJourneyIntent.putExtra("ser_journey", mJourney);
+                                toJourneyIntent.putExtra("parent", "ProfileFragment");
+                                getActivity().startActivity(toJourneyIntent);
+                                break;
+                            }
+                            case 1: { //Delete journey
+                                Iterator<JourneyModel> iterator = allJourneys.iterator();
+                                while(iterator.hasNext()){
+                                    JourneyModel journeyM = iterator.next();
+                                    if(journeyM.toDelete == true){
+                                        DataHandler.getInstance().deleteJourneyInFIR(journeyM.ID, firUserID);
+                                        iterator.remove();
+                                    }
+                                }
+
+                                break;
+                            }
+                            case 2: { // Cancel
+                                break;
+                            }
+
+                        }
+                    }
+                });
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+
+                // show it
+                alertDialog.show();
+            }
+        });
+    }
 
 }

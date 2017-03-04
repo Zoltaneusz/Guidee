@@ -236,7 +236,7 @@ public class DataHandler {
         journeyUpdates.put(journeyKey + "/title", "Your journey title");           // These are not even needed...
         journeyUpdates.put(journeyKey + "/summary", "Your journey summary");
         journeyUpdates.put(journeyKey + "/userAvatarUrl", "Your avatar Url");
-        journeyUpdates.put(journeyKey + "/title", "Your journey title");
+        journeyUpdates.put(journeyKey + "/coverImageUrl", "https://firebasestorage.googleapis.com/v0/b/guidee-f0453.appspot.com/o/images%2F9F4DD9C8-5465-464B-9249-9127AD09E729.jpg?alt=media&token=32a14ec9-a298-4c68-89b3-211eb0f86e7e");
         journeyUpdates.put(journeyKey + "/annotationModel/location/latitude", 42.993976403334706);
         journeyUpdates.put(journeyKey + "/annotationModel/location/longitude", 16.40115687746871);
         journeyUpdates.put(journeyKey + "/annotationModel/imageURL", "Your image URL");
@@ -253,6 +253,36 @@ public class DataHandler {
         mJourneyReference.updateChildren(userJourneyUpdates);
 
         return journeyKey;
+    }
+
+    public void deleteJourneyInFIR(final String journeyID, String userID){
+        DatabaseReference mDatabaseReference = mRootRef.child("Journeys");
+
+        Map<String, Object> journeyUpdates = new HashMap<String, Object>();
+        journeyUpdates.put(journeyID, null);
+
+        mDatabaseReference.updateChildren(journeyUpdates);
+
+        DatabaseReference mUserReference = mRootRef.child("Users").child(userID);
+        final DatabaseReference userJourneysRef = mUserReference.child("journeys");
+        userJourneysRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String journeyKey = dataSnapshot.getKey();
+                if (journeyKey.contains(journeyID.substring(0,4))) {
+                    Map<String, Object> userJourneyUpdates = new HashMap<String, Object>();
+                    userJourneyUpdates.put(journeyKey, null);
+                    userJourneysRef.updateChildren(userJourneyUpdates);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
     }
 
     public void deleteEventInFIR(int index, JourneyModel updatedJourney){

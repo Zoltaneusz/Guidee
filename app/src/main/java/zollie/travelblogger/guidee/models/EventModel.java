@@ -39,6 +39,22 @@ public class EventModel implements Parcelable{
         this.deletedIndexes = 0;
     }
 
+    public EventModel(String ID, Boolean eligible){
+
+        this.title = "Your events title";
+        this.summary = "Your events summary";
+        this.eventLatLng = new LatLng(42.993976403334706,16.40115687746871);
+        this.journeyID = ID;
+        this.FIRNumber = 0;
+        this.userEligible = eligible;
+        CarouselModel emptyCarouselModel = new CarouselModel();
+        emptyCarouselModel.imageUrl = "https://firebasestorage.googleapis.com/v0/b/guidee-f0453.appspot.com/o/images%2F9F4DD9C8-5465-464B-9249-9127AD09E729.jpg?alt=media&token=32a14ec9-a298-4c68-89b3-211eb0f86e7e";
+        emptyCarouselModel.carouselType = CarouselModel.CarouselType.IMAGE;
+        this.carouselModels = new ArrayList<CarouselModel>();
+        this.carouselModels.add(emptyCarouselModel);
+        this.deletedIndexes = 0;
+    }
+
     public EventModel(Map<String, Object> rawEventModel, boolean journeyEligible, String ID, int number) {
         Map<String, Object> locationData = (Map<String, Object>) rawEventModel.get("location");
         ArrayList<Map<String, Object>> rawCarouselModels = null;

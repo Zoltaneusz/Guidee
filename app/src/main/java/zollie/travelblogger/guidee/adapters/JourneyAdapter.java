@@ -2,6 +2,8 @@ package zollie.travelblogger.guidee.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,7 +77,7 @@ public class JourneyAdapter extends RecyclerView.Adapter<JourneyAdapter.ViewHold
 
         TextView textView = holder.mTitle;
         textView.setText(mJourney.title);
-        ImageView imageView = holder.mCoverImage;
+        final ImageView imageView = holder.mCoverImage;
         //===================== Adding Image to to Horizontal Slide via Glide =========
         Glide
                 .with(mContext)
@@ -91,6 +93,23 @@ public class JourneyAdapter extends RecyclerView.Adapter<JourneyAdapter.ViewHold
                 Intent toJourneyIntent = new Intent(mContext, JourneyView.class);
                 toJourneyIntent.putExtra("ser_journey", mJourney);
                 mContext.startActivity(toJourneyIntent);
+            }
+        });
+        holder.mJourney.setOnLongClickListener(new View.OnLongClickListener(){
+            @Override
+            public boolean onLongClick(View view) {
+                if(mJourney.userEligible == true){
+                    if(mJourney.toDelete == false) {
+                        imageView.setColorFilter(ContextCompat.getColor(mContext, R.color.PressedTint));
+                        mJourney.toDelete=true;
+                    }
+                    else if(mJourney.toDelete == true){
+                        imageView.setColorFilter(Color.argb(0, 255, 255, 255));
+                        mJourney.toDelete=false;
+                    }
+                }
+
+                return true;
             }
         });
 

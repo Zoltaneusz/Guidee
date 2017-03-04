@@ -92,8 +92,8 @@ public class EditJourneyView extends Activity{
         mContext = this;
         setContentView(R.layout.activity_edit_journey_view);
         Bundle intentData = getIntent().getExtras();
-        final JourneyModel mJourney = (JourneyModel) intentData.getParcelable("ser_journey");
         parentActivity = intentData.getString("parent");
+        final JourneyModel mJourney = (JourneyModel) intentData.getParcelable("ser_journey");
         if(mJourney.coverImageUrl != null){
             ImageView coverImage = (ImageView ) findViewById(R.id.edit_journey_imgFirst);
             //===================== Adding Image to to Horizontal Slide via Glide =========

@@ -25,6 +25,7 @@ public class JourneyModel implements Parcelable {
     public String userAvatarUrl;
     public String identifier;
     public String ID;
+    public boolean toDelete = false;
     public int deletedIndexes = 0;
     public boolean userEligible;
     public AnnotationModel annotationModel;
@@ -110,9 +111,10 @@ public class JourneyModel implements Parcelable {
         this.identifier = data[4];
         this.ID = data[5];
         this.deletedIndexes = in.readInt();
-        boolean[] data2 = new boolean[1];
+        boolean[] data2 = new boolean[2];
         in.readBooleanArray(data2);
-        this.userEligible = data2[0];
+        this.toDelete = data2[0];
+        this.userEligible = data2[1];
         annotationModel = in.readParcelable(AnnotationModel.class.getClassLoader());
         in.readTypedList(eventModels, EventModel.CREATOR);
     }
@@ -140,6 +142,8 @@ public class JourneyModel implements Parcelable {
         this.identifier = "XXX";
         this.userEligible = true;
         this.annotationModel = new AnnotationModel(avatarURL, title);
+        EventModel emptyEventModel = new EventModel(this.ID, this.userEligible);
+        this.eventModels.add(emptyEventModel);
     }
 
     public JourneyModel(JourneyModel journeyModel){
@@ -148,6 +152,7 @@ public class JourneyModel implements Parcelable {
         this.coverImageUrl = journeyModel.coverImageUrl;
         this.userAvatarUrl = journeyModel.userAvatarUrl;
         this.identifier = journeyModel.identifier;
+        this.toDelete = journeyModel.toDelete;
         this.ID = journeyModel.ID;
         this.annotationModel = journeyModel.annotationModel;
         this.eventModels = journeyModel.eventModels;
@@ -208,7 +213,7 @@ public class JourneyModel implements Parcelable {
                 this.identifier,
                 this.ID});
         parcel.writeInt(this.deletedIndexes);
-        parcel.writeBooleanArray(new boolean[]{this.userEligible});
+        parcel.writeBooleanArray(new boolean[]{this.toDelete, this.userEligible});
         parcel.writeParcelable(annotationModel, i);
         parcel.writeTypedList(eventModels);
     }
