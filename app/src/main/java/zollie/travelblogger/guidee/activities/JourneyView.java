@@ -36,6 +36,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -64,6 +66,7 @@ public class JourneyView extends Activity{
     ArrayList<CommentModel> allComments = new ArrayList<CommentModel>();
     boolean userEditRight = false;
     public Context mContext;
+    FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser(); // Should be in onResume() with almost every other method.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +126,21 @@ public class JourneyView extends Activity{
             }
         });
 
+        //===================== Journey like method ================================================
+        final ImageView likeButton = (ImageView) findViewById(R.id.journey_love_icon);
+        //  Static  imageview change
+        DataHandler.getInstance().setUserLoved(mJourney, firUser, likeButton);
+
+        likeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                DataHandler.getInstance().loveJourneyInFIR(mJourney, firUser, (ImageView) view);
+            }
+        });
+
+
+        //==========================================================================================
         TextView addComment = (TextView) findViewById(R.id.journey_comments_add);
         addComment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -403,4 +421,5 @@ public class JourneyView extends Activity{
         // show it
         alertDialog.show();
     }
+
 }

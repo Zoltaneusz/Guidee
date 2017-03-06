@@ -60,9 +60,9 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/profile_j_edit_FAB"
-        android:src="@drawable/ic_edit_black_18dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:src="@drawable/ic_edit_black_36dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         app:backgroundTint="@color/lightGreen"/>

@@ -1,5 +1,8 @@
 package zollie.travelblogger.guidee.adapters;
 
+import android.widget.ImageView;
+
+import com.google.android.gms.fitness.data.Value;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -12,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import zollie.travelblogger.guidee.R;
 import zollie.travelblogger.guidee.models.CarouselModel;
 import zollie.travelblogger.guidee.models.CommentModel;
 import zollie.travelblogger.guidee.models.EventModel;
@@ -361,13 +365,96 @@ public class DataHandler {
         userUpdates.put(firUserId + "/following/0", "0");
         userUpdates.put(firUserId + "/name", firUser.getDisplayName());
         userUpdates.put(firUserId + "/avatarUrl", firUser.getPhotoUrl());
+    }
 
+    public void loveJourneyInFIR(final JourneyModel journeyModel, final FirebaseUser FIRUser, final ImageView imageView){
+        DatabaseReference mDatabaseReference = mRootRef.child("Journeys");
+        final DatabaseReference journeyReference = mDatabaseReference.child(journeyModel.ID);
+        final String FIRUID = FIRUser.getUid();
+        DatabaseReference userReference = journeyReference.child("loved").child(FIRUID);
+        userReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean likeValue = (boolean) dataSnapshot.getValue();
+                if(likeValue){
+                    // User is removing his like from this journey
+                    Map<String, Object> journeyUpdates = new HashMap<String, Object>();
+                    journeyUpdates.put("annotationModel/likes", String.valueOf(journeyModel.annotationModel.markerLikes));
+                    journeyUpdates.put("loved/" + FIRUID, false);
+                    journeyReference.updateChildren(journeyUpdates);
 
+                    DatabaseReference mUserRef = mRootRef.child("Users").child(FIRUID);
+
+                    Map<String, Object> userUpdates = new HashMap<String, Object>();
+                    userUpdates.put("loved/" + journeyModel.ID, null);
+                    mUserRef.updateChildren(userUpdates);
+                    imageView.setImageResource(R.drawable.ic_favorites);
+
+                }
+                else if(likeValue == false){ // User like this journey again, after clearing the like once
+                    Map<String, Object> journeyUpdates = new HashMap<String, Object>();
+                    journeyUpdates.put("annotationModel/likes", String.valueOf(journeyModel.annotationModel.markerLikes+1));
+                    journeyUpdates.put("loved/" + FIRUID, true);
+                    journeyReference.updateChildren(journeyUpdates);
+
+                    DatabaseReference mUserRef = mRootRef.child("Users").child(FIRUID);
+
+                    Map<String, Object> userUpdates = new HashMap<String, Object>();
+                    userUpdates.put("loved/" + journeyModel.ID, journeyModel.ID);
+                    mUserRef.updateChildren(userUpdates);
+                    imageView.setImageResource(R.drawable.heart_filled);
+                }
+                else{ // First time like this journey
+                    Map<String, Object> journeyUpdates = new HashMap<String, Object>();
+                    journeyUpdates.put("annotationModel/likes", String.valueOf(journeyModel.annotationModel.markerLikes+1));
+                    journeyUpdates.put("loved/" + FIRUID, true);
+                    journeyReference.updateChildren(journeyUpdates);
+
+                    DatabaseReference mUserRef = mRootRef.child("Users").child(FIRUID);
+
+                    Map<String, Object> userUpdates = new HashMap<String, Object>();
+                    userUpdates.put("loved/" + journeyModel.ID, journeyModel.ID);
+                    mUserRef.updateChildren(userUpdates);
+                    imageView.setImageResource(R.drawable.heart_filled);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    //    userReference.removeEventListener(valueEventListener);
     }
 
  /*    public  void getEvents(final DataHandlerListener dataHandlerListener){
 
      }*/
+    public void setUserLoved(final JourneyModel journeyModel, final FirebaseUser FIRUser, final ImageView imageView) {
+        DatabaseReference mDatabaseReference = mRootRef.child("Journeys");
+        final DatabaseReference journeyReference = mDatabaseReference.child(journeyModel.ID);
+        final String FIRUID = FIRUser.getUid();
+        DatabaseReference userReference = journeyReference.child("loved").child(FIRUID);
+        userReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean likeValue = (boolean) dataSnapshot.getValue();
+                if(likeValue) {
+                    imageView.setImageResource(R.drawable.heart_filled);
+                }
+                else {
+                    imageView.setImageResource(R.drawable.ic_favorites);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
                 // public  void getEventWithIds........
 
