@@ -56,7 +56,7 @@ public class EventView extends YouTubeBaseActivity {
         Bundle intentData = getIntent().getExtras();
         final EventModel mEvent = (EventModel) intentData.getParcelable("ser_event");
         if(mEvent.carouselModels.size() != 0) {
-            if (mEvent.carouselModels.get(0).imageUrl != null) {
+            if (!mEvent.carouselModels.get(0).imageUrl.equals("empty")) {
                 if (mEvent.carouselModels.get(0).carouselType == CarouselModel.CarouselType.IMAGE) {
                     ImageView coverImage = (ImageView) findViewById(R.id.event_imgFirst);
                     //===================== Adding Image to to Horizontal Slide via Glide =========

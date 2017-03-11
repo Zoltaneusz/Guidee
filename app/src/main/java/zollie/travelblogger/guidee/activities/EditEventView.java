@@ -85,7 +85,7 @@ public class EditEventView extends YouTubeBaseActivity {
 
         parentActivity = intentData.getString("parent");
         if(mEvent.carouselModels.size() != 0) {
-            if (mEvent.carouselModels.get(0).imageUrl != null) {
+            if (!mEvent.carouselModels.get(0).imageUrl.equals("empty")) {
                 if (mEvent.carouselModels.get(0).carouselType == CarouselModel.CarouselType.IMAGE) {
                     ImageView coverImage = (ImageView) findViewById(R.id.edit_event_imgFirst);
                     //===================== Adding Image to to Horizontal Slide via Glide =========
@@ -120,7 +120,7 @@ public class EditEventView extends YouTubeBaseActivity {
         }
 
         final EditText mEventVideoUrl = (EditText) findViewById((R.id.edit_event_video_content));
-        mEventVideoUrl.setText("ytQ5CYE1VZw");
+        mEventVideoUrl.setText("");
         // ========================= Method for uploading pictures =================================
         checkPermission();
         TextView highlightTitle = (TextView) findViewById(R.id.edit_event_pictures_title);

@@ -84,48 +84,48 @@ public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         final CarouselModel mCarousel = allCarousels.get(position);
         switch(holder.getItemViewType()) {
             case IMAGE:
-                final ImageView mCarouselImage = ((ViewHolderImage) holder).getmImage();
-                //===================== Adding Image to to Horizontal Slide via Glide =========
-                Glide
-                        .with(mContext)
-                        .load(mCarousel.imageUrl)
-                        .centerCrop()
-                        .override(160, 160)
-                        .crossFade()
-                        .into(mCarouselImage);
-                //=============================================================================
-                ((ViewHolderImage) holder).mCarousel.setOnClickListener(new View.OnClickListener(){
+                if(!mCarousel.imageUrl.equals("empty")) {
+                    final ImageView mCarouselImage = ((ViewHolderImage) holder).getmImage();
+                    //===================== Adding Image to to Horizontal Slide via Glide =========
+                    Glide
+                            .with(mContext)
+                            .load(mCarousel.imageUrl)
+                            .centerCrop()
+                            .override(160, 160)
+                            .crossFade()
+                            .into(mCarouselImage);
+                    //=============================================================================
+                    ((ViewHolderImage) holder).mCarousel.setOnClickListener(new View.OnClickListener() {
 
-                    @Override
-                    public void onClick(View view) {
-                        // Go to new activity and display image
-                        FragmentTransaction ft = ((Activity)mContext).getFragmentManager().beginTransaction();
-                        Fragment prev = ((Activity)mContext).getFragmentManager().findFragmentByTag("imageViewer");
-                        if (prev != null) {
-                            ft.remove(prev);
+                        @Override
+                        public void onClick(View view) {
+                            // Go to new activity and display image
+                            FragmentTransaction ft = ((Activity) mContext).getFragmentManager().beginTransaction();
+                            Fragment prev = ((Activity) mContext).getFragmentManager().findFragmentByTag("imageViewer");
+                            if (prev != null) {
+                                ft.remove(prev);
+                            }
+
+                            DialogFragment newFragment = ContentViewerDialogFragment.newInstance(mCarousel.imageUrl);
+                            newFragment.show(ft, "imageViewer");
                         }
+                    });
 
-                        DialogFragment newFragment = ContentViewerDialogFragment.newInstance(mCarousel.imageUrl);
-                        newFragment.show(ft, "imageViewer");
-                    }
-                });
-
-                ((ViewHolderImage) holder).mCarousel.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View view) {
-                        if(mCarousel.toDelete == 1){  // Long click happened in EditEventView, therefore Carousel model is deletable
-                            mCarousel.toDelete = 2; // Prepare Carousel model for deletion
-                            mCarouselImage.setColorFilter(ContextCompat.getColor(mContext,R.color.PressedTint));
-         //                   holder.itemView.setPressed(true);
+                    ((ViewHolderImage) holder).mCarousel.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            if (mCarousel.toDelete == 1) {  // Long click happened in EditEventView, therefore Carousel model is deletable
+                                mCarousel.toDelete = 2; // Prepare Carousel model for deletion
+                                mCarouselImage.setColorFilter(ContextCompat.getColor(mContext, R.color.PressedTint));
+                                //                   holder.itemView.setPressed(true);
+                            } else if (mCarousel.toDelete == 2) {  // Second long click happened; user doesn't want to delete the item any more.
+                                mCarousel.toDelete = 1;
+                                mCarouselImage.setColorFilter(Color.argb(0, 255, 255, 255));
+                            }
+                            return true;
                         }
-                        else if(mCarousel.toDelete == 2) {  // Second long click happened; user doesn't want to delete the item any more.
-                            mCarousel.toDelete = 1;
-                            mCarouselImage.setColorFilter(Color.argb(0, 255, 255, 255));
-                        }
-                        return true;
-                    }
-                });
-
+                    });
+                }
                 break;
             case VIDEO:
 

@@ -113,11 +113,13 @@ public class CarouselModel implements Parcelable{
         }
     }
     public static final Parcelable.Creator<CarouselModel> CREATOR = new Parcelable.Creator<CarouselModel>() {
+        @Override
         public CarouselModel createFromParcel(Parcel in){
             return new CarouselModel(in);
         }
+        @Override
         public CarouselModel[] newArray(int size){
-            return new CarouselModel[size];
+            return new CarouselModel[0];
         }
     };
 

@@ -21,7 +21,7 @@ public class EventModel implements Parcelable{
     public int toDelete = 0; // 0: NO; 1: opened in edit mode, don't delete yet; 2: YES
     public LatLng eventLatLng;
     public boolean userEligible; // deprecated, remove in future !
-    public ArrayList<CarouselModel> carouselModels;
+    public ArrayList<CarouselModel> carouselModels = new ArrayList<CarouselModel>();
 
     public EventModel(JourneyModel journeyModel){
 
@@ -31,11 +31,8 @@ public class EventModel implements Parcelable{
         this.journeyID = journeyModel.ID;
         this.FIRNumber = journeyModel.eventModels.size();
         this.userEligible = journeyModel.userEligible;
-        CarouselModel emptyCarouselModel = new CarouselModel();
-        emptyCarouselModel.imageUrl = "https://firebasestorage.googleapis.com/v0/b/guidee-f0453.appspot.com/o/images%2F9F4DD9C8-5465-464B-9249-9127AD09E729.jpg?alt=media&token=32a14ec9-a298-4c68-89b3-211eb0f86e7e";
-        emptyCarouselModel.carouselType = CarouselModel.CarouselType.IMAGE;
-        this.carouselModels = new ArrayList<CarouselModel>();
-        this.carouselModels.add(emptyCarouselModel);
+        addEmptyCarousel();
+
         this.deletedIndexes = 0;
     }
 
@@ -47,11 +44,8 @@ public class EventModel implements Parcelable{
         this.journeyID = ID;
         this.FIRNumber = 0;
         this.userEligible = eligible;
-        CarouselModel emptyCarouselModel = new CarouselModel();
-        emptyCarouselModel.imageUrl = "https://firebasestorage.googleapis.com/v0/b/guidee-f0453.appspot.com/o/images%2F9F4DD9C8-5465-464B-9249-9127AD09E729.jpg?alt=media&token=32a14ec9-a298-4c68-89b3-211eb0f86e7e";
-        emptyCarouselModel.carouselType = CarouselModel.CarouselType.IMAGE;
-        this.carouselModels = new ArrayList<CarouselModel>();
-        this.carouselModels.add(emptyCarouselModel);
+        addEmptyCarousel();
+
         this.deletedIndexes = 0;
     }
 
@@ -153,8 +147,10 @@ public class EventModel implements Parcelable{
             e.printStackTrace();
         }
         LatLng mLatLng = null;
+        double lati = in.readDouble();
+        double longi = in.readDouble();
         try {
-            mLatLng = new LatLng(in.readDouble(), in.readDouble());
+            mLatLng = new LatLng(lati, longi);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -174,7 +170,6 @@ public class EventModel implements Parcelable{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        carouselModels= new ArrayList<CarouselModel>();
         try {
             in.readTypedList(carouselModels, CarouselModel.CREATOR);
         } catch (Exception e) {
@@ -259,7 +254,11 @@ public class EventModel implements Parcelable{
             e.printStackTrace();
         }
         try {
-            parcel.writeTypedList(carouselModels);
+            if(carouselModels.size() == 0) {
+                addEmptyCarousel();
+                parcel.writeTypedList(carouselModels);
+            }
+            else {parcel.writeTypedList(carouselModels);}
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -306,5 +305,11 @@ public class EventModel implements Parcelable{
             mCarouselModel.FIRNumber = this.getHighestCarouselID(this) + 1;
             this.carouselModels.add(mCarouselModel);
         }
+    }
+    private void addEmptyCarousel(){
+        CarouselModel emptyCarouselModel = new CarouselModel();
+        emptyCarouselModel.imageUrl = "empty";
+        emptyCarouselModel.carouselType = CarouselModel.CarouselType.IMAGE;
+        this.carouselModels.add(emptyCarouselModel);
     }
 }

@@ -181,7 +181,7 @@ public class DataHandler {
         //int updatedCarouselNr = updatedEvent.getHighestCarouselID(updatedEvent);
         int updatedCarouselNr = updatedEvent.carouselModels.size() + updatedEvent.deletedIndexes;
         if(originalCarouselNr != updatedCarouselNr) {
-            for (int i = originalCarouselNr; i < updatedCarouselNr + 1; i++) {
+            for (int i = originalCarouselNr - 1; i < updatedCarouselNr; i++) {
                 if (updatedEvent.carouselModels.get(i).carouselType == CarouselModel.CarouselType.IMAGE) {
                     eventUpdates.put("carouselModels/" + String.valueOf(i) + "/imageURL", updatedEvent.carouselModels.get(i).imageUrl);
                 } else {
@@ -307,10 +307,10 @@ public class DataHandler {
 
         String eventIndex = String.valueOf(updatedJourney.eventModels.size() + updatedJourney.deletedIndexes);
         Map<String, Object> journeyUpdates = new HashMap<String, Object>();
-        journeyUpdates.put(eventIndex + "/title", "Your events title");
-        journeyUpdates.put(eventIndex + "/summary", "Your events summary");
-        journeyUpdates.put(eventIndex + "/location/latitude", 43);
-        journeyUpdates.put(eventIndex + "/location/longitude", 16);
+        journeyUpdates.put("eventModels/" + eventIndex + "/title", "Your events title");
+        journeyUpdates.put("eventModels/" + eventIndex + "/summary", "Your events summary");
+        journeyUpdates.put("eventModels/" + eventIndex + "/location/latitude", 43);
+        journeyUpdates.put("eventModels/" + eventIndex + "/location/longitude", 16);
 
         journeyReference.updateChildren(journeyUpdates);
 
@@ -439,13 +439,21 @@ public class DataHandler {
         userReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                boolean likeValue = (boolean) dataSnapshot.getValue();
-                if(likeValue) {
-                    imageView.setImageResource(R.drawable.heart_filled);
+                boolean likeValue = false;
+                try {
+                    likeValue = (boolean) dataSnapshot.getValue();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                else {
-                    imageView.setImageResource(R.drawable.ic_favorites);
+                finally {
+                    if(likeValue) {
+                        imageView.setImageResource(R.drawable.heart_filled);
+                    }
+                    else {
+                        imageView.setImageResource(R.drawable.ic_favorites);
+                    }
                 }
+
 
             }
 
