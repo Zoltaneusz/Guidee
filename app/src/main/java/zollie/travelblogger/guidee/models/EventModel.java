@@ -288,23 +288,39 @@ public class EventModel implements Parcelable{
         return Nr;
     }
 
-    public void addItemToCarousels(ArrayList<String> images, String video){
+    public boolean addItemToCarousels(ArrayList<String> images, String video){
         int i = 0;
+        boolean retVal = false;
         for(String image : images) {
             CarouselModel mCarouselModel = new CarouselModel();
             mCarouselModel.carouselType = CarouselModel.CarouselType.IMAGE;
             mCarouselModel.imageUrl = image;
-            mCarouselModel.FIRNumber = this.getHighestCarouselID(this) + 1;
-            this.carouselModels.add(mCarouselModel);
+            if(this.carouselModels.get(0).imageUrl.equals("empty")){
+                this.carouselModels.get(0).imageUrl = image;
+                retVal = true;
+            }
+            else {
+                mCarouselModel.FIRNumber = this.getHighestCarouselID(this) + 1;
+                this.carouselModels.add(mCarouselModel);
+            }
+
         }
-        if(video.equals("ytQ5CYE1VZw")){}
+        if(video.equals("")){}  // példa: ytQ5CYE1VZw
         else {
-            CarouselModel mCarouselModel = new CarouselModel();
-            mCarouselModel.carouselType = CarouselModel.CarouselType.VIDEO;
-            mCarouselModel.videoUrl = video;
-            mCarouselModel.FIRNumber = this.getHighestCarouselID(this) + 1;
-            this.carouselModels.add(mCarouselModel);
+            if(this.carouselModels.get(0).imageUrl.equals("empty")){
+                this.carouselModels.get(0).videoUrl = video;
+                this.carouselModels.get(0).imageUrl = "";
+                this.carouselModels.get(0).carouselType = CarouselModel.CarouselType.VIDEO;
+                retVal = true;
+            }else {
+                CarouselModel mCarouselModel = new CarouselModel();
+                mCarouselModel.carouselType = CarouselModel.CarouselType.VIDEO;
+                mCarouselModel.videoUrl = video;
+                mCarouselModel.FIRNumber = this.getHighestCarouselID(this) + 1;
+                this.carouselModels.add(mCarouselModel);
+            }
         }
+        return retVal;
     }
     private void addEmptyCarousel(){
         CarouselModel emptyCarouselModel = new CarouselModel();

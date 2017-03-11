@@ -166,7 +166,7 @@ public class DataHandler {
         });
     }
 
-    public void setEventInFIR(int originalCarouselNr, EventModel updatedEvent){
+    public void setEventInFIR(int originalCarouselNr, EventModel updatedEvent, boolean emptyFilled){
 
         DatabaseReference mDatabaseReference  =  mRootRef.child("Journeys");
         ArrayList<Map<String, Object>> rawEventModels = null;
@@ -178,15 +178,20 @@ public class DataHandler {
         eventUpdates.put("summary", updatedEvent.summary);
         eventUpdates.put("location/latitude", updatedEvent.eventLatLng.latitude);
         eventUpdates.put("location/longitude", updatedEvent.eventLatLng.longitude);
+        int j = 0;
+        if(emptyFilled){
+            eventUpdates.put("carouselModels/0/imageURL", updatedEvent.carouselModels.get(0).imageUrl);
+            j = 1;
+        }
         //int updatedCarouselNr = updatedEvent.getHighestCarouselID(updatedEvent);
         int updatedCarouselNr = updatedEvent.carouselModels.size() + updatedEvent.deletedIndexes;
         if(originalCarouselNr != updatedCarouselNr) {
-            for (int i = originalCarouselNr - 1; i < updatedCarouselNr; i++) {
-                if (updatedEvent.carouselModels.get(i).carouselType == CarouselModel.CarouselType.IMAGE) {
-                    eventUpdates.put("carouselModels/" + String.valueOf(i) + "/imageURL", updatedEvent.carouselModels.get(i).imageUrl);
+            for (int i = originalCarouselNr; i < updatedCarouselNr - j + 1; i++) {
+                if (updatedEvent.carouselModels.get(i+j).carouselType == CarouselModel.CarouselType.IMAGE) {
+                    eventUpdates.put("carouselModels/" + String.valueOf(i+j) + "/imageURL", updatedEvent.carouselModels.get(i+j).imageUrl);
                 } else {
-                    if (updatedEvent.carouselModels.get(i).videoUrl.length() == 11)  // Only 11 characted long videos will be allowed (yet)
-                        eventUpdates.put("carouselModels/" + String.valueOf(i) + "/videoYoutubeId", updatedEvent.carouselModels.get(i).videoUrl);
+                    if (updatedEvent.carouselModels.get(i+j).videoUrl.length() == 11)  // Only 11 characted long videos will be allowed (yet)
+                        eventUpdates.put("carouselModels/" + String.valueOf(i+j) + "/videoYoutubeId", updatedEvent.carouselModels.get(i+j).videoUrl);
                 }
             }
         }

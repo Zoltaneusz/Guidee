@@ -230,4 +230,13 @@ public class EventView extends YouTubeBaseActivity {
             // permissions this app might request
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        Intent toJourneyIntent = new Intent(mContext, JourneyView.class);
+        toJourneyIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        mContext.startActivity(toJourneyIntent);
+    }
 }

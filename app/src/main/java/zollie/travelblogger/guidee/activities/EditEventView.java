@@ -163,8 +163,8 @@ public class EditEventView extends YouTubeBaseActivity {
                 String eventVideoURL = mEventVideoUrl.getText().toString();
 
                 int carousels = mEvent.carouselModels.size() + mEvent.deletedIndexes;
-                updatedEvent.addItemToCarousels(imageUrls, eventVideoURL);
-                DataHandler.getInstance().setEventInFIR(carousels, updatedEvent);
+                boolean emptyFilled = updatedEvent.addItemToCarousels(imageUrls, eventVideoURL);
+                DataHandler.getInstance().setEventInFIR(carousels, updatedEvent, emptyFilled);
 
                 if(parentActivity.equals("EditJourneyView")) {
                     Intent toJourneyIntent = new Intent(mContext, EditJourneyView.class);
