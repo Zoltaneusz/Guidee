@@ -12,14 +12,14 @@
         android:background="@color/colorPrimary100">
 
         <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="150dp"
             android:id="@+id/event_frameLayout">
             <ImageView
                 android:id="@+id/event_imgFirst"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="fitXY"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
                 android:src="@mipmap/maxresdefault"
                 android:alpha="0.5" />
             <RelativeLayout

@@ -93,6 +93,16 @@ public class EventModel implements Parcelable{
                 }
             }
         } catch (Exception e) {
+            Map<String, Object> rawCarouselMap;
+            rawCarouselMap = (Map<String, Object>) rawEventModel.get("carouselModels");
+            for(Map.Entry<String, Object> rawCarouselModel : rawCarouselMap.entrySet()){
+                if(rawCarouselModel != null){
+                    CarouselModel carouselModel = new CarouselModel((Map<String, Object>) rawCarouselModel.getValue(), Integer.parseInt(rawCarouselModel.getKey()));
+                    this.carouselModels.add(carouselModel);
+                }
+
+            }
+
             e.printStackTrace();
         }
         try {

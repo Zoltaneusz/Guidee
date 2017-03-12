@@ -114,6 +114,7 @@ public class ProfileFragment extends Fragment {
                         if(journeyModel.title != null) {
                             allJourneys.add(journeyModel);
                             fillRecyclerView(R.id.my_journeys_recycle, R.id.my_journeys_recycle_placeholder, allJourneys);
+                            changeProfileCover();
                         }
                     }
 
@@ -330,6 +331,20 @@ public class ProfileFragment extends Fragment {
                 alertDialog.show();
             }
         });
+    }
+    public void changeProfileCover(){
+        if(allJourneys.size() != 0) {
+            if (allJourneys.get(0).coverImageUrl != null) {
+                ImageView coverImg = (ImageView) getActivity().findViewById(R.id.prof_cover);
+                //===================== Adding Image to to Horizontal Slide via Glide =========
+                Glide
+                        .with(this)
+                        .load(allJourneys.get(0).coverImageUrl)
+                        .crossFade()
+                        .into(coverImg);
+                //=============================================================================
+            }
+        }
     }
 
 }

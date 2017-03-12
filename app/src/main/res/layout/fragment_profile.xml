@@ -12,39 +12,41 @@
     android:background="@color/colorPrimary100">
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="wrap_content"
-        android:layout_height="150dp"
-        android:id="@+id/frameLayout">
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="150dp">
+
         <ImageView
-            android:id="@+id/imgFirst"
+            android:id="@+id/prof_cover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.5"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/maxresdefault" />
+
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleType="fitXY"
-            android:src="@mipmap/maxresdefault"
-            android:alpha="0.5" />
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|center">
-                        <ImageView
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:id="@+id/prof_pic"
-                            android:layout_alignParentTop="true"
-                            android:layout_centerHorizontal="true">
-                        </ImageView>
+            android:layout_gravity="bottom|center">
 
-                        <TextView
-                            android:text=""
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:id="@+id/profile_name"
-                            android:layout_below="@+id/prof_pic"
-                            android:layout_marginTop="15dp"
-                            android:textSize="25dp"
-                            android:textColor="#000000"
-                            android:layout_centerHorizontal="true"/>
-                </RelativeLayout>
+            <ImageView
+                android:id="@+id/prof_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"></ImageView>
+
+            <TextView
+                android:id="@+id/profile_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/prof_pic"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
+                android:text=""
+                android:textColor="#000000"
+                android:textSize="25dp" />
+        </RelativeLayout>
     </FrameLayout>
 
     <TextView
@@ -61,10 +63,11 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/profile_j_edit_FAB"
         android:src="@drawable/ic_edit_black_36dp"
-        android:layout_width="18dp"
-        android:layout_height="18dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
+        android:paddingRight="10dp"
         app:backgroundTint="@color/lightGreen"/>
 
     <android.support.v7.widget.RecyclerView
