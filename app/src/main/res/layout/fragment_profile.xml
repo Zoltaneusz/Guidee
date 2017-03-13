@@ -8,7 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="4"
+    android:weightSum="5"
     android:background="@color/colorPrimary100">
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -154,6 +154,41 @@
         android:layout_below="@+id/my_favorites_title">
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/my_followed_users_title"
+        android:textColor="#000000"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="My followed 👤"
+        android:textSize="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:layout_below="@+id/following_journeys_recycle"
+        android:background="@android:color/transparent"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/followed_users_recycle"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:layout_below="@+id/my_followed_users_title"
+        android:scrollbars="none"
+        android:paddingStart="10dp"
+        android:paddingBottom="10dp"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/followed_users_recycle_placeholder"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_below="@+id/my_followed_users_title"
+        android:paddingBottom="10dp">
+        </LinearLayout>
 
 </RelativeLayout>
 </ScrollView>

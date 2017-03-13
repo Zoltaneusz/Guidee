@@ -40,6 +40,8 @@ import zollie.travelblogger.guidee.activities.EditJourneyView;
 import zollie.travelblogger.guidee.activities.JourneyView;
 import zollie.travelblogger.guidee.adapters.DataHandler;
 import zollie.travelblogger.guidee.adapters.DataHandlerListener;
+import zollie.travelblogger.guidee.adapters.FollowedAdapter;
+import zollie.travelblogger.guidee.adapters.FollowingListener;
 import zollie.travelblogger.guidee.utils.ImageProcessor;
 import zollie.travelblogger.guidee.adapters.JourneyAdapter;
 import zollie.travelblogger.guidee.R;
@@ -54,6 +56,8 @@ public class ProfileFragment extends Fragment {
     ArrayList<JourneyModel> allJourneys = new ArrayList<JourneyModel>();
     ArrayList<JourneyModel> allFavorites = new ArrayList<JourneyModel>();
     ArrayList<JourneyModel> allPlans = new ArrayList<JourneyModel>();
+    ArrayList<String> allFollowedUserAvatar = new ArrayList<String>();
+    ArrayList<String> allFollowedUserName = new ArrayList<String>();
     Bitmap userAvatarGlobal = null;
     ImageProcessor imageProcessor = new ImageProcessor();
     //Getting Firebase user ID
@@ -97,6 +101,8 @@ public class ProfileFragment extends Fragment {
                 allJourneys.clear();
                 allFavorites.clear();
                 allPlans.clear();
+                allFollowedUserAvatar.clear();
+                allFollowedUserName.clear();
                 UserModel userModel = new UserModel(rawUserData);
                 try {
                     userAvatarUrl = userModel.avatarUrl;
@@ -171,6 +177,15 @@ public class ProfileFragment extends Fragment {
 
                     }
                 });
+
+                DataHandler.getInstance().getUserFollowing(firUserID, new FollowingListener() {
+                    @Override
+                    public void onFollowing(String followedUserAvatar, String followedUserName) {
+                        allFollowedUserAvatar.add(followedUserAvatar);
+                        allFollowedUserName.add(followedUserName);
+                        fillRecyclerViewFollow(R.id.followed_users_recycle, R.id.followed_users_recycle_placeholder, allFollowedUserAvatar, allFollowedUserName);
+                    }
+                });
             }
 
             @Override
@@ -232,6 +247,18 @@ public class ProfileFragment extends Fragment {
         rvJourneys.addItemDecoration(itemDecoration);
         if(journeyModels.isEmpty() == true ) showPlaceholderCards(emptyResource);
    //     rvJourneys.setVisibility(View.INVISIBLE);
+    }
+
+    public void fillRecyclerViewFollow(int primaryResource, int emptyResource, ArrayList<String> userAvatarUrls, ArrayList<String> userNames) {
+        RecyclerView rvFollows = (RecyclerView) getActivity().findViewById(primaryResource);
+        FollowedAdapter adapter = new FollowedAdapter(getActivity(), userAvatarUrls, userNames);
+        rvFollows.setAdapter(adapter);
+        rvFollows.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        RecyclerView.ItemDecoration itemDecoration = new
+                DividerItemDecoration(getActivity(), zollie.travelblogger.guidee.utils.DividerItemDecoration.HORIZONTAL_LIST);
+        rvFollows.addItemDecoration(itemDecoration);
+        if(userAvatarUrls.isEmpty() == true ) showPlaceholderCards(emptyResource);
+
     }
 
     public void showPlaceholderCards(int id){

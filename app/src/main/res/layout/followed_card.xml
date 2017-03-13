@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="50dp"
+    android:layout_height="50dp"
+    android:id="@+id/mFollowedCard">
+    <ImageView
+        android:id="@+id/mFollowedIMG"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#929494"
+        android:src="@drawable/placeholder2"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/mFollowedName"
+        android:allowUndo="true"
+        android:text="Name"
+        android:shadowColor="#000000"
+        android:textAlignment="center"
+        android:textColor="#ffffff"
+        android:textSize="7dp"
+        android:layout_gravity="bottom|center"
+        android:background="#20000000" />
+</FrameLayout>

@@ -385,9 +385,9 @@ public class DataHandler {
                     likeValue = (boolean) dataSnapshot.getValue();
                 } catch (Exception e) { // First time like this journey
                     Map<String, Object> journeyUpdates = new HashMap<String, Object>();
-                    journeyUpdates.put("annotationModel/likes", String.valueOf(journeyModel.annotationModel.markerLikes+1));
+                    journeyUpdates.put("annotationModel/likes", journeyModel.annotationModel.markerLikes+1);
                     journeyUpdates.put("loved/" + FIRUID, true);
-                    journeyUpdates.put("lovedCount", String.valueOf(journeyModel.annotationModel.markerLikes+1));
+                    journeyUpdates.put("lovedCount", journeyModel.annotationModel.markerLikes+1);
                     journeyReference.updateChildren(journeyUpdates);
 
                     DatabaseReference mUserRef = mRootRef.child("Users").child(FIRUID);
@@ -402,9 +402,9 @@ public class DataHandler {
                     if (likeValue) {
                         // User is removing his like from this journey
                         Map<String, Object> journeyUpdates = new HashMap<String, Object>();
-                        journeyUpdates.put("annotationModel/likes", String.valueOf(journeyModel.annotationModel.markerLikes));
+                        journeyUpdates.put("annotationModel/likes", journeyModel.annotationModel.markerLikes);
                         journeyUpdates.put("loved/" + FIRUID, false);
-                        journeyUpdates.put("lovedCount", String.valueOf(journeyModel.annotationModel.markerLikes));
+                        journeyUpdates.put("lovedCount", journeyModel.annotationModel.markerLikes);
                         journeyReference.updateChildren(journeyUpdates);
 
                         DatabaseReference mUserRef = mRootRef.child("Users").child(FIRUID);
@@ -416,9 +416,9 @@ public class DataHandler {
 
                     } else { // User like this journey again, after clearing the like once
                         Map<String, Object> journeyUpdates = new HashMap<String, Object>();
-                        journeyUpdates.put("annotationModel/likes", String.valueOf(journeyModel.annotationModel.markerLikes + 1));
+                        journeyUpdates.put("annotationModel/likes", journeyModel.annotationModel.markerLikes + 1);
                         journeyUpdates.put("loved/" + FIRUID, true);
-                        journeyUpdates.put("lovedCount", String.valueOf(journeyModel.annotationModel.markerLikes+1));
+                        journeyUpdates.put("lovedCount", journeyModel.annotationModel.markerLikes+1);
                         journeyReference.updateChildren(journeyUpdates);
 
                         DatabaseReference mUserRef = mRootRef.child("Users").child(FIRUID);
@@ -476,6 +476,50 @@ public class DataHandler {
     }
 
                 // public  void getEventWithIds........
+
+    public void getUserFollowing(String userID, final FollowingListener followingListener){
+        DatabaseReference mUserReference = mRootRef.child("Users");
+        DatabaseReference followingReference = null;
+        try {
+            followingReference = mUserReference.child(userID).child("following");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally{
+            followingReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    ArrayList<String> rawUserIDs = (ArrayList<String>) dataSnapshot.getValue();
+                for(String rawUserID : rawUserIDs) {
+                    DataHandler.getInstance().getUserWithId(rawUserID, new DataHandlerListener() {
+                        @Override
+                        public void onJourneyData(Map<String, Object> rawJourneyData, String journeyID) {
+
+                        }
+
+                        @Override
+                        public void onUserData(Map<String, Object> rawUserData) {
+                            String avatarUrl = (String) rawUserData.get("avatarUrl");
+                            String name = (String) rawUserData.get("name");
+                            followingListener.onFollowing(avatarUrl, name);
+                        }
+
+                        @Override
+                        public void onCommentData(Map<String, Object> rawCommentData, String commentID, String journeyIdent) {
+
+                        }
+                    });
+                }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+    }
 
         public void setProfPic(String value){
         myProfPic = value;
