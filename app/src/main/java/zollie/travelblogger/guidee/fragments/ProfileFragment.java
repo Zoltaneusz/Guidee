@@ -324,7 +324,7 @@ public class ProfileFragment extends Fragment {
                         switch(i){
                             case 0: { // Add new journey
                                 String FIRKey = DataHandler.getInstance().createJourneyInFIR(firUserID);
-                                JourneyModel mJourney = new JourneyModel(FIRKey, userAvatarUrl);
+                                JourneyModel mJourney = new JourneyModel(FIRKey, userAvatarUrl, firUserID);
 
                                 Intent toJourneyIntent = new Intent(getActivity(), EditJourneyView.class);
                                 toJourneyIntent.putExtra("ser_journey", mJourney);

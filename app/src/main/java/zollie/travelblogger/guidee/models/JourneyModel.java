@@ -24,6 +24,7 @@ public class JourneyModel implements Parcelable {
     public String coverImageUrl;
     public String userAvatarUrl;
     public String identifier;
+    public String ownerID;
     public String ID;
     public boolean toDelete = false;
     public int deletedIndexes = 0;
@@ -54,6 +55,11 @@ public class JourneyModel implements Parcelable {
         }
         try {
             this.identifier = (String) rawJourneyModel.get("identifier");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.ownerID = (String) rawJourneyModel.get("userId");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -102,7 +108,7 @@ public class JourneyModel implements Parcelable {
 
     }
     public JourneyModel(Parcel in){
-        String[] data = new String[6];
+        String[] data = new String[7];
         in.readStringArray(data);
         this.title = data[0];
         this.summary =  data[1];
@@ -110,6 +116,7 @@ public class JourneyModel implements Parcelable {
         this.userAvatarUrl = data[3];
         this.identifier = data[4];
         this.ID = data[5];
+        this.ownerID = data[6];
         this.deletedIndexes = in.readInt();
         boolean[] data2 = new boolean[2];
         in.readBooleanArray(data2);
@@ -125,7 +132,7 @@ public class JourneyModel implements Parcelable {
         return this.userEligible;
     }
 
-    public JourneyModel(String FIRKey, String avatarURL){
+    public JourneyModel(String FIRKey, String avatarURL, String FIRUserID){
         this.title = "Your journey title";
         this.summary = "Your journey summary";
         this.coverImageUrl = "https://firebasestorage.googleapis.com/v0/b/guidee-f0453.appspot.com/o/images%2F9F4DD9C8-5465-464B-9249-9127AD09E729.jpg?alt=media&token=32a14ec9-a298-4c68-89b3-211eb0f86e7e";
@@ -140,6 +147,7 @@ public class JourneyModel implements Parcelable {
             e.printStackTrace();
         }
         this.identifier = "XXX";
+        this.ownerID = FIRUserID;
         this.userEligible = true;
         this.annotationModel = new AnnotationModel(avatarURL, title);
         EventModel emptyEventModel = new EventModel(this.ID, this.userEligible);
@@ -152,6 +160,7 @@ public class JourneyModel implements Parcelable {
         this.coverImageUrl = journeyModel.coverImageUrl;
         this.userAvatarUrl = journeyModel.userAvatarUrl;
         this.identifier = journeyModel.identifier;
+        this.ownerID = journeyModel.ownerID;
         this.toDelete = journeyModel.toDelete;
         this.ID = journeyModel.ID;
         this.annotationModel = journeyModel.annotationModel;
@@ -211,7 +220,8 @@ public class JourneyModel implements Parcelable {
                 this.coverImageUrl,
                 this.userAvatarUrl,
                 this.identifier,
-                this.ID});
+                this.ID,
+                this.ownerID});
         parcel.writeInt(this.deletedIndexes);
         parcel.writeBooleanArray(new boolean[]{this.toDelete, this.userEligible});
         parcel.writeParcelable(annotationModel, i);
