@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/colorPrimary100">
+    <RelativeLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="5"
+        android:background="@color/colorPrimary100">
+
+        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/owner_frameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="150dp">
+
+            <ImageView
+                android:id="@+id/owner_prof_cover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.5"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/maxresdefault" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center">
+
+                <ImageView
+                    android:id="@+id/owner_prof_pic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"></ImageView>
+
+                <TextView
+                    android:id="@+id/owner_profile_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/owner_prof_pic"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="15dp"
+                    android:text=""
+                    android:textColor="#000000"
+                    android:textSize="25dp" />
+            </RelativeLayout>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/owner_journeys_title"
+            android:text="Journeys ✈"
+            android:textColor="#000000"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/owner_frameLayout"
+            android:textSize="20dp"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/owner_journeys_recycle"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:layout_below="@+id/owner_journeys_title"
+            android:scrollbars="none"
+            android:paddingStart="10dp"
+            />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/owner_journeys_recycle_placeholder"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_below="@+id/owner_journeys_title">
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/owner_plans_title"
+            android:text="Plans "
+            android:textColor="#000000"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textSize="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:layout_below="@+id/owner_journeys_recycle"
+            android:background="@android:color/transparent"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/owner_plan_journeys_recycle"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:layout_below="@+id/owner_plans_title"
+            android:scrollbars="none"
+            android:paddingStart="10dp"
+            />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/owner_plan_journeys_recycle_placeholder"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_below="@+id/owner_plans_title">
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/owner_favorites_title"
+            android:textColor="#000000"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Owner "
+            android:textSize="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:layout_below="@+id/owner_plan_journeys_recycle"
+            android:background="@android:color/transparent"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/owner_following_journeys_recycle"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:layout_below="@+id/owner_favorites_title"
+            android:scrollbars="none"
+            android:paddingStart="10dp"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/owner_following_journeys_recycle_placeholder"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_below="@+id/owner_favorites_title">
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/owner_followed_users_title"
+            android:textColor="#000000"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Followed 👤"
+            android:textSize="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:layout_below="@+id/owner_following_journeys_recycle"
+            android:background="@android:color/transparent"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/owner_followed_users_recycle"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:layout_below="@+id/owner_followed_users_title"
+            android:scrollbars="none"
+            android:paddingStart="10dp"
+            android:paddingBottom="10dp"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/owner_followed_users_recycle_placeholder"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_below="@+id/owner_followed_users_title"
+            android:paddingBottom="10dp">
+        </LinearLayout>
+
+    </RelativeLayout>
+</ScrollView>

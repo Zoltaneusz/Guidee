@@ -28,23 +28,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="bottom|center">
+
                 <ImageView
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:id="@+id/journey_prof_pic"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true">
+                    android:id="@+id/journey_owner_icon"
+                    android:layout_alignParentStart="true">
+
                 </ImageView>
+
 
                 <ImageView
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:id="@+id/journey_love_icon"
                     android:src="@drawable/ic_favorites"
-                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/journey_owner_icon"
                     android:paddingTop="10dp"
-                    android:paddingLeft="10dp"
-                    >
+                    android:paddingLeft="10dp">
                 </ImageView>
 
                 <TextView

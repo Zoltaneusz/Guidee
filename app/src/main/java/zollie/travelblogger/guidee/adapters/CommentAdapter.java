@@ -101,7 +101,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                     }
 
                     @Override
-                    public void onUserData(Map<String, Object> rawUserData) {
+                    public void onUserData(Map<String, Object> rawUserData, String userId) {
                         String userName = null;
                         try {
                             userName = (String) rawUserData.get("name");

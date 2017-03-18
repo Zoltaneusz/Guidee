@@ -231,7 +231,7 @@ public class EditJourneyView extends Activity{
             }
 
             @Override
-            public void onUserData(Map<String, Object> rawUserData) {
+            public void onUserData(Map<String, Object> rawUserData, String userID) {
 
             }
 
@@ -415,8 +415,8 @@ public class EditJourneyView extends Activity{
                 }
 
                 @Override
-                public void onUserData(Map<String, Object> rawUserData) {
-                    UserModel mInstance = new UserModel(rawUserData);
+                public void onUserData(Map<String, Object> rawUserData, String userID) {
+                    UserModel mInstance = new UserModel(rawUserData, userID);
                     for (Map.Entry<String, Object> map : mInstance.userJourneys.entrySet()) {
                         String journeyModel = (String) map.getValue();
                         allJourneys.add(journeyModel);

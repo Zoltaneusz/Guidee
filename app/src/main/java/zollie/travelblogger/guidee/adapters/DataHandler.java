@@ -20,6 +20,7 @@ import zollie.travelblogger.guidee.models.CarouselModel;
 import zollie.travelblogger.guidee.models.CommentModel;
 import zollie.travelblogger.guidee.models.EventModel;
 import zollie.travelblogger.guidee.models.JourneyModel;
+import zollie.travelblogger.guidee.models.UserModel;
 
 /**
  * Created by FuszeneckerZ on 2016.12.03..
@@ -87,7 +88,7 @@ public class DataHandler {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Map<String, Object> userInfo = (Map<String, Object>) dataSnapshot.getValue();
-                dataHandlerListener.onUserData(userInfo);
+                dataHandlerListener.onUserData(userInfo, dataSnapshot.getKey());
             }
 
             @Override
@@ -105,7 +106,7 @@ public class DataHandler {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Map<String, Object> userInfo = (Map<String, Object>) dataSnapshot.getValue();
-                dataHandlerListener.onUserData(userInfo);
+                dataHandlerListener.onUserData(userInfo, dataSnapshot.getKey());
             }
 
             @Override
@@ -489,27 +490,53 @@ public class DataHandler {
             followingReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    ArrayList<String> rawUserIDs = (ArrayList<String>) dataSnapshot.getValue();
-                for(String rawUserID : rawUserIDs) {
-                    DataHandler.getInstance().getUserWithId(rawUserID, new DataHandlerListener() {
-                        @Override
-                        public void onJourneyData(Map<String, Object> rawJourneyData, String journeyID) {
+
+                    try {
+                        ArrayList<String> rawUserIDs = null;
+                        rawUserIDs = (ArrayList<String>) dataSnapshot.getValue();
+                        for(String rawUserID : rawUserIDs) {
+                            DataHandler.getInstance().getUserWithId(rawUserID, new DataHandlerListener() {
+                                @Override
+                                public void onJourneyData(Map<String, Object> rawJourneyData, String journeyID) {
+
+                                }
+
+                                @Override
+                                public void onUserData(Map<String, Object> rawUserData, String userId) {
+                                    UserModel userModel = new UserModel(rawUserData, userId);
+                                    followingListener.onFollowing(userModel);
+                                }
+
+                                @Override
+                                public void onCommentData(Map<String, Object> rawCommentData, String commentID, String journeyIdent) {
+
+                                }
+                            });
+                        }
+                    } catch (Exception e){
+                        Map<String, Object> rawUserIDs = null;
+                        rawUserIDs = (Map<String, Object>) dataSnapshot.getValue();
+                        for(Map.Entry<String, Object> rawUserID : rawUserIDs.entrySet()) {
+                            DataHandler.getInstance().getUserWithId((String) rawUserID.getValue(), new DataHandlerListener() {
+                                @Override
+                                public void onJourneyData(Map<String, Object> rawJourneyData, String journeyID) {
+
+                                }
+
+                                @Override
+                                public void onUserData(Map<String, Object> rawUserData, String userId) {
+                                    UserModel userModel = new UserModel(rawUserData, userId);
+                                    followingListener.onFollowing(userModel);
+                                }
+
+                                @Override
+                                public void onCommentData(Map<String, Object> rawCommentData, String commentID, String journeyIdent) {
+
+                                }
+                            });
 
                         }
-
-                        @Override
-                        public void onUserData(Map<String, Object> rawUserData) {
-                            String avatarUrl = (String) rawUserData.get("avatarUrl");
-                            String name = (String) rawUserData.get("name");
-                            followingListener.onFollowing(avatarUrl, name);
-                        }
-
-                        @Override
-                        public void onCommentData(Map<String, Object> rawCommentData, String commentID, String journeyIdent) {
-
-                        }
-                    });
-                }
+                    }
 
                 }
 

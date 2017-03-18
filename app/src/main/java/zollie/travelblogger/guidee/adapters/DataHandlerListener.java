@@ -11,7 +11,7 @@ import java.util.Map;
 public interface DataHandlerListener {
 
     void onJourneyData(Map<String, Object> rawJourneyData, String journeyID);
-    void onUserData(Map<String, Object> rawUserData);
+    void onUserData(Map<String, Object> rawUserData, String userID);
     void onCommentData(Map<String, Object> rawCommentData, String commentID, String journeyIdent);
 
 

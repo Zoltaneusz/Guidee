@@ -71,16 +71,16 @@ public class CarouselModel implements Parcelable{
         } catch (Exception e) {
             e.printStackTrace();
         }
+        try {
+            this.toDelete = in.readInt();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if(imageUrl != null) {
             this.carouselType = CarouselType.IMAGE;
         }
         if(videoUrl != null) {
             this.carouselType = CarouselType.VIDEO;
-        }
-        try {
-            this.toDelete = in.readInt();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

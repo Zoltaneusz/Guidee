@@ -122,7 +122,7 @@ public class ExploreFragment extends Fragment {
                         }
 
                         @Override
-                        public void onUserData(Map<String, Object> rawUserData) {
+                        public void onUserData(Map<String, Object> rawUserData, String userID) {
 
                         }
 

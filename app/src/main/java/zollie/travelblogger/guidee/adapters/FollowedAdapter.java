@@ -1,6 +1,7 @@
 package zollie.travelblogger.guidee.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,8 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import zollie.travelblogger.guidee.R;
+import zollie.travelblogger.guidee.activities.ProfileView;
+import zollie.travelblogger.guidee.models.UserModel;
 
 /**
  * Created by FuszeneckerZ on 2017.03.13..
@@ -22,8 +25,7 @@ import zollie.travelblogger.guidee.R;
 
 public class FollowedAdapter extends RecyclerView.Adapter<FollowedAdapter.ViewHolder> {
 
-    private ArrayList<String> allAvatars = new ArrayList<String>();
-    private ArrayList<String> allNames = new ArrayList<String>();
+    private ArrayList<UserModel> allFollowers = new ArrayList<UserModel>();
     private Context mContext;
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
@@ -42,9 +44,8 @@ public class FollowedAdapter extends RecyclerView.Adapter<FollowedAdapter.ViewHo
 
     }
 
-    public FollowedAdapter(Context context, ArrayList<String> avatarList, ArrayList<String> nameList){
-        allAvatars = avatarList;
-        allNames = nameList;
+    public FollowedAdapter(Context context, ArrayList<UserModel> userModels){
+        allFollowers = userModels;
         mContext = context;
     }
 
@@ -60,23 +61,33 @@ public class FollowedAdapter extends RecyclerView.Adapter<FollowedAdapter.ViewHo
     @Override
     public void onBindViewHolder(FollowedAdapter.ViewHolder holder, int position) {
 
+        final UserModel userModel = allFollowers.get(position);
         TextView textView = holder.userName;
-        textView.setText(allNames.get(position));
+        textView.setText(userModel.userName);
         final ImageView imageView = holder.userAvatar;
         //===================== Adding Image to to Horizontal Slide via Glide =========
         Glide
                 .with(mContext)
-                .load(allAvatars.get(position))
+                .load(userModel.avatarUrl)
                 .centerCrop()
                 .override(80, 80)
                 .crossFade()
                 .into(imageView);
         //=============================================================================
-
+        //============================= Intent to journey owner ===========================
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent toProfileIntent = new Intent(mContext, ProfileView.class);
+                toProfileIntent.putExtra("owner_ID", userModel.userFIRId);
+                mContext.startActivity(toProfileIntent);
+            }
+        });
+        //=============================================================================
     }
 
     @Override
     public int getItemCount()  {
-        return allAvatars.size();
+        return allFollowers.size();
     }
 }

@@ -15,7 +15,7 @@ import zollie.travelblogger.guidee.adapters.DataHandlerListener;
 
 public class UserModel {
     public String avatarUrl;
-    public long userId;
+    public String userFIRId;
     public String userName;
     public String summary;
     public Map<String, Object> userJourneys = null;
@@ -32,7 +32,7 @@ public class UserModel {
         this.summary = "Description about you";
     }
 
-    public UserModel(Map<String, Object> rawUserModel) {
+    public UserModel(Map<String, Object> rawUserModel, String userID) {
 
         try {
             this.avatarUrl = (String) rawUserModel.get("avatarUrl");
@@ -42,6 +42,11 @@ public class UserModel {
         //    this.userId = (long) rawUserModel.get("id");
         try {
             this.userName = (String) rawUserModel.get("name");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.userFIRId = userID;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -76,6 +81,7 @@ public class UserModel {
         this.avatarUrl = userModel.avatarUrl;
         this.userName = userModel.userName;
         this.summary = userModel.summary;
+        this.userFIRId = userModel.userFIRId;
         this.userJourneys = userModel.userJourneys;
         this.following = userModel.following;
         this.loves = userModel.loves;

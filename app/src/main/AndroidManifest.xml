@@ -61,6 +61,14 @@
             android:screenOrientation="portrait">
         </activity>
 
+        <activity
+            android:name=".activities.ProfileView"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/app_name"
+            android:parentActivityName=".activities.JourneyView"
+            android:screenOrientation="portrait">
+        </activity>
+
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />

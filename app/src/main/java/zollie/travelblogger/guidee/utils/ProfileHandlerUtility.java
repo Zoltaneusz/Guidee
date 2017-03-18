@@ -34,8 +34,8 @@ public class ProfileHandlerUtility {
             }
 
             @Override
-            public void onUserData(Map<String, Object> rawUserData) {
-                UserModel mInstance = new UserModel(rawUserData);
+            public void onUserData(Map<String, Object> rawUserData, String userId) {
+                UserModel mInstance = new UserModel(rawUserData, userId);
                 for (Map.Entry<String, Object> map : mInstance.userJourneys.entrySet()) {
                     String journeyModel = (String) map.getValue();
                     allJourneys.add(journeyModel);

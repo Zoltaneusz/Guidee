@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -25,6 +27,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -41,6 +44,7 @@ import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import zollie.travelblogger.guidee.R;
 import zollie.travelblogger.guidee.adapters.CommentAdapter;
@@ -52,6 +56,7 @@ import zollie.travelblogger.guidee.models.CommentModel;
 import zollie.travelblogger.guidee.models.EventModel;
 import zollie.travelblogger.guidee.models.JourneyModel;
 import zollie.travelblogger.guidee.models.UserModel;
+import zollie.travelblogger.guidee.utils.ImageProcessor;
 import zollie.travelblogger.guidee.utils.ProfileHandlerUtility;
 
 /**
@@ -66,6 +71,8 @@ public class JourneyView extends Activity{
     ArrayList<CommentModel> allComments = new ArrayList<CommentModel>();
     boolean userEditRight = false;
     public Context mContext;
+    Bitmap userAvatarGlobal = null;
+    ImageProcessor imageProcessor = new ImageProcessor();
     FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser(); // Should be in onResume() with almost every other method.
 
     @Override
@@ -86,7 +93,17 @@ public class JourneyView extends Activity{
             //=============================================================================
 
         }
-
+        //============================= Intent to journey owner ===========================
+        ImageView journeyOwnerView = (ImageView) findViewById(R.id.journey_owner_icon);
+        journeyOwnerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent toProfileIntent = new Intent(mContext, ProfileView.class);
+                toProfileIntent.putExtra("owner_ID", mJourney.ownerID);
+                mContext.startActivity(toProfileIntent);
+            }
+        });
+        //=================================================================================
         //Get user eligibility for writing this journey
         new AsyncEditRightCheck().execute(mJourney);
 
@@ -104,6 +121,10 @@ public class JourneyView extends Activity{
             e.printStackTrace();
         }
 
+        //====================== Get journey owner picture and display it ==========================
+        new AsyncOwnerPic().execute(mJourney);
+        //==========================================================================================
+
         fillRecyclerView(R.id.journey_events_recycle, R.id.journey_events_recycle_placeholder, mJourney.eventModels);
 
         DataHandler.getInstance().getCommentsWithID(mJourney.ID, new DataHandlerListener() {
@@ -113,7 +134,7 @@ public class JourneyView extends Activity{
             }
 
             @Override
-            public void onUserData(Map<String, Object> rawUserData) {
+            public void onUserData(Map<String, Object> rawUserData, String userID) {
 
             }
 
@@ -299,7 +320,7 @@ public class JourneyView extends Activity{
         //     rvJourneys.setVisibility(View.INVISIBLE);
     }
 
-    class AsyncEditRightCheck extends AsyncTask<Object, Void, JourneyModel>{
+    class AsyncEditRightCheck extends AsyncTask<Object, Void, JourneyModel>{ // This can be made far far easier with Firebase key: "userId"
         @Override
         protected JourneyModel doInBackground(Object... params) {
             final JourneyModel mJourney =  (JourneyModel) params[0];
@@ -315,8 +336,8 @@ public class JourneyView extends Activity{
                 }
 
                 @Override
-                public void onUserData(Map<String, Object> rawUserData) {
-                    UserModel mInstance = new UserModel(rawUserData);
+                public void onUserData(Map<String, Object> rawUserData, String userID) {
+                    UserModel mInstance = new UserModel(rawUserData, userID);
                     for (Map.Entry<String, Object> map : mInstance.userJourneys.entrySet()) {
                         String journeyModel = (String) map.getValue();
                         allJourneys.add(journeyModel);
@@ -381,7 +402,7 @@ public class JourneyView extends Activity{
                             }
 
                             @Override
-                            public void onUserData(Map<String, Object> rawUserData) {
+                            public void onUserData(Map<String, Object> rawUserData, String userID) {
                                 String author = null;
                                 String avatarURL = null;
                                 try {
@@ -420,6 +441,43 @@ public class JourneyView extends Activity{
 
         // show it
         alertDialog.show();
+    }
+
+    class AsyncOwnerPic extends AsyncTask<Object, Void, JourneyModel>{
+
+
+        @Override
+        protected JourneyModel doInBackground(Object... params) {
+            JourneyModel mJourney = new JourneyModel((JourneyModel)(params[0]));
+            //===================== Adding Image to to Horizontal Slide via Glide =========
+            try {
+                userAvatarGlobal= Glide.with(mContext)
+                        .load(mJourney.userAvatarUrl)
+                        .asBitmap()
+                        .into(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            //=============================================================================
+            float scale = getResources().getDisplayMetrics().density;
+            userAvatarGlobal = imageProcessor.resizeMarkerImage(userAvatarGlobal, scale*2/3);
+            return mJourney;
+        }
+
+        @Override
+        protected void onPostExecute(JourneyModel mJourney) {
+            ImageView ownerPic = (ImageView) findViewById(R.id.journey_owner_icon);
+            final float scale = getResources().getDisplayMetrics().density;
+            final Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+            Bitmap bmp = Bitmap.createBitmap((int)(60*scale),(int) (60*scale), conf);
+            Canvas canvas1 = new Canvas(bmp);
+            Bitmap circleBitmap = imageProcessor.pulseMarker(2, bmp, canvas1, scale*2, userAvatarGlobal);
+            circleBitmap = imageProcessor.pulseMarker(2, userAvatarGlobal, canvas1, scale*2, circleBitmap);
+            ownerPic.setImageBitmap(circleBitmap);
+
+        }
     }
 
 }

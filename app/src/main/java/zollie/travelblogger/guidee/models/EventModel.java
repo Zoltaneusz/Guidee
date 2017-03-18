@@ -180,8 +180,9 @@ public class EventModel implements Parcelable{
         } catch (Exception e) {
             e.printStackTrace();
         }
+      //  this.carouselModels = new ArrayList<CarouselModel>();
         try {
-            in.readTypedList(carouselModels, CarouselModel.CREATOR);
+            in.readTypedList(this.carouselModels, CarouselModel.CREATOR);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -264,11 +265,11 @@ public class EventModel implements Parcelable{
             e.printStackTrace();
         }
         try {
-            if(carouselModels.size() == 0) {
+            if(this.carouselModels.size() == 0) {
                 addEmptyCarousel();
-                parcel.writeTypedList(carouselModels);
+                parcel.writeTypedList(this.carouselModels);
             }
-            else {parcel.writeTypedList(carouselModels);}
+            else {parcel.writeTypedList(this.carouselModels);}
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -333,6 +334,7 @@ public class EventModel implements Parcelable{
         return retVal;
     }
     private void addEmptyCarousel(){
+    //    this.carouselModels = new ArrayList<CarouselModel>();
         CarouselModel emptyCarouselModel = new CarouselModel();
         emptyCarouselModel.imageUrl = "empty";
         emptyCarouselModel.carouselType = CarouselModel.CarouselType.IMAGE;
