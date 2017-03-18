@@ -25,9 +25,18 @@
                 android:src="@mipmap/maxresdefault" />
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="bottom|center">
+
+                <ImageView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:id="@+id/owner_follow_icon"
+                    android:src="@drawable/ic_favorites"
+                    android:paddingTop="10dp"
+                    android:paddingLeft="10dp"
+                    android:layout_alignParentStart="true"></ImageView>
 
                 <ImageView
                     android:id="@+id/owner_prof_pic"

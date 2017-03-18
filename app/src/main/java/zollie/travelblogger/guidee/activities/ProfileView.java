@@ -22,6 +22,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -50,6 +52,7 @@ public class ProfileView extends Activity {
     ImageProcessor imageProcessor = new ImageProcessor();
     String userAvatarUrl = new String();
     Context mContext;
+    FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser(); // Should be in onResume() with almost every other method.
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,7 +87,17 @@ public class ProfileView extends Activity {
                 allFavorites.clear();
                 allPlans.clear();
                 allFollowers.clear();
-                UserModel userModel = new UserModel(rawUserData, userID);
+                final UserModel userModel = new UserModel(rawUserData, userID);
+                // ========================= Following user on click ===================================
+                ImageView followUser = (ImageView) findViewById(R.id.owner_follow_icon);
+                DataHandler.getInstance().setUserFollowed(userModel, firUser, followUser);
+                followUser.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DataHandler.getInstance().followUserInFIR(userModel, firUser, (ImageView) v);
+                    }
+                });
+                //======================================================================================
                 try {
                     userAvatarUrl = userModel.avatarUrl;
                 } catch (Exception e) {

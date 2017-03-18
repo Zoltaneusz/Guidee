@@ -206,6 +206,9 @@ public class ExploreFragment extends Fragment {
                     //CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
                    // googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(39.43681513892361, 3.224011088360298), 5);
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(39.43681513892361, 3.224011088360298)));
+                    googleMap.animateCamera(cameraUpdate);
                 }
             });
 

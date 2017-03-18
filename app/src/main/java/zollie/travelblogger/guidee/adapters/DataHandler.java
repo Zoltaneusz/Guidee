@@ -548,6 +548,100 @@ public class DataHandler {
         }
     }
 
+    public void followUserInFIR(final UserModel followedUser, FirebaseUser loggedInUser,final ImageView imageView){
+        final DatabaseReference mDatabaseReference = mRootRef.child("Users");
+        final DatabaseReference followedUserRef = mDatabaseReference.child(followedUser.userFIRId);
+        final String FIRUID = loggedInUser.getUid();
+        final DatabaseReference userReference = followedUserRef.child("followedBy").child(FIRUID);
+        userReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean followedValue = false;
+                try {
+                    followedValue = (boolean) dataSnapshot.getValue();
+                } catch (Exception e) { // Selected user is not yet followed by logged in user
+                    Map<String, Object> userUpdates = new HashMap<String, Object>();
+                    userUpdates.put("followedByCount", followedUser.followedByCount + 1);
+                    userUpdates.put("followedBy/" + FIRUID, true);
+                    followedUserRef.updateChildren(userUpdates);
+
+                    DatabaseReference mUserRef = mDatabaseReference.child(FIRUID);
+
+                    Map<String, Object> loggedUserUpdates = new HashMap<String, Object>();
+                    loggedUserUpdates.put("following/" + followedUser.userFIRId, followedUser.userFIRId);
+                    mUserRef.updateChildren(loggedUserUpdates);
+                    imageView.setImageResource(R.drawable.ic_friends_green);
+                    e.printStackTrace();
+                }
+                finally{
+                    if(followedValue){ // Logged in user already following the selected one and is removing follow now
+                        Map<String, Object> userUpdates = new HashMap<String, Object>();
+                         userUpdates.put("followedByCount", followedUser.followedByCount);
+                        userUpdates.put("followedBy/" + FIRUID, false);
+                        followedUserRef.updateChildren(userUpdates);
+
+                        DatabaseReference mUserRef = mDatabaseReference.child(FIRUID);
+
+                        Map<String, Object> loggedUserUpdates = new HashMap<String, Object>();
+                        loggedUserUpdates.put("following/" + followedUser.userFIRId, null);
+                        mUserRef.updateChildren(loggedUserUpdates);
+                        imageView.setImageResource(R.drawable.ic_friends);
+                    }
+                    else{ // Logged in user is following the selected user again
+                        Map<String, Object> userUpdates = new HashMap<String, Object>();
+                        userUpdates.put("followedByCount", followedUser.followedByCount + 1);
+                        userUpdates.put("followedBy/" + FIRUID, true);
+                        followedUserRef.updateChildren(userUpdates);
+
+                        DatabaseReference mUserRef = mDatabaseReference.child(FIRUID);
+
+                        Map<String, Object> loggedUserUpdates = new HashMap<String, Object>();
+                        loggedUserUpdates.put("following/" + followedUser.userFIRId, followedUser.userFIRId);
+                        mUserRef.updateChildren(loggedUserUpdates);
+                        imageView.setImageResource(R.drawable.ic_friends_green);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    public void setUserFollowed(final UserModel followedUser, FirebaseUser loggedInUser,final ImageView imageView){
+        final DatabaseReference mDatabaseReference = mRootRef.child("Users");
+        DatabaseReference followedUserRef = mDatabaseReference.child(followedUser.userFIRId);
+        final String FIRUID = loggedInUser.getUid();
+        final DatabaseReference userReference = followedUserRef.child("followedBy").child(FIRUID);
+        userReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean followedValue = false;
+                try {
+                    followedValue = (boolean) dataSnapshot.getValue();
+                } catch (Exception e) { // Selected user is not yet followed by logged in user
+                    e.printStackTrace();
+                }
+                finally{
+                    if(followedValue){
+                        imageView.setImageResource(R.drawable.ic_friends_green);
+                    }
+                    else{
+                        imageView.setImageResource(R.drawable.ic_friends);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
         public void setProfPic(String value){
         myProfPic = value;
     }

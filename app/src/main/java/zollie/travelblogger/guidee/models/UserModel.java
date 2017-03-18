@@ -18,6 +18,7 @@ public class UserModel {
     public String userFIRId;
     public String userName;
     public String summary;
+    public long followedByCount;
     public Map<String, Object> userJourneys = null;
     public Map<String, Object> following = null;
     public Map<String, Object> loves = null;
@@ -56,6 +57,11 @@ public class UserModel {
             e.printStackTrace();
         }
         try {
+            this.followedByCount = (long) rawUserModel.get("followedByCount");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
             this.userJourneys = (Map<String, Object>) rawUserModel.get("journeys");
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,6 +92,7 @@ public class UserModel {
         this.following = userModel.following;
         this.loves = userModel.loves;
         this.plans = userModel.plans;
+        this.followedByCount = userModel.followedByCount;
     }
    /* public static synchronized boolean getInstance(final JourneyModel mJourney){
         if(null == mInstance) {

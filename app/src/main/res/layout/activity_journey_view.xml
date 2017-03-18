@@ -42,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:id="@+id/journey_love_icon"
-                    android:src="@drawable/ic_favorites"
+                    android:src="@drawable/ic_friends"
                     android:layout_below="@+id/journey_owner_icon"
                     android:paddingTop="10dp"
                     android:paddingLeft="10dp">
