@@ -26,8 +26,7 @@
                     android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDL-jmbd2AB4Ze5EixYaSptHMrjq1-wID4"/>
-            android:value=""/>
+            android:value="AIzaSyDwPb2hYGTRLPMOTz96s8PD81sK_joR8jQ"/>
 
         <activity
             android:name=".activities.JourneyView"

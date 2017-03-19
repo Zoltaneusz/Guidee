@@ -38,13 +38,13 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-   //     printHashKey();
+        printHashKey();
         setContentView(R.layout.activity_main);
 
         // Pushing MapView Fragment
         Fragment fragment = Fragment.instantiate(this, ExploreFragment.class.getName());
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.contentContainer, fragment);
+        ft.replace(R.id.contentContainer, fragment); // Pushing Facelogin
         ft.commit();
 
 

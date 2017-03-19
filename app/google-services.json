@@ -19,7 +19,7 @@
           "client_type": 1,
           "android_info": {
             "package_name": "zollie.travelblogger.guidee",
-            "certificate_hash": "694BEEEB7971B9C648D5CF2F31EAB6B67AC9EF91"
+            "certificate_hash": "694beeeb7971b9c648d5cf2f31eab6b67ac9ef91"
           }
         },
         {
@@ -29,7 +29,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDL-jmbd2AB4Ze5EixYaSptHMrjq1-wID4"
+          "current_key": "AIzaSyAKCtK1w54HxQkXB-X3uBORII-x_xpNc9k"
         }
       ],
       "services": {
@@ -40,15 +40,15 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "457148042769-olsj1qqjut0hrbqrl48liki1uch4oqi5.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "457148042769-eahkontv96k939ltuuurq5hkigqk3aq1.apps.googleusercontent.com",
+              "client_id": "457148042769-5nie2d4nbj2o7le50g94or3f2ee4prdb.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "Zsombor.Fuszenecker.Guidee"
+                "bundle_id": "Zsombor.Fuszenecker.VoyageApp"
               }
+            },
+            {
+              "client_id": "457148042769-olsj1qqjut0hrbqrl48liki1uch4oqi5.apps.googleusercontent.com",
+              "client_type": 3
             }
           ]
         },

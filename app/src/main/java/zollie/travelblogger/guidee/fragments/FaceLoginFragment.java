@@ -57,7 +57,6 @@ public class FaceLoginFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-
     private ProfileFragment _profileFrag = new ProfileFragment();
     private CallbackManager mCallbackManager;
     private AccessTokenTracker mTokenTracker;
@@ -66,11 +65,8 @@ public class FaceLoginFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
 
-
-        mCallbackManager = CallbackManager.Factory.create();
         mTokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
@@ -86,39 +82,20 @@ public class FaceLoginFragment extends Fragment {
 
         mTokenTracker.startTracking();
         mProfileTracker.startTracking();
-
-        // Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener(){
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if(user != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    //Getting Firebase user ID
-                    FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
-                    String firUserID = firUser.getUid();
-                }
-                else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                }
-            }
-        };
     }
 
     @Override
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
-        Profile prof = Profile.getCurrentProfile();
+/*        Profile prof = Profile.getCurrentProfile();
         FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
         if(firUser != null) { // User is already logged in
             FragmentManager fm;
             fm = getFragmentManager();
             fm.beginTransaction().replace(R.id.contentContainer, _profileFrag).commit();
         }
+*/
     }
 
     @Override
@@ -138,34 +115,58 @@ public class FaceLoginFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
+
+        mCallbackManager = CallbackManager.Factory.create();
         LoginButton loginButton = (LoginButton) view.findViewById(R.id.login_button);
-        loginButton.setReadPermissions("user_friends");
+        loginButton.setReadPermissions("user_friends", "email", "public_profile");
         loginButton.setFragment(this);
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                Log.d(TAG, "facebook:onSuccess:" + loginResult);
                 AccessToken accessToken = loginResult.getAccessToken();
                 handleFacebookAccessToken(accessToken);
-                Profile profile = Profile.getCurrentProfile();
-                FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
-                DataHandler.getInstance().createUserInFIR(firUser);
-
-                FragmentManager fm;
-                fm = getFragmentManager();
-                fm.beginTransaction().replace(R.id.contentContainer, _profileFrag).commit();
 
             }
 
             @Override
             public void onCancel() {
-
+                Log.d(TAG, "facebook:onCancel");
             }
 
             @Override
             public void onError(FacebookException error) {
-
+                Log.d(TAG, "facebook:onError", error);
             }
         });
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener(){
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if(user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    //Getting Firebase user ID
+                    // ======================== Go to Profile Fragment ============================
+                    Profile profile = Profile.getCurrentProfile();
+                    FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
+                    DataHandler.getInstance().createUserInFIR(firUser);
+
+                    FragmentManager fm;
+                    fm = getFragmentManager();
+                    fm.beginTransaction().replace(R.id.contentContainer, _profileFrag).commit();
+                    // ============================================================================
+                }
+                else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+            }
+        };
     }
 
     @Override
@@ -179,6 +180,7 @@ public class FaceLoginFragment extends Fragment {
     public void onResume() {
         super.onResume();
     }
+
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 

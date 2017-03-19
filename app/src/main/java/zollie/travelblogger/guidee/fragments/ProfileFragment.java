@@ -59,9 +59,7 @@ public class ProfileFragment extends Fragment {
     ArrayList<UserModel> allFollowers = new ArrayList<UserModel>();
     Bitmap userAvatarGlobal = null;
     ImageProcessor imageProcessor = new ImageProcessor();
-    //Getting Firebase user ID
-    FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
-    String firUserID = firUser.getUid();
+
     String userAvatarUrl = new String();
 
     @Nullable
@@ -76,6 +74,9 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        //Getting Firebase user ID
+        FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
+        final String firUserID = firUser.getUid();
         EditText messageInput = (EditText) getActivity().findViewById(R.id.my_plans_title);
         messageInput.getText().append("\ud83d\udcdd");
         messageInput = (EditText) getActivity().findViewById(R.id.my_favorites_title);
@@ -190,7 +191,7 @@ public class ProfileFragment extends Fragment {
 
             }
         });
-        journeyEdit();
+        journeyEdit(firUserID);
 
     }
     @Override
@@ -309,7 +310,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    public void journeyEdit(){
+    public void journeyEdit(final String firUserID){
         FloatingActionButton journeyFAB = (FloatingActionButton) getActivity().findViewById(R.id.profile_j_edit_FAB);
         journeyFAB.setOnClickListener(new View.OnClickListener() {
             @Override
