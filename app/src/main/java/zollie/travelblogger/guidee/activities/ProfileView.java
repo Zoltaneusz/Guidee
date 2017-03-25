@@ -76,7 +76,7 @@ public class ProfileView extends AppCompatActivity {
             // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             // finally change the color
-            window.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+            window.setStatusBarColor(getResources().getColor(R.color.colorPrimary));
         }
 
         DataHandler.getInstance().getUserWithId(new String(ownerID), new DataHandlerListener() {
@@ -292,23 +292,12 @@ public class ProfileView extends AppCompatActivity {
             Bitmap circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale*2, userAvatarGlobal);
             circleBitmap = imageProcessor.pulseMarker(4, userAvatarGlobal, canvas1, scale*2, circleBitmap);
             mProfileImage.setImageBitmap(circleBitmap);
-            TextView mProfileName = (TextView) findViewById(R.id.owner_profile_name);
-            mProfileName.setText(mUser.userName);
+    //        TextView mProfileName = (TextView) findViewById(R.id.owner_profile_name);
+      //      mProfileName.setText(mUser.userName);
         }
     }
     public void changeProfileCover(UserModel userModel){
-        if(allJourneys.size() != 0) {
-            if (allJourneys.get(0).coverImageUrl != null) {
-                ImageView coverImg = (ImageView) findViewById(R.id.owner_prof_cover);
-                //===================== Adding Image to to Horizontal Slide via Glide =========
-                Glide
-                        .with(this)
-                        .load(allJourneys.get(0).coverImageUrl)
-                        .crossFade()
-                        .into(coverImg);
-                //=============================================================================
-            }
-        }
+
         // ================== Change Scrolling Toolbar ========================================
         Toolbar toolbar = (Toolbar) findViewById(R.id.prof_act_toolbar);
         setSupportActionBar(toolbar);

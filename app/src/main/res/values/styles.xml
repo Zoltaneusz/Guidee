@@ -15,8 +15,8 @@
     </style>
 
     <style name="collapsedappbar" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/Link</item>
     </style>
 
 </resources>
