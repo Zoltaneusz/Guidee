@@ -16,10 +16,11 @@
         android:id="@+id/mJourneyTitle"
         android:allowUndo="true"
         android:text="Owner"
+        android:fontFamily="sans-serif-regular"
         android:shadowColor="#000000"
         android:textAlignment="center"
         android:textColor="#ffffff"
-        android:textSize="15dp"
+        android:textSize="14sp"
         android:layout_gravity="bottom|center"
         android:background="#20000000" />
 </FrameLayout>

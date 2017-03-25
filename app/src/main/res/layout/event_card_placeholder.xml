@@ -22,12 +22,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/event_placeholder_hint_below"
+            android:fontFamily="sans-serif-regular"
             android:allowUndo="true"
             android:text="My event"
             android:shadowColor="#000000"
             android:textAlignment="center"
             android:textColor="#000000"
-            android:textSize="15dp"
+            android:textSize="14sp"
             android:layout_gravity="bottom|center"
             android:background="#00FFFFFF" />
     </FrameLayout>
@@ -36,13 +37,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/event_placeholder_hint_right"
         android:text="Add some events"
+        android:fontFamily="sans-serif-regular"
         android:allowUndo="true"
         android:layout_gravity="center_vertical"
         android:paddingLeft="16dp"
         android:shadowColor="#000000"
         android:textAlignment="center"
         android:textColor="#000000"
-        android:textSize="15dp"
+        android:textSize="12sp"
         android:background="#00FFFFFF" />
 
 </LinearLayout>

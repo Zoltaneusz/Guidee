@@ -8,9 +8,12 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -43,7 +46,7 @@ import zollie.travelblogger.guidee.utils.ImageProcessor;
  * Created by FuszeneckerZ on 2017. 03. 18..
  */
 
-public class ProfileView extends Activity {
+public class ProfileView extends AppCompatActivity {
     ArrayList<JourneyModel> allJourneys = new ArrayList<JourneyModel>();
     ArrayList<JourneyModel> allFavorites = new ArrayList<JourneyModel>();
     ArrayList<JourneyModel> allPlans = new ArrayList<JourneyModel>();
@@ -114,7 +117,7 @@ public class ProfileView extends Activity {
                         if(journeyModel.title != null) {
                             allJourneys.add(journeyModel);
                             fillRecyclerView(R.id.owner_journeys_recycle, R.id.owner_journeys_recycle_placeholder, allJourneys);
-                            changeProfileCover();
+                            changeProfileCover(userModel);
                         }
                     }
 
@@ -293,7 +296,7 @@ public class ProfileView extends Activity {
             mProfileName.setText(mUser.userName);
         }
     }
-    public void changeProfileCover(){
+    public void changeProfileCover(UserModel userModel){
         if(allJourneys.size() != 0) {
             if (allJourneys.get(0).coverImageUrl != null) {
                 ImageView coverImg = (ImageView) findViewById(R.id.owner_prof_cover);
@@ -306,5 +309,22 @@ public class ProfileView extends Activity {
                 //=============================================================================
             }
         }
+        // ================== Change Scrolling Toolbar ========================================
+        Toolbar toolbar = (Toolbar) findViewById(R.id.prof_act_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.prof_act_collapse_toolbar);
+        collapsingToolbar.setTitle(userModel.userName);
+        ImageView appBarImage = (ImageView) findViewById(R.id.prof_act_appbar_image);
+        //===================== Adding Image to to Horizontal Slide via Glide =========
+        Glide
+                .with(this)
+                .load(allJourneys.get(0).coverImageUrl)
+                .crossFade()
+                .into(appBarImage);
+        //=============================================================================
+        collapsingToolbar.setExpandedTitleTextAppearance(R.style.expandedappbar);
+        collapsingToolbar.setCollapsedTitleTextAppearance(R.style.collapsedappbar);
     }
 }

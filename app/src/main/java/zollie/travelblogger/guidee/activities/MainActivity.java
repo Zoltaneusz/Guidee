@@ -9,6 +9,7 @@ import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
 
@@ -29,7 +30,7 @@ import zollie.travelblogger.guidee.R;
  * Created by zoltanfuszenecker on 10/29/16.
  */
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity  {
 
     private ExploreFragment _exploreMapFrag = new ExploreFragment();
     private ProfileFragment _profileFrag = new ProfileFragment();

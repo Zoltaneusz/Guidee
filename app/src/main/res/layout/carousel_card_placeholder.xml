@@ -4,12 +4,12 @@
     android:layout_height="100dp"
     android:id="@+id/carousel_card_placeholder">
     <FrameLayout
-        android:layout_width="200dp"
-        android:layout_height="200dp">
+        android:layout_width="100dp"
+        android:layout_height="100dp">
         <ImageView
             android:id="@+id/mCarousel"
             android:layout_width="350dp"
-            android:layout_height="200dp"
+            android:layout_height="100dp"
             android:background="#929494"
             android:src="@drawable/placeholder_grey"/>
         <ImageView
@@ -22,12 +22,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/hint_below_carousel"
+            android:fontFamily="sans-serif-regular"
             android:allowUndo="true"
             android:text=""
             android:shadowColor="#000000"
             android:textAlignment="center"
             android:textColor="#000000"
-            android:textSize="15dp"
+            android:textSize="14sp"
             android:layout_gravity="bottom|center"
             android:background="#00FFFFFF" />
     </FrameLayout>

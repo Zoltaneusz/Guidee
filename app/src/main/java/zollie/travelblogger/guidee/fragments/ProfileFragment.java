@@ -9,11 +9,14 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,7 +105,7 @@ public class ProfileFragment extends Fragment {
                 allFavorites.clear();
                 allPlans.clear();
                 allFollowers.clear();
-                UserModel userModel = new UserModel(rawUserData, userID);
+                final UserModel userModel = new UserModel(rawUserData, userID);
                 try {
                     userAvatarUrl = userModel.avatarUrl;
                 } catch (Exception e) {
@@ -119,7 +122,7 @@ public class ProfileFragment extends Fragment {
                         if(journeyModel.title != null) {
                             allJourneys.add(journeyModel);
                             fillRecyclerView(R.id.my_journeys_recycle, R.id.my_journeys_recycle_placeholder, allJourneys);
-                            changeProfileCover();
+                            changeProfileCover(userModel);
                         }
                     }
 
@@ -357,7 +360,7 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
-    public void changeProfileCover(){
+    public void changeProfileCover(UserModel userModel){
         if(allJourneys.size() != 0) {
             if (allJourneys.get(0).coverImageUrl != null) {
                 ImageView coverImg = (ImageView) getActivity().findViewById(R.id.prof_cover);
@@ -370,6 +373,25 @@ public class ProfileFragment extends Fragment {
                 //=============================================================================
             }
         }
+        // ================== Change Scrolling Toolbar ========================================
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.prof_frag_toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) getActivity().findViewById(R.id.prof_frag_collapse_toolbar);
+        collapsingToolbar.setTitle(userModel.userName);
+        ImageView appBarImage = (ImageView) getActivity().findViewById(R.id.prof_frag_appbar_image);
+        //===================== Adding Image to to Horizontal Slide via Glide =========
+        Glide
+                .with(this)
+                .load(allJourneys.get(0).coverImageUrl)
+                .crossFade()
+                .into(appBarImage);
+        //=============================================================================
+        collapsingToolbar.setExpandedTitleTextAppearance(R.style.expandedappbar);
+        collapsingToolbar.setCollapsedTitleTextAppearance(R.style.collapsedappbar);
+
+        // ====================================================================================
     }
 
 }
