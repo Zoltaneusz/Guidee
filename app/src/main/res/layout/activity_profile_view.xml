@@ -221,9 +221,9 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:id="@+id/owner_follow_icon"
-        android:background="@color/Link"
         android:src="@drawable/ic_friends"
         android:paddingRight="10dp"
+        app:backgroundTint="@color/lightGreen"
         app:layout_anchor="@id/prof_act_appbar"
         app:layout_anchorGravity="bottom|right|end">
 

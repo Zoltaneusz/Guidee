@@ -8,6 +8,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,6 +31,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.youtube.player.YouTubeBaseActivity;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
 
 import java.util.ArrayList;
 
@@ -41,7 +45,7 @@ import zollie.travelblogger.guidee.models.EventModel;
  * Created by FuszeneckerZ on 2017.01.09..
  */
 
-public class EventView extends YouTubeBaseActivity {
+public class EventView extends AppCompatActivity{
     final int locationPermission = 0;
     MapView mMapView;
     public GoogleMap googleMap;
@@ -106,7 +110,7 @@ public class EventView extends YouTubeBaseActivity {
 
         mMapView = (MapView) findViewById(R.id.event_Map);
         mMapView.onCreate(savedInstanceState);
-        final ScrollView scrollView = (ScrollView) findViewById(R.id.event_scroll_view);
+        final NestedScrollView scrollView = (NestedScrollView) findViewById(R.id.event_scroll_view);
         ImageView transparent = (ImageView)findViewById(R.id.imagetrans);
 
         // Method to deprecate touch events of ScrollView in case the user touches the map
@@ -239,4 +243,5 @@ public class EventView extends YouTubeBaseActivity {
                 | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         mContext.startActivity(toJourneyIntent);
     }
+
 }

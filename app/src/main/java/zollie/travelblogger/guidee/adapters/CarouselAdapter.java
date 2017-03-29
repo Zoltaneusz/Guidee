@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerFragment;
 import com.google.android.youtube.player.YouTubePlayerView;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
@@ -34,7 +35,7 @@ import zollie.travelblogger.guidee.models.CarouselModel;
  * Created by FuszeneckerZ on 2017.01.14..
  */
 
-public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements YouTubePlayer.OnInitializedListener{
 
     private ArrayList<CarouselModel> allCarousels = new ArrayList<CarouselModel>();
     private Context mContext;
@@ -69,7 +70,7 @@ public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 break;
             case VIDEO:
                 View v2 = inflater.inflate(R.layout.carousel_card_video, parent, false);
-                viewHolder = new ViewHolderVideo(v2);
+                viewHolder = new ViewHolderVideo(mContext, v2);
                 break;
             default:
                 View v = inflater.inflate(R.layout.journey_card_placeholder, parent, false);
@@ -129,24 +130,9 @@ public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 break;
             case VIDEO:
 
-                final YouTubePlayerView mCarouselVideo = ((ViewHolderVideo) holder).getmVideo();
                 final YouTubeThumbnailView mCarouselThumbnail = ((ViewHolderVideo) holder).getmThumbnail();
              //   mCarouselVideo.setSoundEffectsEnabled(true);
-                final YouTubePlayer.OnInitializedListener onInitializedListener;
-                onInitializedListener = new YouTubePlayer.OnInitializedListener(){
 
-                    @Override
-                    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-              //          youTubePlayer.loadVideo(mCarousel.videoUrl);
-                        player = youTubePlayer;
-                    }
-
-                    @Override
-                    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-                        int b = 1;
-                    }
-                };
-                mCarouselVideo.initialize(mContext.getString(R.string.Youtube_API), onInitializedListener);
                 final YouTubeThumbnailView.OnInitializedListener onThumbnailInitialize;
                 onThumbnailInitialize = new YouTubeThumbnailView.OnInitializedListener(){
 
@@ -167,7 +153,24 @@ public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     @Override
                     public void onClick(View view) {
                         mCarouselThumbnail.setVisibility(View.INVISIBLE);
-                        player.loadVideo(mCarousel.videoUrl);
+
+                        final YouTubePlayerFragment youTubePlayerFragment = YouTubePlayerFragment.newInstance();
+                        ((ViewHolderVideo)holder).mVideo.setId(mCarousel.FIRNumber);
+                        ((Activity) mContext).getFragmentManager().beginTransaction().replace(((ViewHolderVideo)holder).mVideo.getId(), youTubePlayerFragment).addToBackStack(null).commit();
+                        youTubePlayerFragment.initialize(mContext.getString(R.string.Youtube_API), new YouTubePlayer.OnInitializedListener(){
+                                    @Override
+                                    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+                                        //player.loadVideo(mCarousel.videoUrl);
+                                        youTubePlayer.cueVideo(mCarousel.videoUrl);
+                          //              youTubePlayer.setShowFullscreenButton(false);
+                                    }
+
+                                    @Override
+                                    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+
+                                    }
+                                });
+                        ((ViewHolderVideo)holder).mVideo.setVisibility(View.VISIBLE);
                         // Go to new activity and display video
                     }
                 });
@@ -185,6 +188,17 @@ public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 break;
         }
     }
+
+    @Override
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+
+    }
+
+    @Override
+    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+
+    }
+
     private final class ThumbnailLoadedListener implements YouTubeThumbnailLoader.OnThumbnailLoadedListener {
 
 

@@ -1,5 +1,6 @@
 package zollie.travelblogger.guidee.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -15,8 +16,8 @@ import zollie.travelblogger.guidee.R;
 
 public class ViewHolderVideo extends RecyclerView.ViewHolder{
 
-    public YouTubePlayerView mVideo;
-
+    public FrameLayout mVideo;
+    public Context mContext;
     public YouTubeThumbnailView getmThumbnail() {
         return mThumbnail;
     }
@@ -28,14 +29,6 @@ public class ViewHolderVideo extends RecyclerView.ViewHolder{
     public YouTubeThumbnailView mThumbnail;
     public FrameLayout mCarousel;
 
-    public YouTubePlayerView getmVideo() {
-        return mVideo;
-    }
-
-    public void setmVideo(YouTubePlayerView mVideo) {
-        this.mVideo = mVideo;
-    }
-
     public FrameLayout getmCarousel() {
         return mCarousel;
     }
@@ -44,10 +37,11 @@ public class ViewHolderVideo extends RecyclerView.ViewHolder{
         this.mCarousel = mCarousel;
     }
 
-    public ViewHolderVideo(View itemView){
+    public ViewHolderVideo(Context activityContext, View itemView){
         super(itemView);
 
-        mVideo = (YouTubePlayerView) itemView.findViewById(R.id.mCarouselVideo);
+        this.mContext = activityContext;
+        mVideo = (FrameLayout) itemView.findViewById(R.id.mCarouselVideo);
         mThumbnail = (YouTubeThumbnailView) itemView.findViewById(R.id.mCarouselThumbnail);
         mCarousel = (FrameLayout) itemView.findViewById(R.id.mCarouselVideoCard);
     }

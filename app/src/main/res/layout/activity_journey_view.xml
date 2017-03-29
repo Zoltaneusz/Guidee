@@ -221,6 +221,7 @@
         android:src="@drawable/ic_favorites"
         android:paddingRight="10dp"
         app:layout_anchor="@id/journey_appbar"
+        app:backgroundTint="@color/lightGreen"
         app:layout_anchorGravity="bottom|right|end">
     </android.support.design.widget.FloatingActionButton>
 

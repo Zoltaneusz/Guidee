@@ -308,8 +308,8 @@ public class ProfileFragment extends Fragment {
             Bitmap circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale*2, userAvatarGlobal);
             circleBitmap = imageProcessor.pulseMarker(4, userAvatarGlobal, canvas1, scale*2, circleBitmap);
             mProfileImage.setImageBitmap(circleBitmap);
-            TextView mProfileName = (TextView) getActivity().findViewById(R.id.profile_name);
-            mProfileName.setText(mUser.userName);
+    //        TextView mProfileName = (TextView) getActivity().findViewById(R.id.profile_name);
+    //        mProfileName.setText(mUser.userName);
         }
     }
 
