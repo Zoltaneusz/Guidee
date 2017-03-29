@@ -17,8 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            android:background="@color/colorPrimary"
-            app:contentScrim="@color/colorPrimary"
+            android:background="#000000"
+            app:contentScrim="#000000"
             android:fitsSystemWindows="true">
 
             <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -211,25 +211,21 @@
                 android:orientation="vertical"
                 android:layout_weight="1"
                 android:layout_below="@+id/owner_followed_users_title"
-                android:paddingBottom="10dp">
+                android:paddingBottom="90dp">
             </LinearLayout>
 
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
 
-    <ImageView
+    <android.support.design.widget.FloatingActionButton
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:id="@+id/owner_follow_icon"
-        android:src="@drawable/ic_favorites"
+        android:background="@color/Link"
+        android:src="@drawable/ic_friends"
         android:paddingRight="10dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
         app:layout_anchor="@id/prof_act_appbar"
         app:layout_anchorGravity="bottom|right|end">
 
-    </ImageView>
-
-
-
+    </android.support.design.widget.FloatingActionButton>
     </android.support.design.widget.CoordinatorLayout>

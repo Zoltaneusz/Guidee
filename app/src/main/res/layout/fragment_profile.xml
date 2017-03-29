@@ -4,6 +4,7 @@
     android:id="@+id/prof_frag_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     android:fitsSystemWindows="true">
 
         <android.support.design.widget.AppBarLayout
@@ -17,17 +18,50 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                android:background="@color/colorPrimary"
-                app:contentScrim="@color/colorPrimary"
+                android:background="#000000"
+                app:contentScrim="#000000"
                 android:fitsSystemWindows="true">
 
-                <ImageView
-                    android:id="@+id/prof_frag_appbar_image"
+                <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/frameLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:fitsSystemWindows="true"
-                    app:layout_collapseMode="pin" />
+                    android:layout_height="150dp"
+                    app:layout_collapseMode="pin"
+                    >
+
+                    <ImageView
+                        android:id="@+id/prof_frag_appbar_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:alpha="0.5"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/maxresdefault" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|center">
+
+                        <ImageView
+                            android:id="@+id/prof_pic"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerHorizontal="true"></ImageView>
+
+                        <TextView
+                            android:id="@+id/profile_name"
+                            android:layout_width="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/prof_pic"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="15dp"
+                            android:text=""
+                            android:textColor="#000000"
+                            android:textSize="24sp" />
+                    </RelativeLayout>
+                </FrameLayout>
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/prof_frag_toolbar"
@@ -50,47 +84,9 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:orientation="vertical" android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:weightSum="5"
             android:background="@color/colorPrimary100">
 
-            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/frameLayout"
-                android:layout_width="match_parent"
-                android:layout_height="150dp">
 
-                <ImageView
-                    android:id="@+id/prof_cover"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:alpha="0.5"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/maxresdefault" />
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|center">
-
-                    <ImageView
-                        android:id="@+id/prof_pic"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true"></ImageView>
-
-                    <TextView
-                        android:id="@+id/profile_name"
-                        android:layout_width="wrap_content"
-                        android:fontFamily="sans-serif-medium"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/prof_pic"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="15dp"
-                        android:text=""
-                        android:textColor="#000000"
-                        android:textSize="24sp" />
-                </RelativeLayout>
-            </FrameLayout>
 
             <TextView
                 android:id="@+id/my_journeys_title"
@@ -99,7 +95,6 @@
                 android:fontFamily="sans-serif-medium"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:layout_below="@+id/frameLayout"
                 android:textSize="20sp"
                 android:paddingTop="10dp"
                 android:paddingLeft="10dp"/>
@@ -120,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/my_journeys_recycle"
                 android:orientation="horizontal"
-                android:layout_weight="1"
+
                 android:layout_below="@+id/my_journeys_title"
                 android:scrollbars="none"
                 android:paddingStart="10dp"
@@ -130,7 +125,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/my_journeys_recycle_placeholder"
                 android:orientation="vertical"
-                android:layout_weight="1"
+
                 android:layout_below="@+id/my_journeys_title">
             </LinearLayout>
 
@@ -153,7 +148,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/plan_journeys_recycle"
                 android:orientation="horizontal"
-                android:layout_weight="1"
+
                 android:layout_below="@+id/my_plans_title"
                 android:scrollbars="none"
                 android:paddingStart="10dp"
@@ -186,7 +181,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/following_journeys_recycle"
                 android:orientation="horizontal"
-                android:layout_weight="1"
+
                 android:layout_below="@+id/my_favorites_title"
                 android:scrollbars="none"
                 android:paddingStart="10dp"
@@ -197,7 +192,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/following_journeys_recycle_placeholder"
                 android:orientation="vertical"
-                android:layout_weight="1"
+
                 android:layout_below="@+id/my_favorites_title">
 
             </LinearLayout>
@@ -221,11 +216,11 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/followed_users_recycle"
                 android:orientation="horizontal"
-                android:layout_weight="1"
+
                 android:layout_below="@+id/my_followed_users_title"
                 android:scrollbars="none"
                 android:paddingStart="10dp"
-                android:paddingBottom="10dp"
+                android:paddingBottom="90dp"
                 />
 
             <LinearLayout
@@ -233,9 +228,9 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/followed_users_recycle_placeholder"
                 android:orientation="vertical"
-                android:layout_weight="1"
+
                 android:layout_below="@+id/my_followed_users_title"
-                android:paddingBottom="10dp">
+                android:paddingBottom="90dp">
                 </LinearLayout>
 
         </RelativeLayout>

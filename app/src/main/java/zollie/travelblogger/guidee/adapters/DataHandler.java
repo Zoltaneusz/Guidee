@@ -1,5 +1,6 @@
 package zollie.travelblogger.guidee.adapters;
 
+import android.support.design.widget.FloatingActionButton;
 import android.widget.ImageView;
 
 import com.google.android.gms.fitness.data.Value;
@@ -373,7 +374,7 @@ public class DataHandler {
         userUpdates.put(firUserId + "/avatarUrl", firUser.getPhotoUrl());
     }
 
-    public void loveJourneyInFIR(final JourneyModel journeyModel, final FirebaseUser FIRUser, final ImageView imageView){
+    public void loveJourneyInFIR(final JourneyModel journeyModel, final FirebaseUser FIRUser, final FloatingActionButton FABImage){
         DatabaseReference mDatabaseReference = mRootRef.child("Journeys");
         final DatabaseReference journeyReference = mDatabaseReference.child(journeyModel.ID);
         final String FIRUID = FIRUser.getUid();
@@ -396,7 +397,7 @@ public class DataHandler {
                     Map<String, Object> userUpdates = new HashMap<String, Object>();
                     userUpdates.put("loved/" + journeyModel.ID, journeyModel.ID);
                     mUserRef.updateChildren(userUpdates);
-                    imageView.setImageResource(R.drawable.heart_filled);
+                    FABImage.setImageResource(R.drawable.heart_filled);
                     e.printStackTrace();
                 }
                 finally {
@@ -413,7 +414,7 @@ public class DataHandler {
                         Map<String, Object> userUpdates = new HashMap<String, Object>();
                         userUpdates.put("loved/" + journeyModel.ID, null);
                         mUserRef.updateChildren(userUpdates);
-                        imageView.setImageResource(R.drawable.ic_favorites);
+                        FABImage.setImageResource(R.drawable.ic_favorites);
 
                     } else { // User like this journey again, after clearing the like once
                         Map<String, Object> journeyUpdates = new HashMap<String, Object>();
@@ -427,7 +428,7 @@ public class DataHandler {
                         Map<String, Object> userUpdates = new HashMap<String, Object>();
                         userUpdates.put("loved/" + journeyModel.ID, journeyModel.ID);
                         mUserRef.updateChildren(userUpdates);
-                        imageView.setImageResource(R.drawable.heart_filled);
+                        FABImage.setImageResource(R.drawable.heart_filled);
                     }
                 }
             }
@@ -443,7 +444,7 @@ public class DataHandler {
  /*    public  void getEvents(final DataHandlerListener dataHandlerListener){
 
      }*/
-    public void setUserLoved(final JourneyModel journeyModel, final FirebaseUser FIRUser, final ImageView imageView) {
+    public void setUserLoved(final JourneyModel journeyModel, final FirebaseUser FIRUser, final FloatingActionButton FABImage) {
         DatabaseReference mDatabaseReference = mRootRef.child("Journeys");
         final DatabaseReference journeyReference = mDatabaseReference.child(journeyModel.ID);
         final String FIRUID = FIRUser.getUid();
@@ -459,10 +460,10 @@ public class DataHandler {
                 }
                 finally {
                     if(likeValue) {
-                        imageView.setImageResource(R.drawable.heart_filled);
+                        FABImage.setImageResource(R.drawable.heart_filled);
                     }
                     else {
-                        imageView.setImageResource(R.drawable.ic_favorites);
+                        FABImage.setImageResource(R.drawable.ic_favorites);
                     }
                 }
 
@@ -548,7 +549,7 @@ public class DataHandler {
         }
     }
 
-    public void followUserInFIR(final UserModel followedUser, FirebaseUser loggedInUser,final ImageView imageView){
+    public void followUserInFIR(final UserModel followedUser, FirebaseUser loggedInUser,final FloatingActionButton fabImage){
         final DatabaseReference mDatabaseReference = mRootRef.child("Users");
         final DatabaseReference followedUserRef = mDatabaseReference.child(followedUser.userFIRId);
         final String FIRUID = loggedInUser.getUid();
@@ -570,7 +571,7 @@ public class DataHandler {
                     Map<String, Object> loggedUserUpdates = new HashMap<String, Object>();
                     loggedUserUpdates.put("following/" + followedUser.userFIRId, followedUser.userFIRId);
                     mUserRef.updateChildren(loggedUserUpdates);
-                    imageView.setImageResource(R.drawable.ic_friends_green);
+                    fabImage.setImageResource(R.drawable.ic_friends_green);
                     e.printStackTrace();
                 }
                 finally{
@@ -585,7 +586,7 @@ public class DataHandler {
                         Map<String, Object> loggedUserUpdates = new HashMap<String, Object>();
                         loggedUserUpdates.put("following/" + followedUser.userFIRId, null);
                         mUserRef.updateChildren(loggedUserUpdates);
-                        imageView.setImageResource(R.drawable.ic_friends);
+                        fabImage.setImageResource(R.drawable.ic_friends);
                     }
                     else{ // Logged in user is following the selected user again
                         Map<String, Object> userUpdates = new HashMap<String, Object>();
@@ -598,7 +599,7 @@ public class DataHandler {
                         Map<String, Object> loggedUserUpdates = new HashMap<String, Object>();
                         loggedUserUpdates.put("following/" + followedUser.userFIRId, followedUser.userFIRId);
                         mUserRef.updateChildren(loggedUserUpdates);
-                        imageView.setImageResource(R.drawable.ic_friends_green);
+                        fabImage.setImageResource(R.drawable.ic_friends_green);
                     }
                 }
             }
@@ -611,7 +612,7 @@ public class DataHandler {
 
     }
 
-    public void setUserFollowed(final UserModel followedUser, FirebaseUser loggedInUser,final ImageView imageView){
+    public void setUserFollowed(final UserModel followedUser, FirebaseUser loggedInUser,final FloatingActionButton fabImage){
         final DatabaseReference mDatabaseReference = mRootRef.child("Users");
         DatabaseReference followedUserRef = mDatabaseReference.child(followedUser.userFIRId);
         final String FIRUID = loggedInUser.getUid();
@@ -627,10 +628,10 @@ public class DataHandler {
                 }
                 finally{
                     if(followedValue){
-                        imageView.setImageResource(R.drawable.ic_friends_green);
+                        fabImage.setImageResource(R.drawable.ic_friends_green);
                     }
                     else{
-                        imageView.setImageResource(R.drawable.ic_friends);
+                        fabImage.setImageResource(R.drawable.ic_friends);
                     }
                 }
             }

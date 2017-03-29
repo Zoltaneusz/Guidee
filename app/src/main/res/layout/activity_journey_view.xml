@@ -1,199 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/colorPrimary100"
-    android:id="@+id/journey_scroll_view"
-    >
-    <RelativeLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="4"
-        android:background="@color/colorPrimary100">
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/journey_coordinator"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
-        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/journey_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="164dp"
+        android:fitsSystemWindows="true">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/journey_collapse_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:id="@+id/journey_frameLayout">
-            <ImageView
-                android:id="@+id/journey_imgFirst"
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            android:background="#000000"
+            app:contentScrim="#000000"
+            android:fitsSystemWindows="true">
+
+            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="164dp"
+                android:id="@+id/journey_frameLayout"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/maxresdefault"
-                android:alpha="0.5" />
-            <RelativeLayout
+                android:fitsSystemWindows="true"
+                app:layout_collapseMode="pin" >
+                <ImageView
+                    android:id="@+id/journey_imgFirst"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/maxresdefault"
+                    android:alpha="0.5" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom|center">
+
+                    <ImageView
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:id="@+id/journey_owner_icon"
+                        android:layout_alignParentStart="true">
+                    </ImageView>
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/journey_edit_FAB"
+                        android:visibility="invisible"
+                        android:src="@drawable/ic_edit_black_36dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        app:backgroundTint="@color/lightGreen"/>
+
+                </RelativeLayout>
+            </FrameLayout>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/journey_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="parallax" />
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary100"
+        android:id="@+id/journey_scroll_view"
+
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <RelativeLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:orientation="vertical" android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="7"
+            android:background="@color/colorPrimary100">
+
+
+
+            <TextView
+                android:id="@+id/journey_summary_title"
+                android:text="Summary"
+                android:textColor="#000000"
+                android:fontFamily="sans-serif-medium"
+                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="bottom|center">
+                android:textSize="20sp"
+                android:paddingTop="10dp"
+                android:paddingLeft="10dp"/>
+            <TextView
+                android:id="@+id/journey_summary_content"
+                android:text=""
+                android:textColor="#000000"
+                android:fontFamily="sans-serif-regular"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_below="@+id/journey_summary_title"
+                android:textSize="14sp"
+                android:paddingTop="10dp"
+                android:paddingLeft="10dp"/>
+            <TextView
+                android:id="@+id/journey_events_title"
+                android:text="Highlights"
+                android:textColor="#000000"
+                android:fontFamily="sans-serif-medium"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_below="@+id/journey_summary_content"
+                android:textSize="20sp"
+                android:paddingTop="10dp"
+                android:paddingLeft="10dp"/>
 
-                <ImageView
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:id="@+id/journey_owner_icon"
-                    android:layout_alignParentStart="true">
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/journey_events_recycle"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_below="@+id/journey_events_title"
+                android:scrollbars="none"
+                android:paddingStart="10dp"
+                />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/journey_events_recycle_placeholder"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_below="@+id/journey_events_title">
+            </LinearLayout>
 
-                </ImageView>
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/journey_Map"
+                android:layout_width="fill_parent"
+                android:layout_weight="1"
+                android:layout_height="350dp"
+                android:paddingTop="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:layout_below="@+id/journey_events_recycle" />
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/journey_imagetrans"
+                android:layout_weight="1"
+                android:layout_alignTop="@+id/journey_Map"
+                android:layout_alignBottom="@+id/journey_Map"
+                android:layout_alignEnd="@+id/journey_Map"
+                android:layout_alignRight="@+id/journey_Map"
+                android:layout_alignLeft="@+id/journey_Map"
+                android:layout_alignStart="@+id/journey_Map"
+                android:src="#00FFFFFF"/>
 
-                <ImageView
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:id="@+id/journey_love_icon"
-                    android:src="@drawable/ic_friends"
-                    android:layout_below="@+id/journey_owner_icon"
-                    android:paddingTop="10dp"
-                    android:paddingLeft="10dp">
-                </ImageView>
+            <TextView
+                android:id="@+id/journey_comments_title"
+                android:text="Comments"
+                android:textColor="#000000"
+                android:fontFamily="sans-serif-medium"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_below="@+id/journey_Map"
+                android:textSize="20sp"
+                android:paddingTop="10dp"
+                android:paddingLeft="10dp"/>
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/journey_comments_recycle"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_below="@+id/journey_comments_title"
+                android:scrollbars="none"
+                android:paddingStart="10dp"
+                />
+            <TextView
+                android:id="@+id/journey_comments_recycle_placeholder"
+                android:text=""
+                android:textColor="#000000"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-regular"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_below="@+id/journey_comments_title"
+                android:textSize="20sp"
+                android:paddingTop="10dp"
+                android:paddingLeft="10dp"/>
 
-                <TextView
-                    android:text=""
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:id="@+id/journey_title"
-                    android:fontFamily="sans-serif-regular"
-                    android:layout_marginTop="15dp"
-                    android:textSize="24sp"
-                    android:textColor="#000000"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"/>
+            <TextView
+                android:id="@+id/journey_comments_add"
+                android:text="ADD NEW ➕"
+                android:textColor="@color/Link"
+                android:fontFamily="sans-serif-light"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_below="@+id/journey_comments_recycle"
+                android:textSize="12sp"
+                android:paddingTop="10dp"
+                android:paddingBottom="50dp"
+                android:paddingLeft="10dp"
+                android:layout_centerHorizontal="true"/>
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
 
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/journey_edit_FAB"
-                    android:visibility="invisible"
-                    android:src="@drawable/ic_edit_black_36dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    app:backgroundTint="@color/lightGreen"/>
+    <android.support.design.widget.FloatingActionButton
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/journey_love_icon"
+        android:src="@drawable/ic_favorites"
+        android:paddingRight="10dp"
+        app:layout_anchor="@id/journey_appbar"
+        app:layout_anchorGravity="bottom|right|end">
+    </android.support.design.widget.FloatingActionButton>
 
-            </RelativeLayout>
-        </FrameLayout>
-
-        <TextView
-            android:id="@+id/journey_summary_title"
-            android:text="Summary"
-            android:textColor="#000000"
-            android:fontFamily="sans-serif-medium"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_below="@+id/journey_frameLayout"
-            android:textSize="20sp"
-            android:paddingTop="10dp"
-            android:paddingLeft="10dp"/>
-        <TextView
-            android:id="@+id/journey_summary_content"
-            android:text=""
-            android:textColor="#000000"
-            android:fontFamily="sans-serif-regular"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_below="@+id/journey_summary_title"
-            android:textSize="14sp"
-            android:paddingTop="10dp"
-            android:paddingLeft="10dp"/>
-        <TextView
-            android:id="@+id/journey_events_title"
-            android:text="Highlights"
-            android:textColor="#000000"
-            android:fontFamily="sans-serif-medium"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_below="@+id/journey_summary_content"
-            android:textSize="20sp"
-            android:paddingTop="10dp"
-            android:paddingLeft="10dp"/>
-
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/journey_events_recycle"
-            android:orientation="vertical"
-            android:layout_weight="1"
-            android:layout_below="@+id/journey_events_title"
-            android:scrollbars="none"
-            android:paddingStart="10dp"
-            />
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/journey_events_recycle_placeholder"
-            android:orientation="vertical"
-            android:layout_weight="1"
-            android:layout_below="@+id/journey_events_title">
-        </LinearLayout>
-
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/journey_Map"
-            android:layout_width="fill_parent"
-            android:layout_height="350dp"
-            android:paddingTop="10dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:layout_below="@+id/journey_events_recycle" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/journey_imagetrans"
-            android:layout_alignTop="@+id/journey_Map"
-            android:layout_alignBottom="@+id/journey_Map"
-            android:layout_alignEnd="@+id/journey_Map"
-            android:layout_alignRight="@+id/journey_Map"
-            android:layout_alignLeft="@+id/journey_Map"
-            android:layout_alignStart="@+id/journey_Map"
-            android:src="#00FFFFFF"/>
-
-        <TextView
-            android:id="@+id/journey_comments_title"
-            android:text="Comments"
-            android:textColor="#000000"
-            android:fontFamily="sans-serif-medium"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_below="@+id/journey_Map"
-            android:textSize="20sp"
-            android:paddingTop="10dp"
-            android:paddingLeft="10dp"/>
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/journey_comments_recycle"
-            android:orientation="vertical"
-            android:layout_weight="1"
-            android:layout_below="@+id/journey_comments_title"
-            android:scrollbars="none"
-            android:paddingStart="10dp"
-            />
-        <TextView
-            android:id="@+id/journey_comments_recycle_placeholder"
-            android:text=""
-            android:textColor="#000000"
-            android:fontFamily="sans-serif-regular"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_below="@+id/journey_comments_title"
-            android:textSize="20sp"
-            android:paddingTop="10dp"
-            android:paddingLeft="10dp"/>
-
-        <TextView
-            android:id="@+id/journey_comments_add"
-            android:text="ADD NEW ➕"
-            android:textColor="@color/Link"
-            android:fontFamily="sans-serif-light"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_below="@+id/journey_comments_recycle"
-            android:textSize="12sp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:layout_centerHorizontal="true"/>
-
-
-    </RelativeLayout>
-</ScrollView>
+</android.support.design.widget.CoordinatorLayout>

@@ -12,12 +12,16 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -63,7 +67,7 @@ import zollie.travelblogger.guidee.utils.ProfileHandlerUtility;
  * Created by FuszeneckerZ on 2016.12.31..
  */
 
-public class JourneyView extends Activity{
+public class JourneyView extends AppCompatActivity{
 
     final int locationPermission = 0;
     MapView mMapView;
@@ -82,17 +86,10 @@ public class JourneyView extends Activity{
         setContentView(R.layout.activity_journey_view);
         Bundle intentData = getIntent().getExtras();
         final JourneyModel mJourney = (JourneyModel) intentData.getParcelable("ser_journey");
-        if(mJourney.coverImageUrl != null){
-            ImageView coverImage = (ImageView ) findViewById(R.id.journey_imgFirst);
-            //===================== Adding Image to to Horizontal Slide via Glide =========
-            Glide
-                    .with(this)
-                    .load(mJourney.coverImageUrl)
-                    .crossFade()
-                    .into(coverImage);
-            //=============================================================================
 
-        }
+        // Change App Toolbar
+        changeAppBar(mJourney);
+
         //============================= Intent to journey owner ===========================
         ImageView journeyOwnerView = (ImageView) findViewById(R.id.journey_owner_icon);
         journeyOwnerView.setOnClickListener(new View.OnClickListener() {
@@ -110,13 +107,6 @@ public class JourneyView extends Activity{
         TextView mJourneySummary = (TextView) findViewById(R.id.journey_summary_content);
         try {
             mJourneySummary.setText(mJourney.summary);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        TextView mJourneyTitle = (TextView) findViewById(R.id.journey_title);
-        try {
-            mJourneyTitle.setText(mJourney.title);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -148,7 +138,7 @@ public class JourneyView extends Activity{
         });
 
         //===================== Journey like method ================================================
-        final ImageView likeButton = (ImageView) findViewById(R.id.journey_love_icon);
+        final FloatingActionButton likeButton = (FloatingActionButton) findViewById(R.id.journey_love_icon);
         //  Static  imageview change
         DataHandler.getInstance().setUserLoved(mJourney, firUser, likeButton);
 
@@ -156,7 +146,7 @@ public class JourneyView extends Activity{
             @Override
             public void onClick(View view) {
 
-                DataHandler.getInstance().loveJourneyInFIR(mJourney, firUser, (ImageView) view);
+                DataHandler.getInstance().loveJourneyInFIR(mJourney, firUser, (FloatingActionButton) view);
             }
         });
 
@@ -172,7 +162,7 @@ public class JourneyView extends Activity{
 
         mMapView = (MapView) findViewById(R.id.journey_Map);
         mMapView.onCreate(savedInstanceState);
-        final ScrollView scrollView = (ScrollView) findViewById(R.id.journey_scroll_view);
+        final NestedScrollView scrollView = (NestedScrollView) findViewById(R.id.journey_scroll_view);
         ImageView transparent = (ImageView)findViewById(R.id.journey_imagetrans);
 
         // Method to deprecate touch events of ScrollView in case the user touches the map
@@ -479,5 +469,27 @@ public class JourneyView extends Activity{
 
         }
     }
+    public void changeAppBar(JourneyModel journeyModel){
 
+        // ================== Change Scrolling Toolbar ========================================
+        Toolbar toolbar = (Toolbar) findViewById(R.id.journey_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.journey_collapse_toolbar);
+        collapsingToolbar.setTitle(journeyModel.title);
+        if(journeyModel.coverImageUrl != null){
+            ImageView coverImage = (ImageView ) findViewById(R.id.journey_imgFirst);
+            //===================== Adding Image to to Horizontal Slide via Glide =========
+            Glide
+                    .with(this)
+                    .load(journeyModel.coverImageUrl)
+                    .crossFade()
+                    .into(coverImage);
+            //=============================================================================
+
+        }
+        collapsingToolbar.setExpandedTitleTextAppearance(R.style.expandedappbar);
+        collapsingToolbar.setCollapsedTitleTextAppearance(R.style.collapsedappbar);
+    }
 }

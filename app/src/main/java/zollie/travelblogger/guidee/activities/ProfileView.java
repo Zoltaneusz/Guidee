@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -92,12 +93,12 @@ public class ProfileView extends AppCompatActivity {
                 allFollowers.clear();
                 final UserModel userModel = new UserModel(rawUserData, userID);
                 // ========================= Following user on click ===================================
-                ImageView followUser = (ImageView) findViewById(R.id.owner_follow_icon);
+                FloatingActionButton followUser = (FloatingActionButton) findViewById(R.id.owner_follow_icon);
                 DataHandler.getInstance().setUserFollowed(userModel, firUser, followUser);
                 followUser.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        DataHandler.getInstance().followUserInFIR(userModel, firUser, (ImageView) v);
+                        DataHandler.getInstance().followUserInFIR(userModel, firUser, (FloatingActionButton) v);
                     }
                 });
                 //======================================================================================
@@ -307,11 +308,15 @@ public class ProfileView extends AppCompatActivity {
         collapsingToolbar.setTitle(userModel.userName);
         ImageView appBarImage = (ImageView) findViewById(R.id.prof_act_appbar_image);
         //===================== Adding Image to to Horizontal Slide via Glide =========
-        Glide
-                .with(this)
-                .load(allJourneys.get(0).coverImageUrl)
-                .crossFade()
-                .into(appBarImage);
+        if(allJourneys.size() != 0) {
+            if (allJourneys.get(0).coverImageUrl != null) {
+                Glide
+                        .with(this)
+                        .load(allJourneys.get(0).coverImageUrl)
+                        .crossFade()
+                        .into(appBarImage);
+            }
+        }
         //=============================================================================
         collapsingToolbar.setExpandedTitleTextAppearance(R.style.expandedappbar);
         collapsingToolbar.setCollapsedTitleTextAppearance(R.style.collapsedappbar);

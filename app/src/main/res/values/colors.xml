@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="lightGreen">#90D499</color>
+    <color name="lightGreen">#B2FF59</color>
     <color name="pastellRed">#FF6565</color>
-    <color name="LightGreen">#C5E1A5</color>
+    <color name="LightGreen">#B2FF59</color>
     <color name="Link">#90C3D4</color>
     <color name="PressedTint">#80f41537</color>
 
-    <color name="colorPrimary">#CDDC39</color>
-    <color name="colorPrimary100">#F0F4C3</color>
-    <color name="colorPrimaryMiddle">#C0CA33</color>
-    <color name="colorPrimaryDark">#827717</color>
-    <color name="colorAccent">#F50057</color>
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimary100">#BBDEFB</color>
+    <color name="colorPrimaryMiddle">#1976D2</color>
+    <color name="colorPrimaryDark">#1565C0</color>
+    <color name="colorAccent">#FFFF00</color>
+
+    <color name="colorSecondary">#CDDC39</color>
+    <color name="colorSecondary100">#F0F4C3</color>
+    <color name="colorSecondaryMiddle">#C0CA33</color>
+    <color name="colorSecondaryDark">#827717</color>
+    <color name="colorAccent2">#F50057</color>
 
 
 </resources>

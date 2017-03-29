@@ -48,7 +48,7 @@ public class ContentViewerDialogFragment extends DialogFragment {
         Glide
                 .with(this)
                 .load(mImageString)
-                .centerCrop()
+                .fitCenter()
                 .crossFade()
                 .into(imageView);
         //=============================================================================

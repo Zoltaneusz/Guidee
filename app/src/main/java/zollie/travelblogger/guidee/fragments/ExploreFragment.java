@@ -337,7 +337,7 @@ public class ExploreFragment extends Fragment {
             // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             // finally change the color
-            window.setStatusBarColor(getActivity().getResources().getColor(R.color.LightGreen));
+            window.setStatusBarColor(getActivity().getResources().getColor(R.color.colorPrimaryDark));
         }
         //========================================================
         mMapView.onResume();

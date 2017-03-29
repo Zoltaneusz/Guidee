@@ -361,18 +361,7 @@ public class ProfileFragment extends Fragment {
         });
     }
     public void changeProfileCover(UserModel userModel){
-        if(allJourneys.size() != 0) {
-            if (allJourneys.get(0).coverImageUrl != null) {
-                ImageView coverImg = (ImageView) getActivity().findViewById(R.id.prof_cover);
-                //===================== Adding Image to to Horizontal Slide via Glide =========
-                Glide
-                        .with(this)
-                        .load(allJourneys.get(0).coverImageUrl)
-                        .crossFade()
-                        .into(coverImg);
-                //=============================================================================
-            }
-        }
+
         // ================== Change Scrolling Toolbar ========================================
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.prof_frag_toolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
@@ -382,11 +371,15 @@ public class ProfileFragment extends Fragment {
         collapsingToolbar.setTitle(userModel.userName);
         ImageView appBarImage = (ImageView) getActivity().findViewById(R.id.prof_frag_appbar_image);
         //===================== Adding Image to to Horizontal Slide via Glide =========
-        Glide
-                .with(this)
-                .load(allJourneys.get(0).coverImageUrl)
-                .crossFade()
-                .into(appBarImage);
+        if(allJourneys.size() != 0) {
+            if (allJourneys.get(0).coverImageUrl != null) {
+                Glide
+                        .with(this)
+                        .load(allJourneys.get(0).coverImageUrl)
+                        .crossFade()
+                        .into(appBarImage);
+            }
+        }
         //=============================================================================
         collapsingToolbar.setExpandedTitleTextAppearance(R.style.expandedappbar);
         collapsingToolbar.setCollapsedTitleTextAppearance(R.style.collapsedappbar);
