@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.NestedScrollView;
@@ -13,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -59,24 +61,10 @@ public class EventView extends AppCompatActivity{
 
         Bundle intentData = getIntent().getExtras();
         final EventModel mEvent = (EventModel) intentData.getParcelable("ser_event");
-        if(mEvent.carouselModels.size() != 0) {
-            if (!mEvent.carouselModels.get(0).imageUrl.equals("empty")) {
-                if (mEvent.carouselModels.get(0).carouselType == CarouselModel.CarouselType.IMAGE) {
-                    ImageView coverImage = (ImageView) findViewById(R.id.event_imgFirst);
-                    //===================== Adding Image to to Horizontal Slide via Glide =========
-                    Glide
-                            .with(this)
-                            .load(mEvent.carouselModels.get(0).imageUrl)
-                            .crossFade()
-                            .into(coverImage);
-                    //=============================================================================
-                }
-            }
-        }
-        if(mEvent.title != null) {
-            TextView eventTitle = (TextView) findViewById(R.id.event_name);
-            eventTitle.setText(mEvent.title);
-        }
+
+        // Change App Toolbar
+        changeAppBar(mEvent);
+
         TextView mEventSummary = (TextView) findViewById(R.id.event_summary_content);
         try {
             mEventSummary.setText(mEvent.summary);
@@ -242,6 +230,33 @@ public class EventView extends AppCompatActivity{
         toJourneyIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                 | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         mContext.startActivity(toJourneyIntent);
+    }
+
+    public void changeAppBar(EventModel eventModel){
+
+        // ================== Change Scrolling Toolbar ========================================
+        Toolbar toolbar = (Toolbar) findViewById(R.id.event_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.event_collapse_toolbar);
+        collapsingToolbar.setTitle(eventModel.title);
+        if(eventModel.carouselModels.size() != 0) {
+            if (!eventModel.carouselModels.get(0).imageUrl.equals("empty")) {
+                if (eventModel.carouselModels.get(0).carouselType == CarouselModel.CarouselType.IMAGE) {
+                    ImageView coverImage = (ImageView) findViewById(R.id.event_imgFirst);
+                    //===================== Adding Image to to Horizontal Slide via Glide =========
+                    Glide
+                            .with(this)
+                            .load(eventModel.carouselModels.get(0).imageUrl)
+                            .crossFade()
+                            .into(coverImage);
+                    //=============================================================================
+                }
+            }
+        }
+        collapsingToolbar.setExpandedTitleTextAppearance(R.style.expandedappbar);
+        collapsingToolbar.setCollapsedTitleTextAppearance(R.style.collapsedappbar);
     }
 
 }

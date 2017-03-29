@@ -37,19 +37,13 @@
                         android:scaleType="centerCrop"
                         android:src="@mipmap/maxresdefault" />
 
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom|center">
 
                         <ImageView
                             android:id="@+id/prof_pic"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentTop="true"
-                            android:layout_centerHorizontal="true"></ImageView>
+                            android:layout_gravity="center|center"></ImageView>
 
-                    </RelativeLayout>
                 </FrameLayout>
 
                 <android.support.v7.widget.Toolbar
