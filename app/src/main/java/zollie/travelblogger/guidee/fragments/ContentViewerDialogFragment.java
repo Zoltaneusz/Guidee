@@ -12,6 +12,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.github.chrisbanes.photoview.PhotoView;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 
 import zollie.travelblogger.guidee.R;
 
@@ -21,6 +23,7 @@ import zollie.travelblogger.guidee.R;
 
 public class ContentViewerDialogFragment extends DialogFragment {
     String mImageString;
+    PhotoViewAttacher mAttacher;
 
     public static ContentViewerDialogFragment newInstance(String image){
         ContentViewerDialogFragment frag = new ContentViewerDialogFragment();
@@ -45,9 +48,9 @@ public class ContentViewerDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //((AppCompatActivity) getActivity()).getSupportActionBar().hide();
         View v = inflater.inflate(R.layout.dialogfragment_content_view, container, false);
-        ImageView imageView = (ImageView) v.findViewById(R.id.contentImageView);
+        PhotoView imageView = (PhotoView) v.findViewById(R.id.contentImageView);
   //      Animation zoomAnimation = AnimationUtils.loadAnimation(getActivity(),R.anim.zoom_animation);
-        
+
         //===================== Adding Image to to Horizontal Slide via Glide =========
         Glide
                 .with(this)
@@ -57,6 +60,7 @@ public class ContentViewerDialogFragment extends DialogFragment {
                 .into(imageView);
         //=============================================================================
     //    imageView.startAnimation(zoomAnimation);
+
 
         return v;
     }
