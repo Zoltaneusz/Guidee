@@ -2,6 +2,7 @@
 <resources>
 
     <color name="lightGreen">#B2FF59</color>
+    <color name="backButton">#B2FF59</color>
     <color name="pastellRed">#FF6565</color>
     <color name="LightGreen">#B2FF59</color>
     <color name="Link">#90C3D4</color>

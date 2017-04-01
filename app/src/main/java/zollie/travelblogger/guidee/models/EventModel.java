@@ -253,11 +253,13 @@ public class EventModel implements Parcelable{
             parcel.writeDouble(eventLatLng.latitude);
         } catch (Exception e) {
             e.printStackTrace();
+            parcel.writeDouble(42.993976403334706);
         }
         try {
             parcel.writeDouble(eventLatLng.longitude);
         } catch (Exception e) {
             e.printStackTrace();
+            parcel.writeDouble(16.40115687746871);
         }
         try {
             parcel.writeBooleanArray(new boolean[]{this.userEligible});

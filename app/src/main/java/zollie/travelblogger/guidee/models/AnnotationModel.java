@@ -163,11 +163,13 @@ public class AnnotationModel implements Parcelable {
             parcel.writeDouble(markerLatLng.latitude);
         } catch (Exception e) {
             e.printStackTrace();
+            parcel.writeDouble(42.993976403334706);
         }
         try {
             parcel.writeDouble(markerLatLng.longitude);
         } catch (Exception e) {
             e.printStackTrace();
+            parcel.writeDouble(16.40115687746871);
         }
             }
     public static final Parcelable.Creator<AnnotationModel> CREATOR = new Parcelable.Creator<AnnotationModel>() {
