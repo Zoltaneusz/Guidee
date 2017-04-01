@@ -43,14 +43,18 @@
                     <ImageView
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
+                        android:visibility="visible"
                         android:id="@+id/journey_owner_icon"
-                        android:layout_alignParentStart="true">
+                        android:paddingRight="10dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true">
                     </ImageView>
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/journey_edit_FAB"
                         android:visibility="invisible"
                         android:src="@drawable/ic_edit_black_36dp"
+                        android:paddingRight="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -74,6 +78,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimary100"
+        android:layout_marginBottom="?attr/actionBarSize"
         android:id="@+id/journey_scroll_view"
 
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -208,7 +213,7 @@
                 android:layout_below="@+id/journey_comments_recycle"
                 android:textSize="12sp"
                 android:paddingTop="10dp"
-                android:paddingBottom="50dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="10dp"
                 android:layout_centerHorizontal="true"/>
         </RelativeLayout>

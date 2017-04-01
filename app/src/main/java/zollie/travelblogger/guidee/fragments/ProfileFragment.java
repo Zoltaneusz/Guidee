@@ -283,7 +283,7 @@ public class ProfileFragment extends Fragment {
             UserModel mUser = new UserModel((UserModel)(params[0]));
             //===================== Adding Image to to Horizontal Slide via Glide =========
             try {
-                userAvatarGlobal= Glide.with(getActivity())
+                userAvatarGlobal= Glide.with((AppCompatActivity)getActivity())
                         .load(mUser.avatarUrl)
                         .asBitmap()
                         .into(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL).get();
@@ -293,15 +293,16 @@ public class ProfileFragment extends Fragment {
                 e.printStackTrace();
             }
             //=============================================================================
-            float scale = getResources().getDisplayMetrics().density;
-            userAvatarGlobal = imageProcessor.resizeMarkerImage(userAvatarGlobal, scale*4/3);
+
             return mUser;
         }
 
         @Override
         protected void onPostExecute(UserModel mUser) {
+            float scale = getResources().getDisplayMetrics().density;
+            if(userAvatarGlobal != null)
+            userAvatarGlobal = imageProcessor.resizeMarkerImage(userAvatarGlobal, scale*4/3);
             ImageView mProfileImage = (ImageView) getActivity().findViewById(R.id.prof_pic);
-            final float scale = getResources().getDisplayMetrics().density;
             final Bitmap.Config conf = Bitmap.Config.ARGB_8888;
             Bitmap bmp = Bitmap.createBitmap((int)(120*scale),(int) (120*scale), conf);
             Canvas canvas1 = new Canvas(bmp);

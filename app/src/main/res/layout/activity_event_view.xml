@@ -23,8 +23,11 @@
 
             <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:id="@+id/event_frameLayout">
+                android:layout_height="164dp"
+                android:id="@+id/event_frameLayout"
+                android:scaleType="centerCrop"
+                android:fitsSystemWindows="true"
+                app:layout_collapseMode="pin" >
                 <ImageView
                     android:id="@+id/event_imgFirst"
                     android:layout_width="match_parent"
@@ -33,22 +36,14 @@
                     android:src="@mipmap/maxresdefault"
                     android:alpha="0.5" />
 
-
-                    <ImageView
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:id="@+id/event_prof_pic"
-                        android:layout_gravity="center|center">
-                    </ImageView>
-
-                    <android.support.design.widget.FloatingActionButton
+                <android.support.design.widget.FloatingActionButton
                         android:id="@+id/event_edit_FAB"
                         android:visibility="invisible"
                         android:src="@drawable/ic_edit_black_36dp"
+                        android:paddingRight="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
+                        android:layout_gravity="right|center"
                         app:backgroundTint="@color/lightGreen"/>
             </FrameLayout>
 
@@ -68,6 +63,7 @@
         android:id="@+id/event_scroll_view"
         android:background="@color/colorPrimary100"
         android:layout_gravity="fill_vertical"
+        android:layout_marginBottom="?attr/actionBarSize"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
         <RelativeLayout
             xmlns:app="http://schemas.android.com/apk/res-auto"

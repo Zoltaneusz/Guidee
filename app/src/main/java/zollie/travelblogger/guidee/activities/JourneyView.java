@@ -338,6 +338,8 @@ public class JourneyView extends AppCompatActivity{
                                 if(mJourney.userEligible) {
                                     FloatingActionButton editEventFAB = (FloatingActionButton) findViewById(R.id.journey_edit_FAB);
                                     editEventFAB.setVisibility(View.VISIBLE);
+                                    ImageView ownerIcon = (ImageView) findViewById(R.id.journey_owner_icon);
+                                    ownerIcon.setVisibility(View.INVISIBLE);
                                     editEventFAB.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
@@ -450,21 +452,25 @@ public class JourneyView extends AppCompatActivity{
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
+            finally{
+                float scale = getResources().getDisplayMetrics().density;
+                if(userAvatarGlobal != null)
+                userAvatarGlobal = imageProcessor.resizeMarkerImage(userAvatarGlobal, scale*3/3);
+            }
             //=============================================================================
-            float scale = getResources().getDisplayMetrics().density;
-            userAvatarGlobal = imageProcessor.resizeMarkerImage(userAvatarGlobal, scale*2/3);
+
             return mJourney;
         }
 
         @Override
         protected void onPostExecute(JourneyModel mJourney) {
             ImageView ownerPic = (ImageView) findViewById(R.id.journey_owner_icon);
-            final float scale = getResources().getDisplayMetrics().density;
             final Bitmap.Config conf = Bitmap.Config.ARGB_8888;
-            Bitmap bmp = Bitmap.createBitmap((int)(60*scale),(int) (60*scale), conf);
+            float scale = getResources().getDisplayMetrics().density;
+            Bitmap bmp = Bitmap.createBitmap((int)(100*scale),(int) (100*scale), conf);
             Canvas canvas1 = new Canvas(bmp);
-            Bitmap circleBitmap = imageProcessor.pulseMarker(2, bmp, canvas1, scale*2, userAvatarGlobal);
-            circleBitmap = imageProcessor.pulseMarker(2, userAvatarGlobal, canvas1, scale*2, circleBitmap);
+            Bitmap circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale*2, userAvatarGlobal);
+            circleBitmap = imageProcessor.pulseMarker(4, userAvatarGlobal, canvas1, scale*2, circleBitmap);
             ownerPic.setImageBitmap(circleBitmap);
 
         }

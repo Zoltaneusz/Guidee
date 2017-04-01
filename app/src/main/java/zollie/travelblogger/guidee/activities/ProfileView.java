@@ -278,15 +278,16 @@ public class ProfileView extends AppCompatActivity {
                 e.printStackTrace();
             }
             //=============================================================================
-            float scale = getResources().getDisplayMetrics().density;
-            userAvatarGlobal = imageProcessor.resizeMarkerImage(userAvatarGlobal, scale*4/3);
+
             return mUser;
         }
 
         @Override
         protected void onPostExecute(UserModel mUser) {
+            float scale = getResources().getDisplayMetrics().density;
+            if(userAvatarGlobal != null)
+            userAvatarGlobal = imageProcessor.resizeMarkerImage(userAvatarGlobal, scale*4/3);
             ImageView mProfileImage = (ImageView) findViewById(R.id.owner_prof_pic);
-            final float scale = getResources().getDisplayMetrics().density;
             final Bitmap.Config conf = Bitmap.Config.ARGB_8888;
             Bitmap bmp = Bitmap.createBitmap((int)(120*scale),(int) (120*scale), conf);
             Canvas canvas1 = new Canvas(bmp);

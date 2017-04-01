@@ -163,7 +163,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 e.printStackTrace();
             }
             //=============================================================================
-            userAvatarGlobal = imageProcessor.resizeMarkerImage(userAvatarGlobal, 2);
+
             return holder;
         }
 
@@ -171,6 +171,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         protected void onPostExecute(CommentAdapter.ViewHolder holder) {
             ImageView imageView = holder.mUserAvatar;
             final float scale = mContext.getResources().getDisplayMetrics().density;
+            if(userAvatarGlobal != null)
+                userAvatarGlobal = imageProcessor.resizeMarkerImage(userAvatarGlobal, 2);
             final Bitmap.Config conf = Bitmap.Config.ARGB_8888;
             Bitmap bmp = Bitmap.createBitmap((int)(120*scale),(int) (120*scale), conf);
             Canvas canvas1 = new Canvas(bmp);

@@ -68,6 +68,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimary100"
+        android:layout_marginBottom="?attr/actionBarSize"
         android:layout_gravity="fill_vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
         <RelativeLayout
@@ -211,7 +212,7 @@
                 android:orientation="vertical"
                 android:layout_weight="1"
                 android:layout_below="@+id/owner_followed_users_title"
-                android:paddingBottom="90dp">
+                android:paddingBottom="10dp">
             </LinearLayout>
 
         </RelativeLayout>

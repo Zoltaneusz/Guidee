@@ -61,7 +61,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="fill_vertical"
         android:background="@color/colorPrimary100"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_marginBottom="?attr/actionBarSize">
         <RelativeLayout
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
@@ -82,35 +83,47 @@
                 android:paddingTop="10dp"
                 android:paddingLeft="10dp"/>
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/profile_j_edit_FAB"
-                android:src="@drawable/ic_edit_black_36dp"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_toRightOf="@+id/my_journeys_recycle"
-                android:layout_below="@+id/my_journeys_title"
-                android:paddingRight="10dp"
-                android:paddingTop="50dp"
-                app:backgroundTint="@color/lightGreen"/>
-
-            <android.support.v7.widget.RecyclerView
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/my_journeys_recycle"
-                android:orientation="horizontal"
-
                 android:layout_below="@+id/my_journeys_title"
-                android:scrollbars="none"
-                android:paddingStart="10dp"
-                />
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/my_journeys_recycle_placeholder"
-                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:id="@+id/profile_j_relative"
+               >
 
-                android:layout_below="@+id/my_journeys_title">
-            </LinearLayout>
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/profile_j_edit_FAB"
+                    android:src="@drawable/ic_edit_black_36dp"
+                    android:layout_centerVertical="true"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_toRightOf="@+id/my_journeys_recycle"
+
+                    android:paddingLeft="10dp"
+                    app:backgroundTint="@color/lightGreen"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/my_journeys_recycle"
+                    android:orientation="horizontal"
+                    android:scrollbars="none"
+                    android:layout_centerVertical="true"
+                    />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/my_journeys_recycle_placeholder"
+                    android:orientation="vertical"
+                    android:layout_alignTop="@+id/my_journeys_recycle"
+                    android:layout_alignBottom="@+id/my_journeys_recycle"
+                    android:layout_alignEnd="@+id/my_journeys_recycle"
+                    android:layout_alignRight="@+id/my_journeys_recycle"
+                    android:layout_alignLeft="@+id/my_journeys_recycle"
+                    android:layout_alignStart="@+id/my_journeys_recycle">
+                </LinearLayout>
+            </RelativeLayout>
 
             <EditText
                 android:id="@+id/my_plans_title"
@@ -123,7 +136,7 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:paddingLeft="10dp"
-                android:layout_below="@+id/my_journeys_recycle"
+                android:layout_below="@+id/profile_j_relative"
                 android:background="@android:color/transparent"/>
 
             <android.support.v7.widget.RecyclerView
@@ -203,7 +216,7 @@
                 android:layout_below="@+id/my_followed_users_title"
                 android:scrollbars="none"
                 android:paddingStart="10dp"
-                android:paddingBottom="90dp"
+                android:paddingBottom="10dp"
                 />
 
             <LinearLayout
@@ -213,7 +226,7 @@
                 android:orientation="vertical"
 
                 android:layout_below="@+id/my_followed_users_title"
-                android:paddingBottom="90dp">
+                android:paddingBottom="10dp">
                 </LinearLayout>
 
         </RelativeLayout>
