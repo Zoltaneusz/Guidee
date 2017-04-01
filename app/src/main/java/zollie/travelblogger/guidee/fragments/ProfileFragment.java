@@ -241,7 +241,7 @@ public class ProfileFragment extends Fragment {
     public void fillRecyclerView(int primaryResource, int emptyResource, ArrayList<JourneyModel> journeyModels){
 
         RecyclerView rvJourneys = (RecyclerView) getActivity().findViewById(primaryResource);
-
+        rvJourneys.setNestedScrollingEnabled(false);
         JourneyAdapter adapter = new JourneyAdapter(getActivity(), journeyModels);
         rvJourneys.setAdapter(adapter);
         rvJourneys.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
@@ -254,6 +254,7 @@ public class ProfileFragment extends Fragment {
 
     public void fillRecyclerViewFollow(int primaryResource, int emptyResource, ArrayList<UserModel> users) {
         RecyclerView rvFollows = (RecyclerView) getActivity().findViewById(primaryResource);
+        rvFollows.setNestedScrollingEnabled(false);
         FollowedAdapter adapter = new FollowedAdapter(getActivity(), users);
         rvFollows.setAdapter(adapter);
         rvFollows.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));

@@ -45,8 +45,7 @@
                         android:layout_width="wrap_content"
                         android:visibility="visible"
                         android:id="@+id/journey_owner_icon"
-                        android:paddingRight="10dp"
-                        android:layout_alignParentEnd="true"
+                        android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true">
                     </ImageView>
 
@@ -59,7 +58,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        app:backgroundTint="@color/lightGreen"/>
+                        app:backgroundTint="@color/buttonBack"/>
 
                 </RelativeLayout>
             </FrameLayout>
@@ -77,8 +76,7 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary100"
-        android:layout_marginBottom="?attr/actionBarSize"
+        android:background="@color/colorPrimary50"
         android:id="@+id/journey_scroll_view"
 
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -89,7 +87,7 @@
             android:orientation="vertical" android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:weightSum="7"
-            android:background="@color/colorPrimary100">
+            android:background="@color/colorPrimary50">
 
 
 
@@ -212,7 +210,7 @@
                 android:layout_weight="1"
                 android:layout_below="@+id/journey_comments_recycle"
                 android:textSize="12sp"
-                android:paddingTop="10dp"
+                android:paddingTop="50dp"
                 android:paddingBottom="10dp"
                 android:paddingLeft="10dp"
                 android:layout_centerHorizontal="true"/>
@@ -226,7 +224,7 @@
         android:src="@drawable/ic_favorites"
         android:paddingRight="10dp"
         app:layout_anchor="@id/journey_appbar"
-        app:backgroundTint="@color/lightGreen"
+        app:backgroundTint="@color/buttonBack"
         app:layout_anchorGravity="bottom|right|end">
     </android.support.design.widget.FloatingActionButton>
 

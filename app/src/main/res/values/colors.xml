@@ -2,13 +2,15 @@
 <resources>
 
     <color name="lightGreen">#B2FF59</color>
-    <color name="backButton">#B2FF59</color>
+    <color name="buttonBack">#90C3D4</color>
+    <color name="backButton">#90C3D4</color>
     <color name="pastellRed">#FF6565</color>
     <color name="LightGreen">#B2FF59</color>
     <color name="Link">#90C3D4</color>
     <color name="PressedTint">#80f41537</color>
 
     <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimary50">#E3F2FD</color>
     <color name="colorPrimary100">#BBDEFB</color>
     <color name="colorPrimaryMiddle">#1976D2</color>
     <color name="colorPrimaryDark">#1565C0</color>

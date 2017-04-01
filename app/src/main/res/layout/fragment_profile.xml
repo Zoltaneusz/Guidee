@@ -60,7 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="fill_vertical"
-        android:background="@color/colorPrimary100"
+        android:background="@color/colorPrimary50"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_marginBottom="?attr/actionBarSize">
         <RelativeLayout
@@ -68,7 +68,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:orientation="vertical" android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorPrimary100">
+            android:background="@color/colorPrimary50">
 
 
 
@@ -100,7 +100,7 @@
                     android:layout_toRightOf="@+id/my_journeys_recycle"
 
                     android:paddingLeft="10dp"
-                    app:backgroundTint="@color/lightGreen"/>
+                    app:backgroundTint="@color/buttonBack"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="wrap_content"

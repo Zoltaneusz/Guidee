@@ -289,7 +289,7 @@ public class JourneyView extends AppCompatActivity{
     public void fillRecyclerView(int primaryResource, int emptyResource, ArrayList<EventModel> eventModels){
 
         RecyclerView rvEvents = (RecyclerView) findViewById(primaryResource);
-
+        rvEvents.setNestedScrollingEnabled(false);
         EventAdapter adapter = new EventAdapter(this, eventModels);
         rvEvents.setAdapter(adapter);
         rvEvents.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -302,7 +302,7 @@ public class JourneyView extends AppCompatActivity{
     public void fillCommentsRecyclerView(int primaryResource, int emptyResource, ArrayList<CommentModel> commentModels){
 
         RecyclerView rvEvents = (RecyclerView) findViewById(primaryResource);
-
+        rvEvents.setNestedScrollingEnabled(false);
         CommentAdapter adapter = new CommentAdapter(this, commentModels);
         rvEvents.setAdapter(adapter);
         rvEvents.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -341,8 +341,8 @@ public class JourneyView extends AppCompatActivity{
                                 if(mJourney.userEligible) {
                                     FloatingActionButton editEventFAB = (FloatingActionButton) findViewById(R.id.journey_edit_FAB);
                                     editEventFAB.setVisibility(View.VISIBLE);
-                                    ImageView ownerIcon = (ImageView) findViewById(R.id.journey_owner_icon);
-                                    ownerIcon.setVisibility(View.INVISIBLE);
+    //                                ImageView ownerIcon = (ImageView) findViewById(R.id.journey_owner_icon);
+    //                                ownerIcon.setVisibility(View.INVISIBLE);
                                     editEventFAB.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {

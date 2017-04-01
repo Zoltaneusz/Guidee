@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -44,6 +46,8 @@ public class ContentViewerDialogFragment extends DialogFragment {
         //((AppCompatActivity) getActivity()).getSupportActionBar().hide();
         View v = inflater.inflate(R.layout.dialogfragment_content_view, container, false);
         ImageView imageView = (ImageView) v.findViewById(R.id.contentImageView);
+  //      Animation zoomAnimation = AnimationUtils.loadAnimation(getActivity(),R.anim.zoom_animation);
+        
         //===================== Adding Image to to Horizontal Slide via Glide =========
         Glide
                 .with(this)
@@ -52,6 +56,7 @@ public class ContentViewerDialogFragment extends DialogFragment {
                 .crossFade()
                 .into(imageView);
         //=============================================================================
+    //    imageView.startAnimation(zoomAnimation);
 
         return v;
     }

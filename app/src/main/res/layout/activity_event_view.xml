@@ -44,7 +44,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right|center"
-                        app:backgroundTint="@color/lightGreen"/>
+                        app:backgroundTint="@color/buttonBack"/>
             </FrameLayout>
 
             <android.support.v7.widget.Toolbar
@@ -61,16 +61,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/event_scroll_view"
-        android:background="@color/colorPrimary100"
+        android:background="@color/colorPrimary50"
         android:layout_gravity="fill_vertical"
-        android:layout_marginBottom="?attr/actionBarSize"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
         <RelativeLayout
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:orientation="vertical" android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorPrimary100">
+            android:background="@color/colorPrimary50">
 
 
 
@@ -132,6 +131,7 @@
                 android:paddingTop="10dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
+                android:paddingBottom="90dp"
                 android:layout_below="@+id/event_pictures_recycle_test" />
 
             <ImageView

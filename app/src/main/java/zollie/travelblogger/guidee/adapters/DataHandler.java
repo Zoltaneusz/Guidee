@@ -516,26 +516,28 @@ public class DataHandler {
                         }
                     } catch (Exception e){
                         Map<String, Object> rawUserIDs = null;
-                        rawUserIDs = (Map<String, Object>) dataSnapshot.getValue();
-                        for(Map.Entry<String, Object> rawUserID : rawUserIDs.entrySet()) {
-                            DataHandler.getInstance().getUserWithId((String) rawUserID.getValue(), new DataHandlerListener() {
-                                @Override
-                                public void onJourneyData(Map<String, Object> rawJourneyData, String journeyID) {
+                        if(dataSnapshot.getValue() != null) {
+                            rawUserIDs = (Map<String, Object>) dataSnapshot.getValue();
+                            for (Map.Entry<String, Object> rawUserID : rawUserIDs.entrySet()) {
+                                DataHandler.getInstance().getUserWithId((String) rawUserID.getValue(), new DataHandlerListener() {
+                                    @Override
+                                    public void onJourneyData(Map<String, Object> rawJourneyData, String journeyID) {
 
-                                }
+                                    }
 
-                                @Override
-                                public void onUserData(Map<String, Object> rawUserData, String userId) {
-                                    UserModel userModel = new UserModel(rawUserData, userId);
-                                    followingListener.onFollowing(userModel);
-                                }
+                                    @Override
+                                    public void onUserData(Map<String, Object> rawUserData, String userId) {
+                                        UserModel userModel = new UserModel(rawUserData, userId);
+                                        followingListener.onFollowing(userModel);
+                                    }
 
-                                @Override
-                                public void onCommentData(Map<String, Object> rawCommentData, String commentID, String journeyIdent) {
+                                    @Override
+                                    public void onCommentData(Map<String, Object> rawCommentData, String commentID, String journeyIdent) {
 
-                                }
-                            });
+                                    }
+                                });
 
+                            }
                         }
                     }
 

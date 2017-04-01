@@ -190,7 +190,7 @@ public class EventView extends AppCompatActivity{
     public void fillRecyclerView(int primaryResource, int emptyResource, ArrayList<CarouselModel> carouselModels){
 
         RecyclerView rvCarousels = (RecyclerView) findViewById(primaryResource);
-
+        rvCarousels.setNestedScrollingEnabled(false);
         CarouselAdapter adapter = new CarouselAdapter(this, carouselModels);
         rvCarousels.setAdapter(adapter);
         rvCarousels.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
