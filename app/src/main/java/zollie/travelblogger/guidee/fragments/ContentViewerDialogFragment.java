@@ -4,6 +4,11 @@ import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,21 +20,26 @@ import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.github.chrisbanes.photoview.PhotoViewAttacher;
 
+import java.util.ArrayList;
+
 import zollie.travelblogger.guidee.R;
+import zollie.travelblogger.guidee.adapters.CarouselAdapter;
+import zollie.travelblogger.guidee.adapters.DialogFragmentAdapter;
+import zollie.travelblogger.guidee.models.CarouselModel;
 
 /**
  * Created by FuszeneckerZ on 2017.01.16..
  */
 
 public class ContentViewerDialogFragment extends DialogFragment {
-    String mImageString;
+    ArrayList<CarouselModel> allCarousels = new ArrayList<CarouselModel>();
     PhotoViewAttacher mAttacher;
 
-    public static ContentViewerDialogFragment newInstance(String image){
+    public static ContentViewerDialogFragment newInstance(ArrayList<CarouselModel> carousels){
         ContentViewerDialogFragment frag = new ContentViewerDialogFragment();
 
         Bundle args = new Bundle();
-        args.putString("image", image);
+        args.putParcelableArrayList("carousels", carousels);
         frag.setArguments(args);
 
         return frag;
@@ -38,7 +48,7 @@ public class ContentViewerDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mImageString = getArguments().getString("image");
+        allCarousels = getArguments().getParcelableArrayList("carousels");
         setStyle(STYLE_NORMAL, R.style.AppTheme);
 
     }
@@ -48,20 +58,19 @@ public class ContentViewerDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //((AppCompatActivity) getActivity()).getSupportActionBar().hide();
         View v = inflater.inflate(R.layout.dialogfragment_content_view, container, false);
-        PhotoView imageView = (PhotoView) v.findViewById(R.id.contentImageView);
-  //      Animation zoomAnimation = AnimationUtils.loadAnimation(getActivity(),R.anim.zoom_animation);
 
-        //===================== Adding Image to to Horizontal Slide via Glide =========
-        Glide
-                .with(this)
-                .load(mImageString)
-                .fitCenter()
-                .crossFade()
-                .into(imageView);
-        //=============================================================================
-    //    imageView.startAnimation(zoomAnimation);
-
+        RecyclerView rvCarousels = (RecyclerView) v.findViewById(R.id.dialog_reycler);
+        DialogFragmentAdapter adapter = new DialogFragmentAdapter(getActivity(), allCarousels);
+        rvCarousels.setAdapter(adapter);
+        SnapHelper helper = new LinearSnapHelper();
+        helper.attachToRecyclerView(rvCarousels);
+        rvCarousels.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        RecyclerView.ItemDecoration itemDecoration = new
+                DividerItemDecoration(getActivity(), zollie.travelblogger.guidee.utils.DividerItemDecoration.HORIZONTAL_LIST);
+        rvCarousels.addItemDecoration(itemDecoration);
 
         return v;
     }
+
+
 }

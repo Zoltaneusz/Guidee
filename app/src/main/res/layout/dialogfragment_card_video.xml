@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/mDialogVideoCard">
+
+    <com.google.android.youtube.player.YouTubeThumbnailView
+        android:id="@+id/mDialogThumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#929494"
+        android:src="@drawable/placeholder2"/>
+    <FrameLayout
+        android:id="@+id/mDialogVideo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/mCarouselThumbnail"
+        android:layout_alignStart="@+id/mCarouselThumbnail"
+        android:layout_alignRight="@+id/mCarouselThumbnail"
+        android:layout_alignEnd="@+id/mCarouselThumbnail"
+        android:visibility="visible"/>
+</FrameLayout>

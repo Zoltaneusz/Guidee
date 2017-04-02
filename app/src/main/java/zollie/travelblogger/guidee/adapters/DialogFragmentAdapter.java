@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerFragment;
@@ -35,14 +36,14 @@ import zollie.travelblogger.guidee.models.CarouselModel;
  * Created by FuszeneckerZ on 2017.01.14..
  */
 
-public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements YouTubePlayer.OnInitializedListener{
+public class DialogFragmentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements YouTubePlayer.OnInitializedListener{
 
     private ArrayList<CarouselModel> allCarousels = new ArrayList<CarouselModel>();
     private Context mContext;
     private final int VIDEO = 0, IMAGE = 1;
     private YouTubePlayer player;
     private YouTubeThumbnailLoader mThumbnailLoader;
-    public CarouselAdapter(Context context, ArrayList<CarouselModel> allCarouselList) {
+    public DialogFragmentAdapter(Context context, ArrayList<CarouselModel> allCarouselList) {
         allCarousels = allCarouselList;
         mContext = context;
     }
@@ -65,12 +66,12 @@ public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         switch(viewType) {
             case IMAGE:
-                View v1 = inflater.inflate(R.layout.carousel_card_image, parent, false);
-                viewHolder = new ViewHolderImage(v1);
+                View v1 = inflater.inflate(R.layout.dialogfragment_card_image, parent, false);
+                viewHolder = new DialogViewHolderImage(v1);
                 break;
             case VIDEO:
-                View v2 = inflater.inflate(R.layout.carousel_card_video, parent, false);
-                viewHolder = new ViewHolderVideo(mContext, v2);
+                View v2 = inflater.inflate(R.layout.dialogfragment_card_video, parent, false);
+                viewHolder = new DialogViewHolderVideo(mContext, v2);
                 break;
             default:
                 View v = inflater.inflate(R.layout.journey_card_placeholder, parent, false);
@@ -86,17 +87,16 @@ public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         switch(holder.getItemViewType()) {
             case IMAGE:
                 if(!mCarousel.imageUrl.equals("empty")) {
-                    final ImageView mCarouselImage = ((ViewHolderImage) holder).getmImage();
+                    final PhotoView mCarouselImage = ((DialogViewHolderImage) holder).getmImage();
                     //===================== Adding Image to to Horizontal Slide via Glide =========
                     Glide
                             .with(mContext)
                             .load(mCarousel.imageUrl)
                             .centerCrop()
-                            .override(160, 160)
                             .crossFade()
                             .into(mCarouselImage);
                     //=============================================================================
-                    ((ViewHolderImage) holder).mCarousel.setOnClickListener(new View.OnClickListener() {
+                  /*  ((DialogViewHolderImage) holder).mCarousel.setOnClickListener(new View.OnClickListener() {
 
                         @Override
                         public void onClick(View view) {
@@ -112,7 +112,7 @@ public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         }
                     });
 
-                    ((ViewHolderImage) holder).mCarousel.setOnLongClickListener(new View.OnLongClickListener() {
+                    ((DialogViewHolderImage) holder).mCarousel.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View view) {
                             if (mCarousel.toDelete == 1) {  // Long click happened in EditEventView, therefore Carousel model is deletable
@@ -125,13 +125,13 @@ public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             }
                             return true;
                         }
-                    });
+                    });*/
                 }
                 break;
             case VIDEO:
 
-                final YouTubeThumbnailView mCarouselThumbnail = ((ViewHolderVideo) holder).getmThumbnail();
-             //   mCarouselVideo.setSoundEffectsEnabled(true);
+                final YouTubeThumbnailView mCarouselThumbnail = ((DialogViewHolderVideo) holder).getmThumbnail();
+                //   mCarouselVideo.setSoundEffectsEnabled(true);
 
                 final YouTubeThumbnailView.OnInitializedListener onThumbnailInitialize;
                 onThumbnailInitialize = new YouTubeThumbnailView.OnInitializedListener(){
@@ -155,21 +155,21 @@ public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         mCarouselThumbnail.setVisibility(View.INVISIBLE);
 
                         final YouTubePlayerFragment youTubePlayerFragment = YouTubePlayerFragment.newInstance();
-                        ((ViewHolderVideo)holder).mVideo.setId(mCarousel.FIRNumber);
-                        ((Activity) mContext).getFragmentManager().beginTransaction().replace(((ViewHolderVideo)holder).mVideo.getId(), youTubePlayerFragment).addToBackStack(null).commit();
+                        ((DialogViewHolderVideo)holder).mVideo.setId(mCarousel.FIRNumber);
+                        ((Activity) mContext).getFragmentManager().beginTransaction().replace(((DialogViewHolderVideo)holder).mVideo.getId(), youTubePlayerFragment).addToBackStack(null).commit();
                         youTubePlayerFragment.initialize(mContext.getString(R.string.Youtube_API), new YouTubePlayer.OnInitializedListener(){
-                                    @Override
-                                    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-                                        //player.loadVideo(mCarousel.videoUrl);
-                                        youTubePlayer.cueVideo(mCarousel.videoUrl);
-                          //              youTubePlayer.setShowFullscreenButton(false);
-                                    }
+                            @Override
+                            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+                                //player.loadVideo(mCarousel.videoUrl);
+                                youTubePlayer.cueVideo(mCarousel.videoUrl);
+                                //              youTubePlayer.setShowFullscreenButton(false);
+                            }
 
-                                    @Override
-                                    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+                            @Override
+                            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
 
-                                    }
-                                });
+                            }
+                        });
                         ((ViewHolderVideo)holder).mVideo.setVisibility(View.VISIBLE);
                         // Go to new activity and display video
                     }
