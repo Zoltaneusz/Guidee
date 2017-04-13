@@ -21,6 +21,16 @@
             app:contentScrim="#000000"
             android:fitsSystemWindows="true">
 
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/journey_share_FAB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|end"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                app:backgroundTint="@color/colorTransparent"
+                android:src="@drawable/ic_share_white_36dp" />
+
             <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="164dp"
@@ -28,6 +38,7 @@
                 android:scaleType="centerCrop"
                 android:fitsSystemWindows="true"
                 app:layout_collapseMode="pin" >
+
                 <ImageView
                     android:id="@+id/journey_imgFirst"
                     android:layout_width="match_parent"
@@ -48,17 +59,6 @@
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true">
                     </ImageView>
-
-                    <android.support.design.widget.FloatingActionButton
-                        android:id="@+id/journey_edit_FAB"
-                        android:visibility="invisible"
-                        android:src="@drawable/ic_edit_black_36dp"
-                        android:paddingRight="10dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        app:backgroundTint="@color/buttonBack"/>
 
                 </RelativeLayout>
             </FrameLayout>
@@ -227,5 +227,20 @@
         app:backgroundTint="@color/buttonBack"
         app:layout_anchorGravity="bottom|right|end">
     </android.support.design.widget.FloatingActionButton>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/journey_edit_FAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:paddingRight="10dp"
+        android:src="@drawable/ic_edit_black_36dp"
+        android:visibility="invisible"
+        app:backgroundTint="@color/buttonBack"
+        app:layout_anchor="@+id/journey_appbar"
+        app:layout_anchorGravity="center_vertical|right" />
+
 
 </android.support.design.widget.CoordinatorLayout>

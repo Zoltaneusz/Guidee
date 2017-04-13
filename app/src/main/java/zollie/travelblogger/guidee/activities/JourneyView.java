@@ -14,9 +14,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.os.EnvironmentCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -49,6 +51,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -140,7 +146,7 @@ public class JourneyView extends AppCompatActivity{
             }
         });
 
-        //===================== Journey like method ================================================
+        //===================== Journey LIKE method ================================================
         final FloatingActionButton likeButton = (FloatingActionButton) findViewById(R.id.journey_love_icon);
         //  Static  imageview change
         DataHandler.getInstance().setUserLoved(mJourney, firUser, likeButton);
@@ -153,6 +159,16 @@ public class JourneyView extends AppCompatActivity{
             }
         });
 
+
+        //==========================================================================================
+        //===================== Journey SHARE method ===============================================
+        final FloatingActionButton shareButton = (FloatingActionButton) findViewById(R.id.journey_share_FAB);
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AsyncImageToBitmap().execute(mJourney);
+            }
+        });
 
         //==========================================================================================
         TextView addComment = (TextView) findViewById(R.id.journey_comments_add);
@@ -373,6 +389,60 @@ public class JourneyView extends AppCompatActivity{
         }
     }
 
+    public Bitmap shareImage(JourneyModel mJourney){
+        Bitmap sharedImage = null;
+        try {
+            sharedImage= Glide.with(mContext)
+                    .load(mJourney.coverImageUrl)
+                    .asBitmap()
+                    .into(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return sharedImage;
+    }
+
+    class AsyncImageToBitmap extends AsyncTask<Object, Void, Bitmap>{
+        @Override
+        protected Bitmap doInBackground(Object... params) {
+            JourneyModel mJourney = (JourneyModel) params[0];
+            Bitmap mBitmap = null;
+            mBitmap = shareImage(mJourney);
+            return mBitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.setType("image/*");
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            File sharedImageFile = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "shared_image.jpg");
+            FileOutputStream fileOut = null;
+            try {
+                sharedImageFile.createNewFile();
+                fileOut = new FileOutputStream(sharedImageFile);
+                fileOut.write(bytes.toByteArray());
+            } catch (IOException e) {
+                e.printStackTrace();
+
+            }
+            finally{
+                try {
+                    fileOut.close();
+                } catch (IOException e) {
+                    e.printStackTrace(); // Closing output stream could not be done!!
+                }
+            }
+            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///storage/emulated/0/shared_image.jpg"));
+            startActivity(Intent.createChooser(shareIntent, "Share Journey"));
+        }
+    }
+
     public void addCommentPopup(final JourneyModel journeyModel) {
         LayoutInflater li = LayoutInflater.from(mContext);
         View popupView = li.inflate(R.layout.comment_popup, null);
@@ -473,8 +543,10 @@ public class JourneyView extends AppCompatActivity{
             Bitmap bmp = Bitmap.createBitmap((int)(100*scale),(int) (100*scale), conf);
             Canvas canvas1 = new Canvas(bmp);
             Bitmap circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale*2, userAvatarGlobal);
-            circleBitmap = imageProcessor.pulseMarker(4, userAvatarGlobal, canvas1, scale*2, circleBitmap);
-            ownerPic.setImageBitmap(circleBitmap);
+            if(circleBitmap != null) {
+                circleBitmap = imageProcessor.pulseMarker(4, userAvatarGlobal, canvas1, scale * 2, circleBitmap);
+                ownerPic.setImageBitmap(circleBitmap);
+            }
 
         }
     }
