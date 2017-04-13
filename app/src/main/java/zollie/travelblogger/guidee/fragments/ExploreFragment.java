@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DatabaseReference;
+import com.google.maps.android.clustering.ClusterManager;
 
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import zollie.travelblogger.guidee.activities.JourneyView;
 import zollie.travelblogger.guidee.adapters.DataHandler;
 import zollie.travelblogger.guidee.adapters.DataHandlerListener;
 import zollie.travelblogger.guidee.models.CommentModel;
+import zollie.travelblogger.guidee.models.MarkerItem;
 import zollie.travelblogger.guidee.utils.ImageProcessor;
 import zollie.travelblogger.guidee.R;
 import zollie.travelblogger.guidee.models.JourneyModel;
@@ -63,7 +65,7 @@ public class ExploreFragment extends Fragment {
     ArrayList<JourneyModel> allJourneys = new ArrayList<JourneyModel>();
     public GoogleMap googleMap;
     //MarkerCache[] markerCache = new MarkerCache[100];
-
+    private ClusterManager<MarkerItem> mClusterManager;
 
     // paint defines the text color, stroke width and size
 
@@ -106,9 +108,11 @@ public class ExploreFragment extends Fragment {
         }
             mMapView.onResume(); // needed to get the map to display immediately
             mMapView.getMapAsync(new OnMapReadyCallback() {
+
                 @Override
                 public void onMapReady(final GoogleMap mMap) {
                     googleMap = mMap;
+                    initializeClusterer();
                     Bitmap bmp = Bitmap.createBitmap((int)(60*scale),(int) (60*scale), conf);
                     Canvas canvas1 = new Canvas(bmp);
                     circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale, circleBitmap);
@@ -118,7 +122,8 @@ public class ExploreFragment extends Fragment {
                             //addMapMarker(journeyModel, mMap);
                             JourneyModel journeyModel = new JourneyModel(rawJourneyData, journeyReference, false);
                             allJourneys.add(journeyModel);
-                            new AsyncMarkerLoader().execute(journeyModel, mMap);
+                            setUpClusterer(journeyModel, mMap);
+
                         }
 
                         @Override
@@ -209,6 +214,7 @@ public class ExploreFragment extends Fragment {
                     CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(39.43681513892361, 3.224011088360298), 5);
                     googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(39.43681513892361, 3.224011088360298)));
                     googleMap.animateCamera(cameraUpdate);
+
                 }
             });
 
@@ -228,37 +234,31 @@ public class ExploreFragment extends Fragment {
             final double markerLat = locationData.latitude;
             final double markerLng = locationData.longitude;
 
-
-//        final String markerImageSource = (String) mapMarkerData.get("imageURL");
         final String markerTitle = journeyModel.annotationModel.markerTitle;
-//        String markerSubtitle = (String) mapMarkerData.get("subtitle");
         long markerLikes = journeyModel.annotationModel.markerLikes;
 
             try {
                 Canvas myCanvas = new Canvas();
                 final float scale = getResources().getDisplayMetrics().density;
 
-                //Bitmap markerImage = journeyModel.annotationModel.markerIcon;
+
                 if(markerImageGlob != null)
                     circleBitmap = imageProcessor.pulseMarker(1, markerImageGlob, myCanvas, scale, circleBitmap);
-    //            URL markerImageUrl = new URL(markerImageSource);
-    //            Bitmap markerImage = BitmapFactory.decodeStream(markerImageUrl.openConnection().getInputStream());
-               Marker mMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(markerLat, markerLng))
-                        //.icon(BitmapDescriptorFactory.fromBitmap(markerImageGlob))
+
+          /*
+          // ===================== Old code snippet to add marker (WORKING)=========================
+          Marker mMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(markerLat, markerLng))
                         .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
                         .title(markerTitle)
-                        // Specifies the anchor to be at a particular point in the marker image.
                         .anchor(0.4f, 1));
                 String markerID = mMarker.getId();
                 journeyModel.annotationModel.markerID = markerID;
-           /*     for(int i=0; i<100; i++)
-                {   if (markerCache[i] == null){
-                            markerCache[i] = new MarkerCache();
-                            markerCache[i].setMarkerID(markerID);
-                            markerCache[i].setMarkerIcon(markerImage);
-                            i=100;
-                        }
-                }*/
+            */
+          //========================================================================================
+            //==================== New code snippet to add marker item to clustermanager ===========
+                MarkerItem mMarkerItem = new MarkerItem(markerLat,markerLng,markerTitle,"Snippet");
+                mClusterManager.addItem(mMarkerItem);
+            //======================================================================================
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -506,5 +506,36 @@ public class ExploreFragment extends Fragment {
 
         }
     }
+    private void initializeClusterer(){
+        // Initialize the manager with the context and the map.
+        // (Activity extends context, so we can pass 'this' in the constructor.)
+        mClusterManager = new ClusterManager<MarkerItem>(getActivity(), googleMap);
 
+        // Point the map's listeners at the listeners implemented by the cluster
+        // manager.
+        googleMap.setOnCameraIdleListener(mClusterManager);
+        googleMap.setOnMarkerClickListener(mClusterManager);
+
+    }
+    private void setUpClusterer(JourneyModel journeyModel, GoogleMap mMap) {
+
+
+        // Add cluster items (markers) to the cluster manager.
+        new AsyncMarkerLoader().execute(journeyModel, mMap);
+    }
+    private void addItems() {
+
+        // Set some lat/lng coordinates to start with.
+        double lat = 51.5145160;
+        double lng = -0.1270060;
+
+        // Add ten cluster items in close proximity, for purposes of this example.
+        for (int i = 0; i < 10; i++) {
+            double offset = i / 60d;
+            lat = lat + offset;
+            lng = lng + offset;
+            MarkerItem offsetItem = new MarkerItem(lat, lng);
+            mClusterManager.addItem(offsetItem);
+        }
+    }
  }
