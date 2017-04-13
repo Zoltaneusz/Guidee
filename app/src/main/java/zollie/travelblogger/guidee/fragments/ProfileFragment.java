@@ -63,7 +63,7 @@ public class ProfileFragment extends Fragment {
     ArrayList<JourneyModel> allPlans = new ArrayList<JourneyModel>();
     ArrayList<UserModel> allFollowers = new ArrayList<UserModel>();
     Bitmap userAvatarGlobal = null;
-    ImageProcessor imageProcessor = new ImageProcessor();
+    ImageProcessor imageProcessor = new ImageProcessor(getActivity());
 
     String userAvatarUrl = new String();
 

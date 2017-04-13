@@ -31,6 +31,8 @@
                 app:backgroundTint="@color/colorTransparent"
                 android:src="@drawable/ic_share_white_36dp" />
 
+
+
             <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="164dp"
@@ -232,15 +234,11 @@
         android:id="@+id/journey_edit_FAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:paddingRight="10dp"
-        android:src="@drawable/ic_edit_black_36dp"
+        android:layout_gravity="left|bottom"
+        android:src="@drawable/ic_edit_white_36dp"
+        app:layout_anchor="@+id/journey_share_FAB"
         android:visibility="invisible"
-        app:backgroundTint="@color/buttonBack"
-        app:layout_anchor="@+id/journey_appbar"
-        app:layout_anchorGravity="center_vertical|right" />
+        app:backgroundTint="@color/colorTransparent" />
 
 
 </android.support.design.widget.CoordinatorLayout>

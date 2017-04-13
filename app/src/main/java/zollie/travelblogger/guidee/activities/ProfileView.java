@@ -56,7 +56,7 @@ public class ProfileView extends AppCompatActivity {
     ArrayList<JourneyModel> allPlans = new ArrayList<JourneyModel>();
     ArrayList<UserModel> allFollowers = new ArrayList<UserModel>();
     Bitmap userAvatarGlobal = null;
-    ImageProcessor imageProcessor = new ImageProcessor();
+    ImageProcessor imageProcessor = new ImageProcessor(this);
     String userAvatarUrl = new String();
     Context mContext;
     FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser(); // Should be in onResume() with almost every other method.

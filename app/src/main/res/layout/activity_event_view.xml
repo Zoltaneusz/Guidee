@@ -39,12 +39,12 @@
                 <android.support.design.widget.FloatingActionButton
                         android:id="@+id/event_edit_FAB"
                         android:visibility="invisible"
-                        android:src="@drawable/ic_edit_black_36dp"
+                        android:src="@drawable/ic_edit_white_36dp"
                         android:paddingRight="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right|center"
-                        app:backgroundTint="@color/buttonBack"/>
+                        android:layout_gravity="top|right"
+                        app:backgroundTint="@color/colorTransparent"/>
             </FrameLayout>
 
             <android.support.v7.widget.Toolbar

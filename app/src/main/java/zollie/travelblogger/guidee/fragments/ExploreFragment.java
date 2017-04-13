@@ -68,7 +68,7 @@ public class ExploreFragment extends Fragment {
     // paint defines the text color, stroke width and size
 
     Bitmap circleBitmap;
-    ImageProcessor imageProcessor = new ImageProcessor();
+    ImageProcessor imageProcessor = new ImageProcessor(getActivity());
 
 
     @Override

@@ -85,7 +85,7 @@ public class JourneyView extends AppCompatActivity{
     boolean userEditRight = false;
     public Context mContext;
     Bitmap userAvatarGlobal = null;
-    ImageProcessor imageProcessor = new ImageProcessor();
+    ImageProcessor imageProcessor = new ImageProcessor(this);
     FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser(); // Should be in onResume() with almost every other method.
 
     @Override
@@ -166,7 +166,8 @@ public class JourneyView extends AppCompatActivity{
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AsyncImageToBitmap().execute(mJourney);
+
+                imageProcessor.shareImage(mJourney);
             }
         });
 
@@ -389,59 +390,9 @@ public class JourneyView extends AppCompatActivity{
         }
     }
 
-    public Bitmap shareImage(JourneyModel mJourney){
-        Bitmap sharedImage = null;
-        try {
-            sharedImage= Glide.with(mContext)
-                    .load(mJourney.coverImageUrl)
-                    .asBitmap()
-                    .into(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
 
-        return sharedImage;
-    }
 
-    class AsyncImageToBitmap extends AsyncTask<Object, Void, Bitmap>{
-        @Override
-        protected Bitmap doInBackground(Object... params) {
-            JourneyModel mJourney = (JourneyModel) params[0];
-            Bitmap mBitmap = null;
-            mBitmap = shareImage(mJourney);
-            return mBitmap;
-        }
 
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            Intent shareIntent = new Intent();
-            shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.setType("image/*");
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            File sharedImageFile = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "shared_image.jpg");
-            FileOutputStream fileOut = null;
-            try {
-                sharedImageFile.createNewFile();
-                fileOut = new FileOutputStream(sharedImageFile);
-                fileOut.write(bytes.toByteArray());
-            } catch (IOException e) {
-                e.printStackTrace();
-
-            }
-            finally{
-                try {
-                    fileOut.close();
-                } catch (IOException e) {
-                    e.printStackTrace(); // Closing output stream could not be done!!
-                }
-            }
-            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///storage/emulated/0/shared_image.jpg"));
-            startActivity(Intent.createChooser(shareIntent, "Share Journey"));
-        }
-    }
 
     public void addCommentPopup(final JourneyModel journeyModel) {
         LayoutInflater li = LayoutInflater.from(mContext);
@@ -543,7 +494,7 @@ public class JourneyView extends AppCompatActivity{
             Bitmap bmp = Bitmap.createBitmap((int)(100*scale),(int) (100*scale), conf);
             Canvas canvas1 = new Canvas(bmp);
             Bitmap circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale*2, userAvatarGlobal);
-            if(circleBitmap != null) {
+            if(userAvatarGlobal != null) {
                 circleBitmap = imageProcessor.pulseMarker(4, userAvatarGlobal, canvas1, scale * 2, circleBitmap);
                 ownerPic.setImageBitmap(circleBitmap);
             }

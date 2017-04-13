@@ -92,7 +92,7 @@ public class DialogFragmentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     Glide
                             .with(mContext)
                             .load(mCarousel.imageUrl)
-                            .centerCrop()
+                            .fitCenter()
                             .crossFade()
                             .into(mCarouselImage);
                     //=============================================================================

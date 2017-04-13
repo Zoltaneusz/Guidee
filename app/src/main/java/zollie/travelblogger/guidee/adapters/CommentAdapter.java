@@ -41,7 +41,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     private ArrayList<CommentModel> allComments = new ArrayList<CommentModel>();
     private Context mContext;
     Bitmap userAvatarGlobal = null;
-    ImageProcessor imageProcessor = new ImageProcessor();
+    ImageProcessor imageProcessor = new ImageProcessor(mContext);
     FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
     String firUserID = firUser.getUid();
 
