@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -41,6 +42,8 @@ import zollie.travelblogger.guidee.models.MarkerItem;
 import zollie.travelblogger.guidee.utils.ImageProcessor;
 import zollie.travelblogger.guidee.R;
 import zollie.travelblogger.guidee.models.JourneyModel;
+import zollie.travelblogger.guidee.utils.MarkerInterface;
+import zollie.travelblogger.guidee.utils.MarkerRenderer;
 
 import static zollie.travelblogger.guidee.R.id.mJourney;
 
@@ -143,8 +146,8 @@ public class ExploreFragment extends Fragment {
 
                     // For dropping a ,,marker at a point on the Map
                     final LatLng sydney = new LatLng(-34, 151);
-
-                    googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                    //==================== Old code without clustering =============================
+                    /*googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
                         public boolean onMarkerClick(Marker marker) {
                          //   Bitmap bmp = Bitmap.createBitmap((int)(60*scale),(int) (60*scale), conf);
@@ -171,15 +174,66 @@ public class ExploreFragment extends Fragment {
 
                             return false;
                         }
-                    });
+                    });*/
+                    //==============================================================================
+                    //==================== New code with clustering ================================
+                    mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MarkerItem>() {
+                        @Override
+                        public boolean onClusterItemClick(MarkerItem markerItem) {
+                            //   Bitmap bmp = Bitmap.createBitmap((int)(60*scale),(int) (60*scale), conf);
+                            Bitmap markerImage = null;
+                            final String markerID = markerItem.getID();
+                            JourneyModel mJourney = null;
+                            int j = 0;
+                            for(int i=0; i<allJourneys.size(); i++)
+                            {
+                                mJourney = allJourneys.get(i);
 
-                    googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                                    if (mJourney.annotationModel.getMarkerID().equals(markerID)) {
+                                        //markerImage = markerImageGlob;
+//                                    markerImage = mJourney.annotationModel.markerIcon;
+                                        mJourney.annotationModel.setMarkerItem(markerItem);
+                                        j = i;
+                                        break;
+                                    }
+
+                            }
+                            new AsyncAnimation().execute(allJourneys.get(j));
+                            return false;
+                        }
+                    });
+                    //==============================================================================
+                    //==================== Old code without clustering =============================
+                /*    googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                         @Override
                         public void onInfoWindowClick(Marker marker) {
+                            // ======================== Go to selected journey =====================
+                            final String markerID = marker.getId();
+                            JourneyModel mJourney = null;
+                            int j = 0;
+                            for(int i=0; i<allJourneys.size(); i++)
+                            {
+                                mJourney = allJourneys.get(i);
 
-                            /*FragmentManager fm = getFragmentManager();
-                            fm.beginTransaction().replace(R.id.contentContainer, _profileFrag).commit();
-                            */
+                                if(mJourney.annotationModel.getMarkerID().equals(markerID))
+                                {
+                                    //markerImage = markerImageGlob;
+//                                    markerImage = mJourney.annotationModel.markerIcon;
+                                    j=i;
+                                    break;
+                                }
+                            }
+                            Intent toJourneyIntent = new Intent(getActivity(), JourneyView.class);
+                            toJourneyIntent.putExtra("ser_journey", allJourneys.get(j));
+                            getActivity().startActivity(toJourneyIntent);
+
+                        }
+                    });*/
+                    //==============================================================================
+                    //==================== New code with clustering ================================
+                    mClusterManager.getMarkerCollection().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener(){
+                        @Override
+                        public void onInfoWindowClick(Marker marker) {
                             // ======================== Go to selected journey =====================
                             final String markerID = marker.getId();
                             JourneyModel mJourney = null;
@@ -203,6 +257,7 @@ public class ExploreFragment extends Fragment {
                         }
                     });
 
+                    //==============================================================================
                     //       googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_friends)));
 
                /*Creating custom map markers here */
@@ -222,7 +277,7 @@ public class ExploreFragment extends Fragment {
         return rootView;
     }
 
-    private void addMapMarker(JourneyModel journeyModel, GoogleMap mMap){
+    private void addMapMarker(final JourneyModel journeyModel, GoogleMap mMap){
 
         LatLng locationData = null;
         try {
@@ -256,8 +311,15 @@ public class ExploreFragment extends Fragment {
             */
           //========================================================================================
             //==================== New code snippet to add marker item to clustermanager ===========
-                MarkerItem mMarkerItem = new MarkerItem(markerLat,markerLng,markerTitle,"Snippet");
+                MarkerItem mMarkerItem = new MarkerItem(markerLat,markerLng,markerTitle,"Snippet",circleBitmap);
                 mClusterManager.addItem(mMarkerItem);
+                mClusterManager.setRenderer(new MarkerRenderer(getActivity(), googleMap, mClusterManager, new MarkerInterface(){
+                    @Override
+                    public void setMarkerId(Marker marker) {
+                        journeyModel.annotationModel.markerID = marker.getId();
+                    }
+                })
+                );
             //======================================================================================
             }
             catch (Exception e) {
@@ -501,7 +563,7 @@ public class ExploreFragment extends Fragment {
 
                 if(markerImageGlob != null) {
                     Canvas canvas1 = new Canvas(markerImageGlob);
-                    animateMarker(journeyModel.annotationModel.getMarker(), journeyModel, markerImageGlob, canvas1, googleMap);
+                    //animateMarker(journeyModel.annotationModel.getMarker(), journeyModel, markerImageGlob, canvas1, googleMap);
                 }
 
         }
@@ -534,7 +596,7 @@ public class ExploreFragment extends Fragment {
             double offset = i / 60d;
             lat = lat + offset;
             lng = lng + offset;
-            MarkerItem offsetItem = new MarkerItem(lat, lng);
+            MarkerItem offsetItem = new MarkerItem(lat, lng,"Title" ,"Snippet" , BitmapFactory.decodeResource(getResources(),R.mipmap.maxresdefault));
             mClusterManager.addItem(offsetItem);
         }
     }

@@ -20,7 +20,8 @@ public class AnnotationModel implements Parcelable {
     public long markerLikes;
     public String markerSubtitle;
     public String markerTitle;
-    public Marker marker;
+    // public Marker marker;
+    public MarkerItem markerItem;
     public LatLng markerLatLng;
     public Bitmap markerIcon;
 
@@ -34,7 +35,7 @@ public class AnnotationModel implements Parcelable {
 
     public AnnotationModel(Map<String, Object> rawAnnotationModel) {
         Map<String, Object> locationData = (Map<String, Object>) rawAnnotationModel.get("location");
-        this.markerID = null;
+        this.markerID = "default";
         this.markerIcon = null;
         try {
             this.markerIconURL = (String) rawAnnotationModel.get("imageURL");
@@ -139,13 +140,14 @@ public class AnnotationModel implements Parcelable {
     public Bitmap getMarkerIcon() {
             return markerIcon;
             }
-    public Marker getMarker() {
-            return marker;
-            }
 
-    public void setMarker(Marker marker) {
-            this.marker = marker;
-            }
+    public MarkerItem getMarkerItem() {
+        return markerItem;
+    }
+
+    public void setMarkerItem(MarkerItem markerItem) {
+        this.markerItem = markerItem;
+    }
 
     @Override
     public int describeContents() {
