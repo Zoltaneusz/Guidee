@@ -231,7 +231,31 @@ public class ExploreFragment extends Fragment {
                     });*/
                     //==============================================================================
                     //==================== New code with clustering ================================
-                    mClusterManager.getMarkerCollection().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener(){
+                    mClusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.OnClusterItemInfoWindowClickListener<MarkerItem>() {
+                        @Override
+                        public void onClusterItemInfoWindowClick(MarkerItem markerItem) {
+                            // ======================== Go to selected journey =====================
+                            final String markerID = markerItem.getID();
+                            JourneyModel mJourney = null;
+                            int j = 0;
+                            for(int i=0; i<allJourneys.size(); i++)
+                            {
+                                mJourney = allJourneys.get(i);
+
+                                if(mJourney.annotationModel.getMarkerID().equals(markerID))
+                                {
+                                    //markerImage = markerImageGlob;
+//                                    markerImage = mJourney.annotationModel.markerIcon;
+                                    j=i;
+                                    break;
+                                }
+                            }
+                            Intent toJourneyIntent = new Intent(getActivity(), JourneyView.class);
+                            toJourneyIntent.putExtra("ser_journey", allJourneys.get(j));
+                            getActivity().startActivity(toJourneyIntent);
+                        }
+                    });
+                    /*mClusterManager.getMarkerCollection().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener(){
                         @Override
                         public void onInfoWindowClick(Marker marker) {
                             // ======================== Go to selected journey =====================
@@ -255,7 +279,7 @@ public class ExploreFragment extends Fragment {
                             getActivity().startActivity(toJourneyIntent);
 
                         }
-                    });
+                    });*/
 
                     //==============================================================================
                     //       googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_friends)));
@@ -269,6 +293,7 @@ public class ExploreFragment extends Fragment {
                     CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(39.43681513892361, 3.224011088360298), 5);
                     googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(39.43681513892361, 3.224011088360298)));
                     googleMap.animateCamera(cameraUpdate);
+                    googleMap.setOnInfoWindowClickListener(mClusterManager);
 
                 }
             });
