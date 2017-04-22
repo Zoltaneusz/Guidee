@@ -1,8 +1,10 @@
 package zollie.travelblogger.guidee.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -18,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
@@ -69,7 +72,7 @@ public class ExploreFragment extends Fragment {
     public GoogleMap googleMap;
     //MarkerCache[] markerCache = new MarkerCache[100];
     private ClusterManager<MarkerItem> mClusterManager;
-
+    MarkerItem clickedMarker;
     // paint defines the text color, stroke width and size
 
     Bitmap circleBitmap;
@@ -181,6 +184,7 @@ public class ExploreFragment extends Fragment {
                         @Override
                         public boolean onClusterItemClick(MarkerItem markerItem) {
                             //   Bitmap bmp = Bitmap.createBitmap((int)(60*scale),(int) (60*scale), conf);
+                            clickedMarker = markerItem;
                             Bitmap markerImage = null;
                             final String markerID = markerItem.getID();
                             JourneyModel mJourney = null;
@@ -294,7 +298,8 @@ public class ExploreFragment extends Fragment {
                     googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(39.43681513892361, 3.224011088360298)));
                     googleMap.animateCamera(cameraUpdate);
                     googleMap.setOnInfoWindowClickListener(mClusterManager);
-
+                    googleMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
+                    mClusterManager.getMarkerCollection().setOnInfoWindowAdapter(new InfoWindowAdapter());
                 }
             });
 
@@ -316,6 +321,7 @@ public class ExploreFragment extends Fragment {
 
         final String markerTitle = journeyModel.annotationModel.markerTitle;
         long markerLikes = journeyModel.annotationModel.markerLikes;
+        String journeySummary = journeyModel.summary;
 
             try {
                 Canvas myCanvas = new Canvas();
@@ -336,7 +342,7 @@ public class ExploreFragment extends Fragment {
             */
           //========================================================================================
             //==================== New code snippet to add marker item to clustermanager ===========
-                MarkerItem mMarkerItem = new MarkerItem(markerLat,markerLng,markerTitle,"Snippet",circleBitmap);
+                MarkerItem mMarkerItem = new MarkerItem(markerLat,markerLng,markerTitle,markerLikes, journeySummary,circleBitmap);
                 mClusterManager.addItem(mMarkerItem);
                 mClusterManager.setRenderer(new MarkerRenderer(getActivity(), googleMap, mClusterManager, new MarkerInterface(){
                     @Override
@@ -621,8 +627,38 @@ public class ExploreFragment extends Fragment {
             double offset = i / 60d;
             lat = lat + offset;
             lng = lng + offset;
-            MarkerItem offsetItem = new MarkerItem(lat, lng,"Title" ,"Snippet" , BitmapFactory.decodeResource(getResources(),R.mipmap.maxresdefault));
-            mClusterManager.addItem(offsetItem);
+           // MarkerItem offsetItem = new MarkerItem(lat, lng,"Title" ,"Snippet" , BitmapFactory.decodeResource(getResources(),R.mipmap.maxresdefault));
+           // mClusterManager.addItem(offsetItem);
         }
     }
+    public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter
+    {
+
+        private View mContentView;
+
+        InfoWindowAdapter() {
+            this.mContentView = getActivity().getLayoutInflater().inflate(R.layout.infow_window, null);
+
+        }
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+
+            return null;
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            TextView infoTitle = (TextView) mContentView.findViewById(R.id.info_window_title);
+            TextView infoSummary = (TextView) mContentView.findViewById(R.id.info_window_summary);
+            TextView infoLikes = (TextView) mContentView.findViewById(R.id.info_window_likes);
+
+            infoTitle.setText(clickedMarker.getTitle());
+            infoSummary.setText(clickedMarker.getSnippet());
+            infoLikes.setText(String.valueOf(clickedMarker.getLikes()));
+
+            return mContentView;
+        }
+    }
+
  }

@@ -21,6 +21,7 @@
         android:text="#1 Omis beach"
         android:maxLines="1"
         android:allowUndo="true"
+        android:fontFamily="sans-serif-medium"
         android:layout_toRightOf="@+id/event_frame"
         android:gravity="top"
         android:paddingLeft="16dp"
@@ -28,12 +29,13 @@
         android:paddingRight="32dp"
         android:shadowColor="#000000"
         android:textColor="#000000"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textStyle="bold"
         android:background="#00FFFFFF" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fontFamily="sans-serif-regular"
         android:id="@+id/event_summary_right"
         android:text="Nice beach of the city called Omis Nice beach of the city called Omis Nice beach of the city called Omis Nice beach of the city called Omis Nice beach of the city called Omis"
         android:maxLines="3"
@@ -45,7 +47,7 @@
         android:paddingLeft="16dp"
         android:shadowColor="#000000"
         android:textColor="#000000"
-        android:textSize="15dp"
+        android:textSize="14sp"
         android:background="#00FFFFFF" />
 
     <ImageView

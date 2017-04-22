@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/info_window_rel1">
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/info_window_title"
+        android:fontFamily="sans-serif-medium"
+        android:text="#1 Omis beach"
+        android:maxLines="1"
+        android:allowUndo="true"
+        android:layout_toRightOf="@+id/event_frame"
+        android:gravity="top"
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp"
+        android:paddingRight="32dp"
+        android:shadowColor="#000000"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:background="#00FFFFFF" />
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/info_window_summary"
+        android:fontFamily="sans-serif-regular"
+        android:text="Nice beach of the city called Omis Nice beach of the city called Omis Nice beach of the city called Omis Nice beach of the city called Omis Nice beach of the city called Omis"
+        android:maxLines="3"
+        android:ellipsize="end"
+        android:allowUndo="true"
+        android:paddingRight="32dp"
+        android:layout_below="@+id/info_window_title"
+        android:paddingLeft="16dp"
+        android:shadowColor="#000000"
+        android:textColor="#424242"
+        android:textSize="14sp"
+        android:background="#00FFFFFF" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_keyboard_arrow_right_black_48dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:id="@+id/info_window_arrow" />
+    </RelativeLayout>
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/info_window_rel2"
+    android:paddingTop="10dp"
+    android:layout_gravity="center_horizontal"
+    android:layout_alignParentBottom="true">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/heart_filled"
+        android:id="@+id/info_window_hearth" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/info_window_likes"
+        android:fontFamily="sans-serif-regular"
+        android:text="23"
+        android:paddingRight="10dp"
+        android:paddingTop="4dp"
+        android:layout_toRightOf="@+id/info_window_hearth"
+        android:paddingLeft="10dp"
+        android:shadowColor="#000000"
+        android:textColor="#424242"
+        android:textSize="14sp"
+        android:background="#00FFFFFF" />
+
+</RelativeLayout>
+
+
+
+</LinearLayout>
