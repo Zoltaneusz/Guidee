@@ -166,6 +166,7 @@ public class JourneyModel implements Parcelable {
         this.annotationModel = journeyModel.annotationModel;
         this.eventModels = journeyModel.eventModels;
     }
+    public JourneyModel(){}
 
     public String getTitle() {
         return title;

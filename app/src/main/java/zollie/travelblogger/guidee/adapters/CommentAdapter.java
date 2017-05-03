@@ -176,9 +176,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             final Bitmap.Config conf = Bitmap.Config.ARGB_8888;
             Bitmap bmp = Bitmap.createBitmap((int)(120*scale),(int) (120*scale), conf);
             Canvas canvas1 = new Canvas(bmp);
-            Bitmap circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale*2, userAvatarGlobal);
-            circleBitmap = imageProcessor.pulseMarker(4, userAvatarGlobal, canvas1, scale*2, circleBitmap);
-            imageView.setImageBitmap(circleBitmap);
+            if(userAvatarGlobal != null) {
+                Bitmap circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale * 2, userAvatarGlobal);
+                circleBitmap = imageProcessor.pulseMarker(4, userAvatarGlobal, canvas1, scale * 2, circleBitmap);
+                imageView.setImageBitmap(circleBitmap);
+            }
         }
     }
 

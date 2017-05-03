@@ -18,7 +18,6 @@ import zollie.travelblogger.guidee.models.MarkerItem;
 
 public class MarkerRenderer extends DefaultClusterRenderer<MarkerItem> {
 
-    public JourneyModel journeyModel;
     public MarkerInterface markerInterface;
     public MarkerRenderer(Context context, GoogleMap map, ClusterManager<MarkerItem> clusterManager, MarkerInterface mInterface) {
         super(context, map, clusterManager);
@@ -31,14 +30,15 @@ public class MarkerRenderer extends DefaultClusterRenderer<MarkerItem> {
         markerOptions.snippet(item.getSnippet());
         markerOptions.title(item.getTitle());
 
-        super.onBeforeClusterItemRendered(item, markerOptions);
+  //      super.onBeforeClusterItemRendered(item, markerOptions);
     }
 
     @Override
     protected void onClusterItemRendered(MarkerItem clusterItem, Marker marker) {
         clusterItem.setID(marker.getId());
-        markerInterface.setMarkerId(marker);
-        super.onClusterItemRendered(clusterItem, marker);
+        markerInterface.setMarkerId(clusterItem);
+        //super.onClusterItemRendered(clusterItem, marker);
 
     }
+
 }

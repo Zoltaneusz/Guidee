@@ -134,7 +134,7 @@ public class AnnotationModel implements Parcelable {
             }
 
     public String getMarkerID() {
-            return markerID;
+            return this.markerID;
             }
 
     public Bitmap getMarkerIcon() {

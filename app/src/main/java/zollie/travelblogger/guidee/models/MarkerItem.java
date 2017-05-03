@@ -16,17 +16,19 @@ public class MarkerItem implements ClusterItem {
     private Bitmap mIcon;
     private String mID;
     private long likes;
+    private String journeyID;
 
     public MarkerItem(double lat, double lng) {
         mPosition = new LatLng(lat, lng);
     }
 
-    public MarkerItem(double lat, double lng, String title, long liked, String snippet, Bitmap icon) {
+    public MarkerItem(double lat, double lng, String title, long liked, String snippet, Bitmap icon, String jID) {
         mPosition = new LatLng(lat, lng);
         mTitle = title;
         mSnippet = snippet;
         mIcon = icon;
         likes = liked;
+        journeyID = jID;
     }
 
     @Override
@@ -64,5 +66,13 @@ public class MarkerItem implements ClusterItem {
         this.likes = likes;
     }
 
+
+    public String getJourneyID() {
+        return journeyID;
+    }
+
+    public void setJourneyID(String journeyID) {
+        this.journeyID = journeyID;
+    }
 
 }
