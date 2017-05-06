@@ -1,6 +1,7 @@
 package zollie.travelblogger.guidee.fragments;
 
 import android.app.DialogFragment;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -57,6 +58,7 @@ public class ContentViewerDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_USER);
         View v = inflater.inflate(R.layout.dialogfragment_content_view, container, false);
 
         RecyclerView rvCarousels = (RecyclerView) v.findViewById(R.id.dialog_reycler);

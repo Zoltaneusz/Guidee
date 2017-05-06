@@ -3,6 +3,7 @@ package zollie.travelblogger.guidee.activities;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -60,6 +61,7 @@ public class EventView extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
+
         setContentView(R.layout.activity_event_view);
 
         Bundle intentData = getIntent().getExtras();
@@ -244,6 +246,13 @@ public class EventView extends AppCompatActivity{
         toJourneyIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                 | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         mContext.startActivity(toJourneyIntent);
+    }
+
+    @Override
+    protected void onResume() {
+
+   //     this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        super.onResume();
     }
 
     public void changeAppBar(EventModel eventModel){

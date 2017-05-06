@@ -3,6 +3,7 @@ package zollie.travelblogger.guidee.fragments;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PorterDuff;
@@ -78,6 +79,7 @@ public class ProfileFragment extends Fragment {
     }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onViewCreated(view, savedInstanceState);
         //Getting Firebase user ID
         FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();

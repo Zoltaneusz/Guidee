@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -90,6 +91,7 @@ public class ExploreFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_USER);
         final View rootView = inflater.inflate(R.layout.fragment_map, container, false);
         final float scale = getResources().getDisplayMetrics().density;
         final Bitmap.Config conf = Bitmap.Config.ARGB_8888;
@@ -314,7 +316,7 @@ public class ExploreFragment extends Fragment {
         return rootView;
     }
 
-    private MarkerItem addMapMarker(final JourneyModel markerJourney, GoogleMap mMap, int imageSize ){
+    private MarkerItem addMapMarker(final JourneyModel markerJourney, GoogleMap mMap, int imageSize , final boolean initial){
 
         MarkerItem returnedMarker = null;
         LatLng locationData = null;
@@ -374,10 +376,15 @@ public class ExploreFragment extends Fragment {
                     @Override
                     public void run() {
                         try{
-                            Marker clickedMarker = mRenderer.getMarker(mMarkerItem);
-                            if(clickedMarker != null){
-                                clickedMarker.showInfoWindow();
+                            if(!initial) {
+                                Marker clickedMarker = mRenderer.getMarker(mMarkerItem);
+                                if (clickedMarker != null) {
+                                    clickedMarker.showInfoWindow();
+                                }
+                                circleBitmap = null;
+                                markerImageGlob = null;
                             }
+
                         }
                         catch(Exception e)
                         {
@@ -576,7 +583,7 @@ public class ExploreFragment extends Fragment {
         circleBitmap = null;
         // Animating marker implementation =================================================
        // circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale, circleBitmap);
-        myMarkerItem2 = addMapMarker(mJourney, mMap, 4);
+        myMarkerItem2 = addMapMarker(mJourney, mMap, 4, false);
 
         h.postDelayed(new Runnable(){  // Csak a legutolsót törli ki...a többi marker korábbról ott marad
             @Override
@@ -620,7 +627,7 @@ public class ExploreFragment extends Fragment {
         final LatLng markerLatLng = markerItem.getPosition();
         final String markerTitle = markerItem.getTitle();
         final float scale = getResources().getDisplayMetrics().density;
-
+        markerImageGlob = bmp;
         mClusterManager.removeItem(markerItem);
         circleBitmap = null;
         // Animating marker implementation =================================================
@@ -684,8 +691,8 @@ public class ExploreFragment extends Fragment {
             }
         },500);
         //==================================================================================
-        markerImageGlob = bmp;
-        myMarkerItem2 = addMapMarker(mJourney, mMap, 4);
+
+        myMarkerItem2 = addMapMarker(mJourney, mMap, 4, false);
 
 //        circleBitmap = null;
 //        markerImageGlob = null;
@@ -711,7 +718,7 @@ public class ExploreFragment extends Fragment {
         @Override
         protected void onPostExecute(JourneyModel journeyModel) {
          //   super.onPostExecute(result);
-                addMapMarker(journeyModel, googleMap, 1);
+                addMapMarker(journeyModel, googleMap, 1, true);
   //          googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(circleBitmap)));
         }
     }
