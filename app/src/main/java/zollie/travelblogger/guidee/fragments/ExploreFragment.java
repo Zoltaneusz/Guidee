@@ -37,6 +37,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
+import com.google.maps.android.data.Renderer;
 
 
 import java.util.ArrayList;
@@ -350,24 +351,42 @@ public class ExploreFragment extends Fragment {
           //========================================================================================
             //==================== New code snippet to add marker item to clustermanager ===========
                 final MarkerItem mMarkerItem = new MarkerItem(markerLat,markerLng,markerTitle,markerLikes, journeySummary,circleBitmap, markerJourney.ID);
-                mClusterManager.setRenderer(new MarkerRenderer(getActivity(), googleMap, mClusterManager, new MarkerInterface(){
+                final MarkerRenderer mRenderer = new MarkerRenderer(getActivity(), googleMap, mClusterManager, new MarkerInterface(){
                     @Override
                     public void setMarkerId(MarkerItem markerItem) {
                         //journeyModel.annotationModel.setMarkerID(markerItem.getID());
-                        mMarkerItem.setID(markerItem.getID());
+                        //mMarkerItem.setID(markerItem.getID());
                         for(int j = 0; j<allJourneys.size(); j++){
                             JourneyModel mJourney = allJourneys.get(j);
                             if(mJourney.ID == markerItem.getJourneyID()){
                                 mJourney.annotationModel.setMarkerID(markerItem.getID());
                                 mJourney.ID = markerItem.getJourneyID();
-                               allJourneys.set(j, mJourney);
+                                allJourneys.set(j, mJourney);
                             }
                         }
 
                     }
-                })
-                );
+                });
+
+                mClusterManager.setRenderer(mRenderer);
                 mClusterManager.addItem(mMarkerItem);
+                h.postDelayed(new Runnable(){  // Csak a legutolsót törli ki...a többi marker korábbról ott marad
+                    @Override
+                    public void run() {
+                        try{
+                            Marker clickedMarker = mRenderer.getMarker(mMarkerItem);
+                            if(clickedMarker != null){
+                                clickedMarker.showInfoWindow();
+                            }
+                        }
+                        catch(Exception e)
+                        {
+                            //  break;
+                        }
+                    }
+                },500);
+
+
             //======================================================================================
                 returnedMarker = mMarkerItem;
             }
@@ -378,7 +397,7 @@ public class ExploreFragment extends Fragment {
         return returnedMarker;
     }
 
-    private MarkerItem addRemoveMapMarker(final JourneyModel markerJourney, GoogleMap mMap, int imageSize ){
+    private MarkerItem addRemoveMapMarker(final JourneyModel markerJourney, GoogleMap mMap, int imageSize ){ // TODO: delete this method. Deprecated.
 
         MarkerItem returnedMarker = null;
         LatLng locationData = null;
@@ -543,7 +562,7 @@ public class ExploreFragment extends Fragment {
         mMapView.onLowMemory();
     }
 
-    public void animateMarker(MarkerItem marker, final JourneyModel mJourney, final Bitmap bmp, final Canvas canvas1, final GoogleMap mMap){
+    public void animateMarker(MarkerItem marker, final JourneyModel mJourney, final Bitmap bmp, final Canvas canvas1, final GoogleMap mMap){ //TODO:delete this mathod. Not used.
 
 //        final LatLng markerLatLng = marker.getPosition();
   //      final String markerTitle = marker.getTitle();
@@ -614,9 +633,7 @@ public class ExploreFragment extends Fragment {
                     circleBitmap = imageProcessor.pulseMarker(6, bmp, canvas1, scale, circleBitmap);
                     myMarker4 = mMap.addMarker(new MarkerOptions().position(markerLatLng)
                             .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
-                            .title(markerTitle)
-                            // Specifies the anchor to be at a particular point in the marker image.
-                            .anchor(0.4f, 1));
+                            .title(markerTitle));
                 }
                 catch(Exception e)
                 {
@@ -645,9 +662,7 @@ public class ExploreFragment extends Fragment {
                     circleBitmap = imageProcessor.pulseMarker(6, bmp, canvas1, scale, circleBitmap);
                     myMarker5 = mMap.addMarker(new MarkerOptions().position(markerLatLng)
                             .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
-                            .title(markerTitle)
-                            // Specifies the anchor to be at a particular point in the marker image.
-                            .anchor(0.4f, 1));
+                            .title(markerTitle));
                 }
                 catch(Exception e)
                 {
@@ -669,9 +684,11 @@ public class ExploreFragment extends Fragment {
             }
         },500);
         //==================================================================================
+        markerImageGlob = bmp;
         myMarkerItem2 = addMapMarker(mJourney, mMap, 4);
-        circleBitmap = null;
-        markerImageGlob = null;
+
+//        circleBitmap = null;
+//        markerImageGlob = null;
 
     }
 
