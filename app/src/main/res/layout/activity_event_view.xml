@@ -21,6 +21,17 @@
             app:contentScrim="#000000"
             android:fitsSystemWindows="true">
 
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/event_edit_FAB"
+                android:visibility="invisible"
+                android:src="@drawable/ic_edit_white_36dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|end"
+                app:backgroundTint="@color/colorTransparent"/>
+
             <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="164dp"
@@ -36,15 +47,7 @@
                     android:src="@mipmap/maxresdefault"
                     android:alpha="0.5" />
 
-                <android.support.design.widget.FloatingActionButton
-                        android:id="@+id/event_edit_FAB"
-                        android:visibility="invisible"
-                        android:src="@drawable/ic_edit_white_36dp"
-                        android:paddingRight="10dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="top|right"
-                        app:backgroundTint="@color/colorTransparent"/>
+
             </FrameLayout>
 
             <android.support.v7.widget.Toolbar

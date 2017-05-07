@@ -130,7 +130,7 @@ public class EditEventView extends YouTubeBaseActivity {
                 if(storagePermission) {
                     FilePickerBuilder.getInstance().setMaxCount(5)
                             .setSelectedFiles(photoPaths)
-                            .setActivityTheme(R.style.AppTheme)
+                            .setActivityTheme(R.style.PhotoPickerTheme)
                             .pickPhoto((Activity) mContext);
                 }
             }
@@ -182,6 +182,7 @@ public class EditEventView extends YouTubeBaseActivity {
             }
         });
         //==========================================================================================
+        //================================= Cancels Activity and navigates user back ===============
         FloatingActionButton cancelButton = (FloatingActionButton) findViewById(R.id.edit_event_cancel_FAB);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,7 +192,7 @@ public class EditEventView extends YouTubeBaseActivity {
                 mContext.startActivity(toEventIntent);
             }
         });
-
+        //==========================================================================================
 
 //        FloatingActionButton editEventFAB = (FloatingActionButton) findViewById(R.id.event_edit_FAB);
 //        editEventFAB.setVisibility(View.INVISIBLE);

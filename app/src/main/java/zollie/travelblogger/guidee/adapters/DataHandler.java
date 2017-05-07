@@ -186,14 +186,15 @@ public class DataHandler {
             j = 1;
         }
         //int updatedCarouselNr = updatedEvent.getHighestCarouselID(updatedEvent);
-        int updatedCarouselNr = updatedEvent.carouselModels.size() + updatedEvent.deletedIndexes;
+        int delCount =  + updatedEvent.deletedIndexes;
+        int updatedCarouselNr = updatedEvent.carouselModels.size();
         if(originalCarouselNr != updatedCarouselNr) {
-            for (int i = originalCarouselNr; i < updatedCarouselNr - j + 1; i++) {
+            for (int i = originalCarouselNr; i < updatedCarouselNr - j ; i++) {
                 if (updatedEvent.carouselModels.get(i+j).carouselType == CarouselModel.CarouselType.IMAGE) {
-                    eventUpdates.put("carouselModels/" + String.valueOf(i+j) + "/imageURL", updatedEvent.carouselModels.get(i+j).imageUrl);
+                    eventUpdates.put("carouselModels/" + String.valueOf(i+delCount+j) + "/imageURL", updatedEvent.carouselModels.get(i+j).imageUrl);
                 } else {
                     if (updatedEvent.carouselModels.get(i+j).videoUrl.length() == 11)  // Only 11 characted long videos will be allowed (yet)
-                        eventUpdates.put("carouselModels/" + String.valueOf(i+j) + "/videoYoutubeId", updatedEvent.carouselModels.get(i+j).videoUrl);
+                        eventUpdates.put("carouselModels/" + String.valueOf(i+delCount+j) + "/videoYoutubeId", updatedEvent.carouselModels.get(i+j).videoUrl);
                 }
             }
         }
@@ -208,7 +209,14 @@ public class DataHandler {
         // From here we can modify the data in FIR Database.
 
         Map<String, Object> eventUpdates = new HashMap<String, Object>();
-        eventUpdates.put("carouselModels/" + index, null);
+        if(updatedEvent.carouselModels.size() == 0) {
+            eventUpdates.put("carouselModels/" + index, null);
+            eventUpdates.put("location", null);
+            eventUpdates.put("summary", null);
+            eventUpdates.put("title", null);
+        }
+        else
+            eventUpdates.put("carouselModels/" + index, null);
         eventReference.updateChildren(eventUpdates);
     }
 

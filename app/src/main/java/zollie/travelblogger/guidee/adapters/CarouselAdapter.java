@@ -68,7 +68,7 @@ public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 View v1 = inflater.inflate(R.layout.carousel_card_image, parent, false);
                 viewHolder = new ViewHolderImage(v1);
                 break;
-            case VIDEO:
+            case VIDEO: // TODO: ha létezik a "videoYoutubeId" key, de üres, akkor is felfújja az xml-t és ott lesz az alap video háttér...nem jó
                 View v2 = inflater.inflate(R.layout.carousel_card_video, parent, false);
                 viewHolder = new ViewHolderVideo(mContext, v2);
                 break;

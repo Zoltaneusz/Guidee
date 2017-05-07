@@ -637,7 +637,7 @@ public class ExploreFragment extends Fragment {
             @Override
             public void run() {
                 try{
-                    circleBitmap = imageProcessor.pulseMarker(6, bmp, canvas1, scale, circleBitmap);
+                    circleBitmap = imageProcessor.pulseMarker(8, bmp, canvas1, scale, circleBitmap);
                     myMarker4 = mMap.addMarker(new MarkerOptions().position(markerLatLng)
                             .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
                             .title(markerTitle));
@@ -666,7 +666,7 @@ public class ExploreFragment extends Fragment {
             @Override
             public void run() {
                 try{
-                    circleBitmap = imageProcessor.pulseMarker(6, bmp, canvas1, scale, circleBitmap);
+                    circleBitmap = imageProcessor.pulseMarker(8, bmp, canvas1, scale, circleBitmap);
                     myMarker5 = mMap.addMarker(new MarkerOptions().position(markerLatLng)
                             .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
                             .title(markerTitle));

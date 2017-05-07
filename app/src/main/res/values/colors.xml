@@ -15,7 +15,9 @@
     <color name="colorPrimary100">#BBDEFB</color>
     <color name="colorPrimaryMiddle">#1976D2</color>
     <color name="colorPrimaryDark">#1565C0</color>
-    <color name="colorAccent">#FFFF00</color>
+    <color name="colorAccent">#1565C0</color>
+
+    <color name="tabColor">#FFFF00</color>
 
     <color name="colorSecondary">#CDDC39</color>
     <color name="colorSecondary100">#F0F4C3</color>
