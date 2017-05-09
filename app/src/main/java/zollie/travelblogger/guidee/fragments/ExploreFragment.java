@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import zollie.travelblogger.guidee.activities.JourneyView;
+import zollie.travelblogger.guidee.activities.MainActivity;
 import zollie.travelblogger.guidee.adapters.DataHandler;
 import zollie.travelblogger.guidee.adapters.DataHandlerListener;
 import zollie.travelblogger.guidee.models.CommentModel;
@@ -99,7 +100,12 @@ public class ExploreFragment extends Fragment {
         mMapView = (MapView) rootView.findViewById(R.id.exploreMap);
         mMapView.onCreate(savedInstanceState);
 
-
+        // Get camera position from MainActivity
+   //     double showedLat = getArguments().getDouble("lat");
+        //     double showedLng = getArguments().getDouble("lng");
+        double showedLat = ((MainActivity)getActivity()).getShowedLat();
+        double showedLng = ((MainActivity)getActivity()).getShowedLng();
+        final LatLng showedCoord = new LatLng(showedLat, showedLng);
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -158,7 +164,7 @@ public class ExploreFragment extends Fragment {
                     //           googleMap.setMyLocationEnabled(true);
 
                     // For dropping a ,,marker at a point on the Map
-                    final LatLng sydney = new LatLng(-34, 151);
+                    //final LatLng sydney = new LatLng(-34, 151);
                     //==================== Old code without clustering =============================
                     /*googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
@@ -305,8 +311,8 @@ public class ExploreFragment extends Fragment {
                     //CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
                    // googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(39.43681513892361, 3.224011088360298), 5);
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(39.43681513892361, 3.224011088360298)));
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(showedCoord, 5);
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(showedCoord));
                     googleMap.animateCamera(cameraUpdate);
 
                 }

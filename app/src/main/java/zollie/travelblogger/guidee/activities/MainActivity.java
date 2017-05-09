@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.MenuItem;
 
 
+import com.google.android.gms.maps.model.LatLng;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
@@ -38,12 +39,26 @@ public class MainActivity extends AppCompatActivity  {
     private ExploreFragment _exploreMapFrag = new ExploreFragment();
     private ProfileFragment _profileFrag = new ProfileFragment();
     private FaceLoginFragment _loginFrag = new FaceLoginFragment();
+    double showedLat = 39.43681513892361;
+    double showedLng = 3.224011088360298;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         printHashKey();
         setContentView(R.layout.activity_main);
+
+        Bundle intentData = null;
+        try {
+            intentData = getIntent().getExtras();
+            showedLat = intentData.getDouble("lat");
+            showedLng = intentData.getDouble("lng");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+
+        }
+
 
         // Pushing MapView Fragment
         Fragment fragment = Fragment.instantiate(this, ExploreFragment.class.getName());
@@ -62,6 +77,10 @@ public class MainActivity extends AppCompatActivity  {
                 switch(tabId)
                 {
                     case R.id.tab_explore:
+                    /*    Bundle bundle = new Bundle();
+                        bundle.putDouble("lat", showedLat);
+                        bundle.putDouble("lng", showedLng);
+                        _exploreMapFrag.setArguments(bundle);*/
                         fm = getFragmentManager();
                         fm.beginTransaction().replace(R.id.contentContainer, _exploreMapFrag).commit();
                         break;
@@ -80,6 +99,13 @@ public class MainActivity extends AppCompatActivity  {
 
 
     }
+    public double getShowedLat(){
+        return  showedLat;
+    }
+    public double getShowedLng(){
+        return  showedLng;
+    }
+
     public void printHashKey(){
 
         // Add code to print out the key hash

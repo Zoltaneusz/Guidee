@@ -158,8 +158,10 @@ public class EditJourneyView extends Activity{
                 DataHandler.getInstance().setJourneyInFIR(eventsCount, mJourney);
                 // Change comments, profile picture and events needed
 
-                if(parentActivity.equals("FragmentView")){
-                    Intent toProfileIntent = new Intent(mContext, ProfileFragment.class);
+                if(parentActivity.equals("ProfileFragment")){
+                    Intent toProfileIntent = new Intent(mContext, MainActivity.class);
+                    toProfileIntent.putExtra("lat", mJourney.annotationModel.markerLatLng.latitude);
+                    toProfileIntent.putExtra("lng", mJourney.annotationModel.markerLatLng.longitude);
                     mContext.startActivity(toProfileIntent);
                 }
                 else {
@@ -213,7 +215,7 @@ public class EditJourneyView extends Activity{
                 if(storagePermission) {
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setSelectedFiles(photoPaths)
-                            .setActivityTheme(R.style.AppTheme)
+                            .setActivityTheme(R.style.PhotoPickerTheme)
                             .pickPhoto((Activity) mContext);
                 }
             }
