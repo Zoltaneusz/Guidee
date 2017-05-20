@@ -26,6 +26,7 @@ public class MarkerRenderer extends DefaultClusterRenderer<MarkerItem> {
 
     @Override
     protected void onBeforeClusterItemRendered(MarkerItem item, MarkerOptions markerOptions) {
+        // Itt megoldható a nem létező profilképek sima markerrel helyettesítése
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(item.getmIcon()));
         markerOptions.snippet(item.getSnippet());
         markerOptions.title(item.getTitle());

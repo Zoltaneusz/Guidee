@@ -305,15 +305,16 @@ public class ProfileFragment extends Fragment {
         @Override
         protected void onPostExecute(UserModel mUser) {
             float scale = getResources().getDisplayMetrics().density;
-            if(userAvatarGlobal != null)
-            userAvatarGlobal = imageProcessor.resizeMarkerImage(userAvatarGlobal, scale*4/3);
-            ImageView mProfileImage = (ImageView) getActivity().findViewById(R.id.prof_pic);
-            final Bitmap.Config conf = Bitmap.Config.ARGB_8888;
-            Bitmap bmp = Bitmap.createBitmap((int)(120*scale),(int) (120*scale), conf);
-            Canvas canvas1 = new Canvas(bmp);
-            Bitmap circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale*2, userAvatarGlobal);
-            circleBitmap = imageProcessor.pulseMarker(4, userAvatarGlobal, canvas1, scale*2, circleBitmap);
-            mProfileImage.setImageBitmap(circleBitmap);
+            if(userAvatarGlobal != null) {
+                userAvatarGlobal = imageProcessor.resizeMarkerImage(userAvatarGlobal, scale * 4 / 3);
+                ImageView mProfileImage = (ImageView) getActivity().findViewById(R.id.prof_pic);
+                final Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+                Bitmap bmp = Bitmap.createBitmap((int) (120 * scale), (int) (120 * scale), conf);
+                Canvas canvas1 = new Canvas(bmp);
+                Bitmap circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale * 2, userAvatarGlobal);
+                circleBitmap = imageProcessor.pulseMarker(4, userAvatarGlobal, canvas1, scale * 2, circleBitmap);
+                mProfileImage.setImageBitmap(circleBitmap);
+            }
     //        TextView mProfileName = (TextView) getActivity().findViewById(R.id.profile_name);
     //        mProfileName.setText(mUser.userName);
         }

@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -89,6 +90,7 @@ public class ExploreFragment extends Fragment {
     Bitmap circleBitmap;
     ImageProcessor imageProcessor = new ImageProcessor(getActivity());
 
+    LatLng chosenPlace = new LatLng(47.49801,19.03991);
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -158,7 +160,18 @@ public class ExploreFragment extends Fragment {
                             CommentModel commentModel = new CommentModel(rawCommentData, commentReference, journeyIdent);
                         }
                     });
-
+                    googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                        @Override
+                        public void onMapClick(LatLng latLng) {
+                            chosenPlace = latLng;
+                            googleMap.clear();
+                            mClusterManager.clearItems();
+                            googleMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                            for(JourneyModel journeyModel: allJourneys) {
+                                setUpClusterer(journeyModel, mMap);
+                            }
+                        }
+                    });
                     // For showing a move to my location button
 
                     //           googleMap.setMyLocationEnabled(true);
@@ -506,6 +519,7 @@ public class ExploreFragment extends Fragment {
          }
          catch(Exception e) {
              e.printStackTrace();
+             markerImage = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_friends_green);
          }
          return markerImage;
      }
@@ -767,8 +781,15 @@ public class ExploreFragment extends Fragment {
     }
     private void setUpClusterer(JourneyModel journeyModel, GoogleMap mMap) {
 
+        float[] distance = new float[3];
+        // Only add the markers in a 100 km circle of the chosen place
+        Location.distanceBetween(chosenPlace.latitude, chosenPlace.longitude,
+                journeyModel.annotationModel.markerLatLng.latitude,
+                journeyModel.annotationModel.markerLatLng.longitude, distance);
         // Add cluster items (markers) to the cluster manager.
-        new AsyncMarkerLoader().execute(journeyModel, mMap);
+        if(distance[0] < 1000000){
+            new AsyncMarkerLoader().execute(journeyModel, mMap);
+        }
     }
     private void addItems() {
 
