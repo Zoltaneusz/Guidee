@@ -74,7 +74,7 @@
 
             <TextView
                 android:id="@+id/my_journeys_title"
-                android:text="My Journeys ✈"
+                android:text="My Journeys"
                 android:textColor="#000000"
                 android:fontFamily="sans-serif-medium"
                 android:layout_height="wrap_content"
@@ -99,7 +99,7 @@
                     android:layout_height="48dp"
                     android:layout_toRightOf="@+id/my_journeys_recycle"
 
-                    android:paddingLeft="10dp"
+                    android:layout_marginLeft="8dp"
                     app:backgroundTint="@color/buttonBack"/>
 
                 <android.support.v7.widget.RecyclerView
@@ -125,51 +125,18 @@
                 </LinearLayout>
             </RelativeLayout>
 
-            <EditText
-                android:id="@+id/my_plans_title"
-                android:text="My Plans "
-                android:textColor="#000000"
-                android:fontFamily="sans-serif-medium"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:textSize="20sp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:paddingLeft="10dp"
-                android:layout_below="@+id/profile_j_relative"
-                android:background="@android:color/transparent"/>
-
-            <android.support.v7.widget.RecyclerView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/plan_journeys_recycle"
-                android:orientation="horizontal"
-
-                android:layout_below="@+id/my_plans_title"
-                android:scrollbars="none"
-                android:paddingStart="10dp"
-                />
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/plan_journeys_recycle_placeholder"
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:layout_below="@+id/my_plans_title">
-            </LinearLayout>
-
-            <EditText
+            <TextView
                 android:id="@+id/my_favorites_title"
                 android:textColor="#000000"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="My "
+                android:text="My favorites"
                 android:textSize="20sp"
                 android:fontFamily="sans-serif-medium"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:paddingLeft="10dp"
-                android:layout_below="@+id/plan_journeys_recycle"
+                android:layout_below="@+id/profile_j_relative"
                 android:background="@android:color/transparent"/>
 
             <android.support.v7.widget.RecyclerView
@@ -198,7 +165,7 @@
                 android:textColor="#000000"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="My followed 👤"
+                android:text="My followed "
                 android:textSize="20sp"
                 android:fontFamily="sans-serif-medium"
                 android:paddingTop="10dp"

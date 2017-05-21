@@ -2,7 +2,7 @@
 <resources>
 
     <color name="lightGreen">#B2FF59</color>
-    <color name="buttonBack">#90C3D4</color>
+    <color name="buttonBack">#FFFFFF</color>
     <color name="backButton">#90C3D4</color>
     <color name="pastellRed">#FF6565</color>
     <color name="LightGreen">#B2FF59</color>
@@ -10,14 +10,14 @@
     <color name="PressedTint">#80f41537</color>
     <color name="colorTransparent">#00FFFFFF</color>
 
-    <color name="colorPrimary">#2196F3</color>
-    <color name="colorPrimary50">#E3F2FD</color>
-    <color name="colorPrimary100">#BBDEFB</color>
-    <color name="colorPrimaryMiddle">#1976D2</color>
-    <color name="colorPrimaryDark">#1565C0</color>
+    <color name="colorPrimary">#9E9E9E</color>
+    <color name="colorPrimary50">#FAFAFA</color>
+    <color name="colorPrimary100">#F5F5F5</color>
+    <color name="colorPrimaryMiddle">#9E9E9E</color>
+    <color name="colorPrimaryDark">#616161</color>
     <color name="colorAccent">#1565C0</color>
 
-    <color name="tabColor">#FFFF00</color>
+    <color name="tabColor">#FFFFFF</color>
 
     <color name="colorSecondary">#CDDC39</color>
     <color name="colorSecondary100">#F0F4C3</color>

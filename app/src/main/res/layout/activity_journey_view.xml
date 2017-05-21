@@ -26,8 +26,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|end"
-                android:paddingRight="10dp"
-                android:paddingTop="10dp"
+                android:layout_marginRight="8dp"
+
                 app:backgroundTint="@color/colorTransparent"
                 android:src="@drawable/ic_share_white_36dp" />
 
@@ -223,8 +223,8 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:id="@+id/journey_love_icon"
-        android:src="@drawable/ic_favorites"
-        android:paddingRight="10dp"
+        app:srcCompat = "@drawable/hearth_stroke"
+        android:layout_marginRight="8dp"
         app:layout_anchor="@id/journey_appbar"
         app:backgroundTint="@color/buttonBack"
         app:layout_anchorGravity="bottom|right|end">

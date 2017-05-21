@@ -25,11 +25,11 @@
                 android:id="@+id/event_edit_FAB"
                 android:visibility="invisible"
                 android:src="@drawable/ic_edit_white_36dp"
-                android:paddingRight="10dp"
-                android:paddingTop="10dp"
+                android:layout_gravity="top|end"
+                android:layout_marginRight="8dp"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top|end"
                 app:backgroundTint="@color/colorTransparent"/>
 
             <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"

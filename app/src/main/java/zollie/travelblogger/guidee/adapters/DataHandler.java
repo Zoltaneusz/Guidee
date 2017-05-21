@@ -1,7 +1,9 @@
 package zollie.travelblogger.guidee.adapters;
 
+import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.fitness.data.Value;
 import com.google.firebase.auth.FirebaseUser;
@@ -405,7 +407,7 @@ public class DataHandler {
                     Map<String, Object> userUpdates = new HashMap<String, Object>();
                     userUpdates.put("loved/" + journeyModel.ID, journeyModel.ID);
                     mUserRef.updateChildren(userUpdates);
-                    FABImage.setImageResource(R.drawable.heart_filled);
+                    FABImage.setImageResource(R.drawable.hearth_filled);
                     e.printStackTrace();
                 }
                 finally {
@@ -422,7 +424,7 @@ public class DataHandler {
                         Map<String, Object> userUpdates = new HashMap<String, Object>();
                         userUpdates.put("loved/" + journeyModel.ID, null);
                         mUserRef.updateChildren(userUpdates);
-                        FABImage.setImageResource(R.drawable.ic_favorites);
+                        FABImage.setImageResource(R.drawable.hearth_stroke);
 
                     } else { // User like this journey again, after clearing the like once
                         Map<String, Object> journeyUpdates = new HashMap<String, Object>();
@@ -436,7 +438,7 @@ public class DataHandler {
                         Map<String, Object> userUpdates = new HashMap<String, Object>();
                         userUpdates.put("loved/" + journeyModel.ID, journeyModel.ID);
                         mUserRef.updateChildren(userUpdates);
-                        FABImage.setImageResource(R.drawable.heart_filled);
+                        FABImage.setImageResource(R.drawable.hearth_filled);
                     }
                 }
             }
@@ -468,10 +470,10 @@ public class DataHandler {
                 }
                 finally {
                     if(likeValue) {
-                        FABImage.setImageResource(R.drawable.heart_filled);
+                        FABImage.setImageResource(R.drawable.hearth_filled);
                     }
                     else {
-                        FABImage.setImageResource(R.drawable.ic_favorites);
+                        FABImage.setImageResource(R.drawable.hearth_stroke);
                     }
                 }
 
@@ -559,7 +561,7 @@ public class DataHandler {
         }
     }
 
-    public void followUserInFIR(final UserModel followedUser, FirebaseUser loggedInUser,final FloatingActionButton fabImage){
+    public void followUserInFIR(final UserModel followedUser, FirebaseUser loggedInUser, final FloatingActionButton fabImage, final Context context){
         final DatabaseReference mDatabaseReference = mRootRef.child("Users");
         final DatabaseReference followedUserRef = mDatabaseReference.child(followedUser.userFIRId);
         final String FIRUID = loggedInUser.getUid();
@@ -581,7 +583,8 @@ public class DataHandler {
                     Map<String, Object> loggedUserUpdates = new HashMap<String, Object>();
                     loggedUserUpdates.put("following/" + followedUser.userFIRId, followedUser.userFIRId);
                     mUserRef.updateChildren(loggedUserUpdates);
-                    fabImage.setImageResource(R.drawable.ic_friends_green);
+                    fabImage.setImageResource(R.drawable.ic_person_black_36px);
+                    Toast.makeText(context, "Followed", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
                 finally{
@@ -596,7 +599,8 @@ public class DataHandler {
                         Map<String, Object> loggedUserUpdates = new HashMap<String, Object>();
                         loggedUserUpdates.put("following/" + followedUser.userFIRId, null);
                         mUserRef.updateChildren(loggedUserUpdates);
-                        fabImage.setImageResource(R.drawable.ic_friends);
+                        fabImage.setImageResource(R.drawable.ic_person_outline_black_36px);
+                        Toast.makeText(context, "Unfollowed", Toast.LENGTH_SHORT).show();
                     }
                     else{ // Logged in user is following the selected user again
                         Map<String, Object> userUpdates = new HashMap<String, Object>();
@@ -609,7 +613,8 @@ public class DataHandler {
                         Map<String, Object> loggedUserUpdates = new HashMap<String, Object>();
                         loggedUserUpdates.put("following/" + followedUser.userFIRId, followedUser.userFIRId);
                         mUserRef.updateChildren(loggedUserUpdates);
-                        fabImage.setImageResource(R.drawable.ic_friends_green);
+                        fabImage.setImageResource(R.drawable.ic_person_black_36px);
+                        Toast.makeText(context, "Followed", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -638,10 +643,10 @@ public class DataHandler {
                 }
                 finally{
                     if(followedValue){
-                        fabImage.setImageResource(R.drawable.ic_friends_green);
+                        fabImage.setImageResource(R.drawable.ic_person_black_36px);
                     }
                     else{
-                        fabImage.setImageResource(R.drawable.ic_friends);
+                        fabImage.setImageResource(R.drawable.ic_person_outline_black_36px);
                     }
                 }
             }

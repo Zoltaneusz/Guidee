@@ -22,7 +22,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -53,7 +52,6 @@ import zollie.travelblogger.guidee.utils.ImageProcessor;
 public class ProfileView extends AppCompatActivity {
     ArrayList<JourneyModel> allJourneys = new ArrayList<JourneyModel>();
     ArrayList<JourneyModel> allFavorites = new ArrayList<JourneyModel>();
-    ArrayList<JourneyModel> allPlans = new ArrayList<JourneyModel>();
     ArrayList<UserModel> allFollowers = new ArrayList<UserModel>();
     Bitmap userAvatarGlobal = null;
     ImageProcessor imageProcessor = new ImageProcessor(this);
@@ -69,10 +67,6 @@ public class ProfileView extends AppCompatActivity {
         final String ownerID = intentData.getString("owner_ID");
         mContext = this;
 
-        EditText messageInput = (EditText) findViewById(R.id.owner_plans_title);
-        messageInput.getText().append("\ud83d\udcdd");
-        messageInput = (EditText) findViewById(R.id.owner_favorites_title);
-        messageInput.getText().append("\ud83d\udc9c");
         if (Build.VERSION.SDK_INT >= 21) {
             Window window = getWindow();
             // clear FLAG_TRANSLUCENT_STATUS flag:
@@ -92,7 +86,7 @@ public class ProfileView extends AppCompatActivity {
             public void onUserData(Map<String, Object> rawUserData, String userID) {
                 allJourneys.clear();
                 allFavorites.clear();
-                allPlans.clear();
+   //             allPlans.clear();
                 allFollowers.clear();
                 final UserModel userModel = new UserModel(rawUserData, userID);
                 // ========================= Following user on click ===================================
@@ -101,7 +95,7 @@ public class ProfileView extends AppCompatActivity {
                 followUser.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        DataHandler.getInstance().followUserInFIR(userModel, firUser, (FloatingActionButton) v);
+                        DataHandler.getInstance().followUserInFIR(userModel, firUser, (FloatingActionButton) v, mContext);
                     }
                 });
                 //======================================================================================
@@ -158,7 +152,7 @@ public class ProfileView extends AppCompatActivity {
                     }
                 });
 
-                DataHandler.getInstance().getJourneyWithIds(getUserPlans(userModel), new DataHandlerListener() {
+               /* DataHandler.getInstance().getJourneyWithIds(getUserPlans(userModel), new DataHandlerListener() {
                     @Override
                     public void onJourneyData(Map<String, Object> rawJourneyData, String journeyReference) {
                         JourneyModel journeyModel = new JourneyModel(rawJourneyData, journeyReference, false);
@@ -178,7 +172,7 @@ public class ProfileView extends AppCompatActivity {
 
                     }
                 });
-
+*/
                 DataHandler.getInstance().getUserFollowing(ownerID, new FollowingListener() {
                     @Override
                     public void onFollowing(UserModel followedUser) {
@@ -213,7 +207,7 @@ public class ProfileView extends AppCompatActivity {
         }
         return allJourneys;
     }
-
+/*
     public ArrayList<String> getUserPlans(UserModel userModel) {
         ArrayList<String> allJourneys = new ArrayList<String>();
         if(userModel.plans == null) return null;
@@ -223,7 +217,7 @@ public class ProfileView extends AppCompatActivity {
         }
         return allJourneys;
     }
-
+*/
     public void fillRecyclerView(int primaryResource, int emptyResource, ArrayList<JourneyModel> journeyModels){
 
         RecyclerView rvJourneys = (RecyclerView) findViewById(primaryResource);

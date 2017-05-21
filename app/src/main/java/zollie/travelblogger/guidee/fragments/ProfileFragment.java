@@ -25,7 +25,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -61,7 +60,7 @@ import zollie.travelblogger.guidee.models.UserModel;
 public class ProfileFragment extends Fragment {
     ArrayList<JourneyModel> allJourneys = new ArrayList<JourneyModel>();
     ArrayList<JourneyModel> allFavorites = new ArrayList<JourneyModel>();
-    ArrayList<JourneyModel> allPlans = new ArrayList<JourneyModel>();
+ //   ArrayList<JourneyModel> allPlans = new ArrayList<JourneyModel>();
     ArrayList<UserModel> allFollowers = new ArrayList<UserModel>();
     Bitmap userAvatarGlobal = null;
     ImageProcessor imageProcessor = new ImageProcessor(getActivity());
@@ -84,10 +83,6 @@ public class ProfileFragment extends Fragment {
         //Getting Firebase user ID
         FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
         final String firUserID = firUser.getUid();
-        EditText messageInput = (EditText) getActivity().findViewById(R.id.my_plans_title);
-        messageInput.getText().append("\ud83d\udcdd");
-        messageInput = (EditText) getActivity().findViewById(R.id.my_favorites_title);
-        messageInput.getText().append("\ud83d\udc9c");
         if (Build.VERSION.SDK_INT >= 21) {
             Window window = getActivity().getWindow();
             // clear FLAG_TRANSLUCENT_STATUS flag:
@@ -107,7 +102,7 @@ public class ProfileFragment extends Fragment {
             public void onUserData(Map<String, Object> rawUserData, String userID) {
                 allJourneys.clear();
                 allFavorites.clear();
-                allPlans.clear();
+             //   allPlans.clear();
                 allFollowers.clear();
                 final UserModel userModel = new UserModel(rawUserData, userID);
                 try {
@@ -163,7 +158,7 @@ public class ProfileFragment extends Fragment {
                     }
                 });
 
-                DataHandler.getInstance().getJourneyWithIds(getUserPlans(userModel), new DataHandlerListener() {
+            /*    DataHandler.getInstance().getJourneyWithIds(getUserPlans(userModel), new DataHandlerListener() {
                     @Override
                     public void onJourneyData(Map<String, Object> rawJourneyData, String journeyReference) {
                         JourneyModel journeyModel = new JourneyModel(rawJourneyData, journeyReference, false);
@@ -183,7 +178,7 @@ public class ProfileFragment extends Fragment {
 
                     }
                 });
-
+*/
                 DataHandler.getInstance().getUserFollowing(firUserID, new FollowingListener() {
                     @Override
                     public void onFollowing(UserModel followedUser) {
@@ -229,7 +224,7 @@ public class ProfileFragment extends Fragment {
         }
         return allJourneys;
     }
-
+/*
     public ArrayList<String> getUserPlans(UserModel userModel) {
         ArrayList<String> allJourneys = new ArrayList<String>();
         if(userModel.plans == null) return null;
@@ -239,7 +234,7 @@ public class ProfileFragment extends Fragment {
         }
         return allJourneys;
     }
-
+*/
     public void fillRecyclerView(int primaryResource, int emptyResource, ArrayList<JourneyModel> journeyModels){
 
         RecyclerView rvJourneys = (RecyclerView) getActivity().findViewById(primaryResource);

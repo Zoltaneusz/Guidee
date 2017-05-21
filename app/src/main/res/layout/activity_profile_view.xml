@@ -83,7 +83,7 @@
 
             <TextView
                 android:id="@+id/owner_journeys_title"
-                android:text="Journeys ✈"
+                android:text="Journeys"
                 android:textColor="#000000"
                 android:fontFamily="sans-serif-medium"
                 android:layout_height="wrap_content"
@@ -111,51 +111,18 @@
                 android:layout_below="@+id/owner_journeys_title">
             </LinearLayout>
 
-            <EditText
-                android:id="@+id/owner_plans_title"
-                android:text="Plans "
-                android:textColor="#000000"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-medium"
-                android:layout_width="wrap_content"
-                android:textSize="20sp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:paddingLeft="10dp"
-                android:layout_below="@+id/owner_journeys_recycle"
-                android:background="@android:color/transparent"/>
-
-            <android.support.v7.widget.RecyclerView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/owner_plan_journeys_recycle"
-                android:orientation="horizontal"
-                android:layout_weight="1"
-                android:layout_below="@+id/owner_plans_title"
-                android:scrollbars="none"
-                android:paddingStart="10dp"
-                />
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/owner_plan_journeys_recycle_placeholder"
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:layout_below="@+id/owner_plans_title">
-            </LinearLayout>
-
-            <EditText
+            <TextView
                 android:id="@+id/owner_favorites_title"
                 android:textColor="#000000"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
                 android:layout_width="wrap_content"
-                android:text="Owner "
+                android:text="Owner"
                 android:textSize="20sp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:paddingLeft="10dp"
-                android:layout_below="@+id/owner_plan_journeys_recycle"
+                android:layout_below="@+id/owner_journeys_recycle"
                 android:background="@android:color/transparent"/>
 
             <android.support.v7.widget.RecyclerView
@@ -184,7 +151,7 @@
                 android:textColor="#000000"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="Followed 👤"
+                android:text="Followed"
                 android:textSize="20sp"
                 android:fontFamily="sans-serif-medium"
                 android:paddingTop="10dp"
@@ -222,7 +189,7 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:id="@+id/owner_follow_icon"
-        android:src="@drawable/ic_friends"
+        app:srcCompat="@drawable/ic_person_outline_black_36px"
         android:paddingRight="10dp"
         app:backgroundTint="@color/buttonBack"
         app:layout_anchor="@id/prof_act_appbar"
