@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.google.android.gms.fitness.data.Value;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -371,7 +372,7 @@ public class DataHandler {
         commentReferenceOuter.updateChildren(commentUpdates);
     }
 
-    public void createUserInFIR(FirebaseUser firUser)
+    public void createUserInFIR(FirebaseUser firUser, AccessToken facebookToken)
     {
         DatabaseReference mUserReference = mRootRef.child("Users");
         String firUserId = firUser.getUid();
@@ -381,7 +382,8 @@ public class DataHandler {
         userUpdates.put(firUserId + "/followedByCount", 0);
         userUpdates.put(firUserId + "/following/0", "0");
         userUpdates.put(firUserId + "/name", firUser.getDisplayName());
-        userUpdates.put(firUserId + "/avatarUrl", firUser.getPhotoUrl());
+        userUpdates.put(firUserId + "/avatarUrl", "https://graph.facebook.com/" + facebookToken.getUserId() + "/picture?type=square");
+
     }
 
     public void loveJourneyInFIR(final JourneyModel journeyModel, final FirebaseUser FIRUser, final FloatingActionButton FABImage){

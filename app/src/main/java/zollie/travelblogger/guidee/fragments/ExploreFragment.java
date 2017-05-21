@@ -140,7 +140,7 @@ public class ExploreFragment extends Fragment {
                     initializeClusterer();
                     Bitmap bmp = Bitmap.createBitmap((int)(60*scale),(int) (60*scale), conf);
                     Canvas canvas1 = new Canvas(bmp);
-                    circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale, circleBitmap);
+                    circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale, circleBitmap, true);
                     DataHandler.getInstance().getJourneys(new DataHandlerListener() {
                         @Override
                         public void onJourneyData(final Map<String, Object> rawJourneyData, String journeyReference) {
@@ -358,7 +358,7 @@ public class ExploreFragment extends Fragment {
 
 
                 if(markerImageGlob != null)
-                    circleBitmap = imageProcessor.pulseMarker(imageSize, markerImageGlob, myCanvas, scale, circleBitmap);
+                    circleBitmap = imageProcessor.pulseMarker(imageSize, markerImageGlob, myCanvas, scale, circleBitmap, true);
 
           /*
           // ===================== Old code snippet to add marker (WORKING)=========================
@@ -446,7 +446,7 @@ public class ExploreFragment extends Fragment {
 
 
             if(markerImageGlob != null)
-                circleBitmap = imageProcessor.pulseMarker(imageSize, markerImageGlob, myCanvas, scale, circleBitmap);
+                circleBitmap = imageProcessor.pulseMarker(imageSize, markerImageGlob, myCanvas, scale, circleBitmap, true);
 
           /*
           // ===================== Old code snippet to add marker (WORKING)=========================
@@ -651,13 +651,13 @@ public class ExploreFragment extends Fragment {
         mClusterManager.removeItem(markerItem);
         circleBitmap = null;
         // Animating marker implementation =================================================
-        circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale, circleBitmap);
+        circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale, circleBitmap, true);
 
         h.postDelayed(new Runnable(){  // Csak a legutolsót törli ki...a többi marker korábbról ott marad
             @Override
             public void run() {
                 try{
-                    circleBitmap = imageProcessor.pulseMarker(8, bmp, canvas1, scale, circleBitmap);
+                    circleBitmap = imageProcessor.pulseMarker(8, bmp, canvas1, scale, circleBitmap, true);
                     myMarker4 = mMap.addMarker(new MarkerOptions().position(markerLatLng)
                             .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
                             .title(markerTitle));
@@ -686,7 +686,7 @@ public class ExploreFragment extends Fragment {
             @Override
             public void run() {
                 try{
-                    circleBitmap = imageProcessor.pulseMarker(8, bmp, canvas1, scale, circleBitmap);
+                    circleBitmap = imageProcessor.pulseMarker(8, bmp, canvas1, scale, circleBitmap, true);
                     myMarker5 = mMap.addMarker(new MarkerOptions().position(markerLatLng)
                             .icon(BitmapDescriptorFactory.fromBitmap(circleBitmap))
                             .title(markerTitle));

@@ -7,7 +7,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center|center"
-        android:src="@drawable/ic_add_circle_outline_black_48dp"
+        android:src="@drawable/com_facebook_profile_picture_blank_square"
         android:id="@+id/comment_user_avatar"/>
 
     <TextView

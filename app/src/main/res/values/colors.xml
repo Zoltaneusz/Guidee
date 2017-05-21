@@ -3,10 +3,10 @@
 
     <color name="lightGreen">#B2FF59</color>
     <color name="buttonBack">#FFFFFF</color>
-    <color name="backButton">#90C3D4</color>
+    <color name="backButton">#FFFFFF</color>
     <color name="pastellRed">#FF6565</color>
     <color name="LightGreen">#B2FF59</color>
-    <color name="Link">#90C3D4</color>
+    <color name="Link">#9E9E9E</color>
     <color name="PressedTint">#80f41537</color>
     <color name="colorTransparent">#00FFFFFF</color>
 

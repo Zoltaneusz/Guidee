@@ -61,6 +61,7 @@ public class FaceLoginFragment extends Fragment {
     private CallbackManager mCallbackManager;
     private AccessTokenTracker mTokenTracker;
     private ProfileTracker mProfileTracker;
+    private AccessToken faceToken;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -127,8 +128,8 @@ public class FaceLoginFragment extends Fragment {
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
                 AccessToken accessToken = loginResult.getAccessToken();
+                faceToken = accessToken;
                 handleFacebookAccessToken(accessToken);
-
             }
 
             @Override
@@ -154,7 +155,8 @@ public class FaceLoginFragment extends Fragment {
                     // ======================== Go to Profile Fragment ============================
                     Profile profile = Profile.getCurrentProfile();
                     FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
-                    DataHandler.getInstance().createUserInFIR(firUser);
+                    if(faceToken != null)
+                    DataHandler.getInstance().createUserInFIR(firUser, faceToken);
 
                     FragmentManager fm;
                     fm = getFragmentManager();

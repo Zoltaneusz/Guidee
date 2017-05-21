@@ -37,11 +37,19 @@ public class ImageProcessor {
         this.mContext = activityContext;
     }
 
-    public Bitmap pulseMarker(int step, Bitmap bitm, Canvas canv, float scale, Bitmap circleBitmap){
+    public Bitmap pulseMarker(int step, Bitmap bitm, Canvas canv, float scale, Bitmap circleBitmap, boolean fixRes){
 
         Paint color = new Paint();
         color.setTextSize(35);
         color.setColor(Color.BLACK);
+
+        // Resize to 100x100 dp
+        if(fixRes)
+        bitm = scaleDown(bitm, 100, true);
+
+        // Check for square images
+        if(bitm.getHeight() != bitm.getWidth())
+            bitm = Bitmap.createBitmap(bitm, 0, 0, bitm.getWidth(), bitm.getHeight()-(bitm.getHeight()-bitm.getWidth()));
 
         Bitmap bitmap = bitm;
         circleBitmap = Bitmap.createBitmap(bitmap.getWidth()+5, bitmap.getHeight()+5, Bitmap.Config.ARGB_8888);
@@ -129,5 +137,17 @@ public class ImageProcessor {
             shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///storage/emulated/0/shared_image.jpg"));
             mContext.startActivity(Intent.createChooser(shareIntent, "Share Journey"));
         }
+    }
+    public static Bitmap scaleDown(Bitmap realImage, float maxImageSize,
+                                   boolean filter) {
+        float ratio = Math.max(
+                (float) maxImageSize / realImage.getWidth(),
+                (float) maxImageSize / realImage.getHeight());
+        int width = Math.round((float) ratio * realImage.getWidth());
+        int height = Math.round((float) ratio * realImage.getHeight());
+
+        Bitmap newBitmap = Bitmap.createScaledBitmap(realImage, width,
+                height, filter);
+        return newBitmap;
     }
 }

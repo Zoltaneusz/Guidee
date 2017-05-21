@@ -493,9 +493,9 @@ public class JourneyView extends AppCompatActivity{
             float scale = getResources().getDisplayMetrics().density;
             Bitmap bmp = Bitmap.createBitmap((int)(100*scale),(int) (100*scale), conf);
             Canvas canvas1 = new Canvas(bmp);
-            Bitmap circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale*2, userAvatarGlobal);
+            Bitmap circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale*2, userAvatarGlobal, false);
             if(userAvatarGlobal != null) {
-                circleBitmap = imageProcessor.pulseMarker(4, userAvatarGlobal, canvas1, scale * 2, circleBitmap);
+                circleBitmap = imageProcessor.pulseMarker(4, userAvatarGlobal, canvas1, scale * 2, circleBitmap, false);
                 ownerPic.setImageBitmap(circleBitmap);
             }
 

@@ -177,8 +177,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             Bitmap bmp = Bitmap.createBitmap((int)(120*scale),(int) (120*scale), conf);
             Canvas canvas1 = new Canvas(bmp);
             if(userAvatarGlobal != null) {
-                Bitmap circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale * 2, userAvatarGlobal);
-                circleBitmap = imageProcessor.pulseMarker(4, userAvatarGlobal, canvas1, scale * 2, circleBitmap);
+                Bitmap circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale * 2, userAvatarGlobal, false);
+                circleBitmap = imageProcessor.pulseMarker(4, userAvatarGlobal, canvas1, scale * 2, circleBitmap, false);
                 imageView.setImageBitmap(circleBitmap);
             }
         }

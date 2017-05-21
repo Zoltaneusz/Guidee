@@ -288,8 +288,8 @@ public class ProfileView extends AppCompatActivity {
                 final Bitmap.Config conf = Bitmap.Config.ARGB_8888;
                 Bitmap bmp = Bitmap.createBitmap((int) (120 * scale), (int) (120 * scale), conf);
                 Canvas canvas1 = new Canvas(bmp);
-                Bitmap circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale * 2, userAvatarGlobal);
-                circleBitmap = imageProcessor.pulseMarker(4, userAvatarGlobal, canvas1, scale * 2, circleBitmap);
+                Bitmap circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale * 2, userAvatarGlobal, false);
+                circleBitmap = imageProcessor.pulseMarker(4, userAvatarGlobal, canvas1, scale * 2, circleBitmap, false);
                 mProfileImage.setImageBitmap(circleBitmap);
             }
     //        TextView mProfileName = (TextView) findViewById(R.id.owner_profile_name);
