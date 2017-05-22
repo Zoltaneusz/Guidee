@@ -2,15 +2,43 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <VideoView
+            android:id="@+id/login_video"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"/>
 
-    <com.facebook.login.widget.LoginButton
-        android:id="@+id/login_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="300dp"
-        android:layout_marginBottom="300dp"
-    />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/login_video_blur"
+            android:layout_alignTop="@+id/login_video"
+            android:layout_alignBottom="@+id/login_video"
+            android:layout_alignEnd="@+id/login_video"
+            android:layout_alignRight="@+id/login_video"
+            android:layout_alignLeft="@+id/login_video"
+            android:layout_alignStart="@+id/login_video"
+            android:src="#66000000"/>
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="300dp"
+            android:layout_marginBottom="300dp"
+            android:layout_gravity="center"
+            />
+
+    </RelativeLayout>
+
+
+
 
 
 </RelativeLayout>

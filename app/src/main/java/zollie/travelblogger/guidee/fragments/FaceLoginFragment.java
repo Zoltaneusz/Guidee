@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.net.Uri;
 import android.os.Bundle;
 
 import android.support.annotation.NonNull;
@@ -18,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 
 import com.facebook.AccessToken;
@@ -41,7 +43,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 
-
+import java.io.IOException;
 
 import zollie.travelblogger.guidee.R;
 import zollie.travelblogger.guidee.adapters.DataHandler;
@@ -83,6 +85,8 @@ public class FaceLoginFragment extends Fragment {
 
         mTokenTracker.startTracking();
         mProfileTracker.startTracking();
+
+
     }
 
     @Override
@@ -118,6 +122,8 @@ public class FaceLoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
+        VideoView videoView = (VideoView) getActivity().findViewById(R.id.login_video);
+        playVideo(videoView);
 
         mCallbackManager = CallbackManager.Factory.create();
         LoginButton loginButton = (LoginButton) view.findViewById(R.id.login_button);
@@ -206,5 +212,12 @@ public class FaceLoginFragment extends Fragment {
                     }
                 });
     }
+    void playVideo(VideoView view) {
+
+        String path = "android.resource://" + getActivity().getPackageName() + "/" + R.raw.onboardingvid;
+        view.setVideoURI(Uri.parse(path));
+        view.start();
+    }
+
 
 }
