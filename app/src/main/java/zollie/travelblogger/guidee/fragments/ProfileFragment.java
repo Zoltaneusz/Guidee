@@ -67,11 +67,15 @@ public class ProfileFragment extends Fragment {
 
     String userAvatarUrl = new String();
 
+    RecyclerView.ItemDecoration itemDecoration = null;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+        itemDecoration =  new
+                DividerItemDecoration(getActivity(), zollie.travelblogger.guidee.utils.DividerItemDecoration.HORIZONTAL_LIST);
         return rootView;
 
 
@@ -80,6 +84,13 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onViewCreated(view, savedInstanceState);
+
+
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        Profile profile = Profile.getCurrentProfile();
         //Getting Firebase user ID
         FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
         final String firUserID = firUser.getUid();
@@ -102,7 +113,7 @@ public class ProfileFragment extends Fragment {
             public void onUserData(Map<String, Object> rawUserData, String userID) {
                 allJourneys.clear();
                 allFavorites.clear();
-             //   allPlans.clear();
+                //   allPlans.clear();
                 allFollowers.clear();
                 final UserModel userModel = new UserModel(rawUserData, userID);
                 try {
@@ -194,12 +205,6 @@ public class ProfileFragment extends Fragment {
             }
         });
         journeyEdit(firUserID);
-
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-        Profile profile = Profile.getCurrentProfile();
         // Change statusbar color ===============================
 
 
@@ -242,8 +247,7 @@ public class ProfileFragment extends Fragment {
         JourneyAdapter adapter = new JourneyAdapter(getActivity(), journeyModels);
         rvJourneys.setAdapter(adapter);
         rvJourneys.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        RecyclerView.ItemDecoration itemDecoration = new
-                DividerItemDecoration(getActivity(), zollie.travelblogger.guidee.utils.DividerItemDecoration.HORIZONTAL_LIST);
+        rvJourneys.removeItemDecoration(itemDecoration);
         rvJourneys.addItemDecoration(itemDecoration);
         if(journeyModels.isEmpty() == true ) showPlaceholderCards(emptyResource);
    //     rvJourneys.setVisibility(View.INVISIBLE);
@@ -255,8 +259,7 @@ public class ProfileFragment extends Fragment {
         FollowedAdapter adapter = new FollowedAdapter(getActivity(), users);
         rvFollows.setAdapter(adapter);
         rvFollows.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        RecyclerView.ItemDecoration itemDecoration = new
-                DividerItemDecoration(getActivity(), zollie.travelblogger.guidee.utils.DividerItemDecoration.HORIZONTAL_LIST);
+        rvFollows.removeItemDecoration(itemDecoration);
         rvFollows.addItemDecoration(itemDecoration);
         if(users.isEmpty() == true ) showPlaceholderCards(emptyResource);
 

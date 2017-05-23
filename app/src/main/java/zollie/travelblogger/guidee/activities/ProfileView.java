@@ -58,11 +58,19 @@ public class ProfileView extends AppCompatActivity {
     String userAvatarUrl = new String();
     Context mContext;
     FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser(); // Should be in onResume() with almost every other method.
-
+    RecyclerView.ItemDecoration itemDecoration = null;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        itemDecoration = new
+                DividerItemDecoration(this, zollie.travelblogger.guidee.utils.DividerItemDecoration.HORIZONTAL_LIST);
         setContentView(R.layout.activity_profile_view);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         Bundle intentData = getIntent().getExtras();
         final String ownerID = intentData.getString("owner_ID");
         mContext = this;
@@ -86,7 +94,7 @@ public class ProfileView extends AppCompatActivity {
             public void onUserData(Map<String, Object> rawUserData, String userID) {
                 allJourneys.clear();
                 allFavorites.clear();
-   //             allPlans.clear();
+                //             allPlans.clear();
                 allFollowers.clear();
                 final UserModel userModel = new UserModel(rawUserData, userID);
                 // ========================= Following user on click ===================================
@@ -188,7 +196,8 @@ public class ProfileView extends AppCompatActivity {
             }
         });
     }
-  public ArrayList<String> getUserJourneys(UserModel userModel) {
+
+    public ArrayList<String> getUserJourneys(UserModel userModel) {
         ArrayList<String> allJourneys = new ArrayList<String>();
         if(userModel.userJourneys == null) return null;
         for (Map.Entry<String, Object> map : userModel.userJourneys.entrySet()) {
@@ -225,8 +234,7 @@ public class ProfileView extends AppCompatActivity {
         JourneyAdapter adapter = new JourneyAdapter(this, journeyModels);
         rvJourneys.setAdapter(adapter);
         rvJourneys.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        RecyclerView.ItemDecoration itemDecoration = new
-                DividerItemDecoration(this, zollie.travelblogger.guidee.utils.DividerItemDecoration.HORIZONTAL_LIST);
+
         rvJourneys.addItemDecoration(itemDecoration);
         if(journeyModels.isEmpty() == true ) showPlaceholderCards(emptyResource);
         //     rvJourneys.setVisibility(View.INVISIBLE);
@@ -237,8 +245,7 @@ public class ProfileView extends AppCompatActivity {
         FollowedAdapter adapter = new FollowedAdapter(this, users);
         rvFollows.setAdapter(adapter);
         rvFollows.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        RecyclerView.ItemDecoration itemDecoration = new
-                DividerItemDecoration(this, zollie.travelblogger.guidee.utils.DividerItemDecoration.HORIZONTAL_LIST);
+
         rvFollows.addItemDecoration(itemDecoration);
         if(users.isEmpty() == true ) showPlaceholderCards(emptyResource);
 

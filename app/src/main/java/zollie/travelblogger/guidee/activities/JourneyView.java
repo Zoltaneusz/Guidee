@@ -87,14 +87,82 @@ public class JourneyView extends AppCompatActivity{
     Bitmap userAvatarGlobal = null;
     ImageProcessor imageProcessor = new ImageProcessor(this);
     FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser(); // Should be in onResume() with almost every other method.
-
+    JourneyModel mJourney = null;
+    RecyclerView.ItemDecoration itemDecoration = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
+        itemDecoration = new
+                DividerItemDecoration(this, zollie.travelblogger.guidee.utils.DividerItemDecoration.VERTICAL_LIST);
         setContentView(R.layout.activity_journey_view);
+
+
+        mMapView = (MapView) findViewById(R.id.journey_Map);
+        mMapView.onCreate(savedInstanceState);
+        final NestedScrollView scrollView = (NestedScrollView) findViewById(R.id.journey_scroll_view);
+        ImageView transparent = (ImageView)findViewById(R.id.journey_imagetrans);
+
+        // Method to deprecate touch events of ScrollView in case the user touches the map
+        transparent.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                int action = motionEvent.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Disallow ScrollView to intercept touch events.
+                        scrollView.requestDisallowInterceptTouchEvent(true);
+                        // Disable touch on transparent view
+                        return false;
+
+                    case MotionEvent.ACTION_UP:
+                        // Allow ScrollView to intercept touch events.
+                        scrollView.requestDisallowInterceptTouchEvent(false);
+                        return true;
+
+                    case MotionEvent.ACTION_MOVE:
+                        scrollView.requestDisallowInterceptTouchEvent(true);
+                        return false;
+
+                    default:
+                        return true;
+                }
+            }
+        });
+
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case locationPermission: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         Bundle intentData = getIntent().getExtras();
-        final JourneyModel mJourney = (JourneyModel) intentData.getParcelable("ser_journey");
+        mJourney  = (JourneyModel) intentData.getParcelable("ser_journey");
 
         // Change App Toolbar
         changeAppBar(mJourney);
@@ -120,31 +188,7 @@ public class JourneyView extends AppCompatActivity{
             e.printStackTrace();
         }
 
-        //====================== Get journey owner picture and display it ==========================
-        new AsyncOwnerPic().execute(mJourney);
-        //==========================================================================================
 
-        fillRecyclerView(R.id.journey_events_recycle, R.id.journey_events_recycle_placeholder, mJourney.eventModels);
-
-        DataHandler.getInstance().getCommentsWithID(mJourney.ID, new DataHandlerListener() {
-            @Override
-            public void onJourneyData(Map<String, Object> rawJourneyData, String journeyReference) {
-
-            }
-
-            @Override
-            public void onUserData(Map<String, Object> rawUserData, String userID) {
-
-            }
-
-            @Override
-            public void onCommentData(Map<String, Object> rawCommentData, String commentReference, String journeyIdent) {
-                CommentModel commentModel = new CommentModel(rawCommentData, commentReference, journeyIdent);
-                allComments.add(commentModel);
-                fillCommentsRecyclerView(R.id.journey_comments_recycle, R.id.journey_comments_recycle_placeholder, allComments);
-
-            }
-        });
 
         //===================== Journey LIKE method ================================================
         final FloatingActionButton likeButton = (FloatingActionButton) findViewById(R.id.journey_love_icon);
@@ -179,39 +223,31 @@ public class JourneyView extends AppCompatActivity{
                 addCommentPopup(mJourney);
             }
         });
+        //====================== Get journey owner picture and display it ==========================
+        new AsyncOwnerPic().execute(mJourney);
+        //==========================================================================================
 
-        mMapView = (MapView) findViewById(R.id.journey_Map);
-        mMapView.onCreate(savedInstanceState);
-        final NestedScrollView scrollView = (NestedScrollView) findViewById(R.id.journey_scroll_view);
-        ImageView transparent = (ImageView)findViewById(R.id.journey_imagetrans);
+        fillRecyclerView(R.id.journey_events_recycle, R.id.journey_events_recycle_placeholder, mJourney.eventModels);
 
-        // Method to deprecate touch events of ScrollView in case the user touches the map
-        transparent.setOnTouchListener(new View.OnTouchListener() {
+        DataHandler.getInstance().getCommentsWithID(mJourney.ID, new DataHandlerListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                int action = motionEvent.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        // Disallow ScrollView to intercept touch events.
-                        scrollView.requestDisallowInterceptTouchEvent(true);
-                        // Disable touch on transparent view
-                        return false;
+            public void onJourneyData(Map<String, Object> rawJourneyData, String journeyReference) {
 
-                    case MotionEvent.ACTION_UP:
-                        // Allow ScrollView to intercept touch events.
-                        scrollView.requestDisallowInterceptTouchEvent(false);
-                        return true;
+            }
 
-                    case MotionEvent.ACTION_MOVE:
-                        scrollView.requestDisallowInterceptTouchEvent(true);
-                        return false;
+            @Override
+            public void onUserData(Map<String, Object> rawUserData, String userID) {
 
-                    default:
-                        return true;
-                }
+            }
+
+            @Override
+            public void onCommentData(Map<String, Object> rawCommentData, String commentReference, String journeyIdent) {
+                CommentModel commentModel = new CommentModel(rawCommentData, commentReference, journeyIdent);
+                allComments.add(commentModel);
+                fillCommentsRecyclerView(R.id.journey_comments_recycle, R.id.journey_comments_recycle_placeholder, allComments);
+
             }
         });
-
         mMapView.onResume(); // needed to get the map to display immediately
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -269,36 +305,6 @@ public class JourneyView extends AppCompatActivity{
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case locationPermission: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
     }
@@ -310,8 +316,7 @@ public class JourneyView extends AppCompatActivity{
         EventAdapter adapter = new EventAdapter(this, eventModels);
         rvEvents.setAdapter(adapter);
         rvEvents.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        RecyclerView.ItemDecoration itemDecoration = new
-                DividerItemDecoration(this, zollie.travelblogger.guidee.utils.DividerItemDecoration.VERTICAL_LIST);
+
         rvEvents.addItemDecoration(itemDecoration);
   //      if(eventModels.isEmpty() == true ) showPlaceholderCards(emptyResource);
         //     rvJourneys.setVisibility(View.INVISIBLE);
@@ -323,8 +328,7 @@ public class JourneyView extends AppCompatActivity{
         CommentAdapter adapter = new CommentAdapter(this, commentModels);
         rvEvents.setAdapter(adapter);
         rvEvents.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        RecyclerView.ItemDecoration itemDecoration = new
-                DividerItemDecoration(this, zollie.travelblogger.guidee.utils.DividerItemDecoration.VERTICAL_LIST);
+
         rvEvents.addItemDecoration(itemDecoration);
         //      if(eventModels.isEmpty() == true ) showPlaceholderCards(emptyResource);
         //     rvJourneys.setVisibility(View.INVISIBLE);

@@ -56,48 +56,17 @@ public class EventView extends AppCompatActivity{
     MapView mMapView;
     public GoogleMap googleMap;
     public Context mContext;
-
+    EventModel mEvent = null;
+    RecyclerView.ItemDecoration itemDecoration = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
-
+        itemDecoration = new
+                DividerItemDecoration(this, zollie.travelblogger.guidee.utils.DividerItemDecoration.HORIZONTAL_LIST);
         setContentView(R.layout.activity_event_view);
 
-        Bundle intentData = getIntent().getExtras();
-        final EventModel mEvent = (EventModel) intentData.getParcelable("ser_event");
 
-        // Change App Toolbar
-        changeAppBar(mEvent);
-
-        TextView mEventSummary = (TextView) findViewById(R.id.event_summary_content);
-        try {
-            mEventSummary.setText(mEvent.summary);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        fillRecyclerView(R.id.event_pictures_recycle_test, R.id.event_pictures_recycle_placeholder, mEvent.carouselModels);
-
-        //======= Check user edit right for this event and add FAB for editing Event ===============
-        boolean userEdit = false;
-        userEdit = mEvent.userEligible;
-        if(userEdit) {
-            FloatingActionButton editEventFAB = (FloatingActionButton) findViewById(R.id.event_edit_FAB);
-            editEventFAB.setVisibility(View.VISIBLE);
-            editEventFAB.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent toEventIntent = new Intent(mContext, EditEventView.class);
-                    toEventIntent.putExtra("ser_event", mEvent);
-                    toEventIntent.putExtra("parent", "EventView");
-                    mContext.startActivity(toEventIntent);
-                }
-            });
-
-
-        }
 
         //==========================================================================================
 
@@ -133,60 +102,7 @@ public class EventView extends AppCompatActivity{
             }
         });
 
-        mMapView.onResume(); // needed to get the map to display immediately
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap mMap) {
-                googleMap = mMap;
-                googleMap.getUiSettings().setZoomControlsEnabled(true);
-                googleMap.addMarker(new MarkerOptions()
-                        .position(mEvent.eventLatLng)
-                        .title(mEvent.title)
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
- /*               CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(mEvent.eventLatLng)      // Sets the center of the map to location user
-                        .zoom(19f)                   // Sets the zoom
-                        .bearing(90)                // Sets the orientation of the camera to east
-                        .tilt(40)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-*/
-     /*           CameraUpdate center=
-                        CameraUpdateFactory.newLatLng(mEvent.eventLatLng);
-                CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
-                googleMap.moveCamera(center);
-                googleMap.animateCamera(zoom);
-*/
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mEvent.eventLatLng, 10);
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(mEvent.eventLatLng ));
-                googleMap.animateCamera(cameraUpdate);
-            }
-        });
-
-
-        try {
-            MapsInitializer.initialize(this.getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-            } else {
-                if (Build.VERSION.SDK_INT >= 23)
-                    requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION}, locationPermission);
-
-            }
-        }
     }
 
     public void fillRecyclerView(int primaryResource, int emptyResource, ArrayList<CarouselModel> carouselModels){
@@ -196,8 +112,7 @@ public class EventView extends AppCompatActivity{
         CarouselAdapter adapter = new CarouselAdapter(this, carouselModels);
         rvCarousels.setAdapter(adapter);
         rvCarousels.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        RecyclerView.ItemDecoration itemDecoration = new
-                DividerItemDecoration(this, zollie.travelblogger.guidee.utils.DividerItemDecoration.HORIZONTAL_LIST);
+
         rvCarousels.addItemDecoration(itemDecoration);
         //      if(eventModels.isEmpty() == true ) showPlaceholderCards(emptyResource);
         //     rvJourneys.setVisibility(View.INVISIBLE);
@@ -253,6 +168,94 @@ public class EventView extends AppCompatActivity{
 
    //     this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onResume();
+        Bundle intentData = getIntent().getExtras();
+        mEvent = (EventModel) intentData.getParcelable("ser_event");
+
+        // Change App Toolbar
+        changeAppBar(mEvent);
+
+        TextView mEventSummary = (TextView) findViewById(R.id.event_summary_content);
+        try {
+            mEventSummary.setText(mEvent.summary);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        fillRecyclerView(R.id.event_pictures_recycle_test, R.id.event_pictures_recycle_placeholder, mEvent.carouselModels);
+
+        //======= Check user edit right for this event and add FAB for editing Event ===============
+        boolean userEdit = false;
+        userEdit = mEvent.userEligible;
+        if(userEdit) {
+            FloatingActionButton editEventFAB = (FloatingActionButton) findViewById(R.id.event_edit_FAB);
+            editEventFAB.setVisibility(View.VISIBLE);
+            editEventFAB.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent toEventIntent = new Intent(mContext, EditEventView.class);
+                    toEventIntent.putExtra("ser_event", mEvent);
+                    toEventIntent.putExtra("parent", "EventView");
+                    mContext.startActivity(toEventIntent);
+                }
+            });
+
+
+        }
+        mMapView.onResume(); // needed to get the map to display immediately
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap mMap) {
+                googleMap = mMap;
+                googleMap.getUiSettings().setZoomControlsEnabled(true);
+                googleMap.addMarker(new MarkerOptions()
+                        .position(mEvent.eventLatLng)
+                        .title(mEvent.title)
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+
+ /*               CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(mEvent.eventLatLng)      // Sets the center of the map to location user
+                        .zoom(19f)                   // Sets the zoom
+                        .bearing(90)                // Sets the orientation of the camera to east
+                        .tilt(40)                   // Sets the tilt of the camera to 30 degrees
+                        .build();                   // Creates a CameraPosition from the builder
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+*/
+     /*           CameraUpdate center=
+                        CameraUpdateFactory.newLatLng(mEvent.eventLatLng);
+                CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
+                googleMap.moveCamera(center);
+                googleMap.animateCamera(zoom);
+*/
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mEvent.eventLatLng, 10);
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(mEvent.eventLatLng ));
+                googleMap.animateCamera(cameraUpdate);
+            }
+        });
+
+
+        try {
+            MapsInitializer.initialize(this.getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+            } else {
+                if (Build.VERSION.SDK_INT >= 23)
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION}, locationPermission);
+
+            }
+        }
     }
 
     public void changeAppBar(EventModel eventModel){

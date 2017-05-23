@@ -23,7 +23,7 @@
             android:layout_alignRight="@+id/login_video"
             android:layout_alignLeft="@+id/login_video"
             android:layout_alignStart="@+id/login_video"
-            android:src="#66000000"/>
+            android:src="#2200CCCC"/>
 
         <com.facebook.login.widget.LoginButton
             android:id="@+id/login_button"
@@ -36,9 +36,5 @@
             />
 
     </RelativeLayout>
-
-
-
-
 
 </RelativeLayout>
