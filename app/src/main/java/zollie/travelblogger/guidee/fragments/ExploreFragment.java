@@ -42,6 +42,7 @@ import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
 import com.google.maps.android.data.Renderer;
 
 
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -70,11 +71,8 @@ public class ExploreFragment extends Fragment {
     final int locationPermission = 0;
     Handler h = new Handler();
     private ProfileFragment _profileFrag = new ProfileFragment();
-    Marker myMarker2;
-    Marker myMarker3;
     Marker myMarker4;
     Marker myMarker5;
-    Marker myMarker6;
     MapView mMapView;
     Bitmap markerImageGlob = null;
     ArrayList<JourneyModel> allJourneys = new ArrayList<JourneyModel>();
@@ -96,241 +94,9 @@ public class ExploreFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_USER);
         final View rootView = inflater.inflate(R.layout.fragment_map, container, false);
-        final float scale = getResources().getDisplayMetrics().density;
-        final Bitmap.Config conf = Bitmap.Config.ARGB_8888;
 
         mMapView = (MapView) rootView.findViewById(R.id.exploreMap);
         mMapView.onCreate(savedInstanceState);
-
-        // Get camera position from MainActivity
-   //     double showedLat = getArguments().getDouble("lat");
-        //     double showedLng = getArguments().getDouble("lng");
-        double showedLat = ((MainActivity)getActivity()).getShowedLat();
-        double showedLng = ((MainActivity)getActivity()).getShowedLng();
-        final LatLng showedCoord = new LatLng(showedLat, showedLng);
-
-        try {
-            MapsInitializer.initialize(getActivity().getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                    android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-            } else {
-                if (Build.VERSION.SDK_INT >= 23)
-                    requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION}, locationPermission);
-
-            }
-        }
-            mMapView.onResume(); // needed to get the map to display immediately
-            mMapView.getMapAsync(new OnMapReadyCallback() {
-
-                @Override
-                public void onMapReady(final GoogleMap mMap) {
-                    googleMap = mMap;
-                    initializeClusterer();
-                    Bitmap bmp = Bitmap.createBitmap((int)(60*scale),(int) (60*scale), conf);
-                    Canvas canvas1 = new Canvas(bmp);
-                    circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale, circleBitmap, true);
-                    DataHandler.getInstance().getJourneys(new DataHandlerListener() {
-                        @Override
-                        public void onJourneyData(final Map<String, Object> rawJourneyData, String journeyReference) {
-                            //addMapMarker(journeyModel, mMap);
-                            JourneyModel journeyModel = new JourneyModel(rawJourneyData, journeyReference, false);
-                            allJourneys.add(journeyModel);
-                            setUpClusterer(journeyModel, mMap);
-                        }
-
-                        @Override
-                        public void onUserData(Map<String, Object> rawUserData, String userID) {
-
-                        }
-
-                        @Override
-                        public void onCommentData(Map<String, Object> rawCommentData, String commentReference, String journeyIdent) {
-                            CommentModel commentModel = new CommentModel(rawCommentData, commentReference, journeyIdent);
-                        }
-                    });
-                    googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                        @Override
-                        public void onMapClick(LatLng latLng) {
-                            chosenPlace = latLng;
-                            googleMap.clear();
-                            mClusterManager.clearItems();
-                            googleMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                            for(JourneyModel journeyModel: allJourneys) {
-                                setUpClusterer(journeyModel, mMap);
-                            }
-                        }
-                    });
-                    // For showing a move to my location button
-
-                    //           googleMap.setMyLocationEnabled(true);
-
-                    // For dropping a ,,marker at a point on the Map
-                    //final LatLng sydney = new LatLng(-34, 151);
-                    //==================== Old code without clustering =============================
-                    /*googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                        @Override
-                        public boolean onMarkerClick(Marker marker) {
-                         //   Bitmap bmp = Bitmap.createBitmap((int)(60*scale),(int) (60*scale), conf);
-                            Bitmap markerImage = null;
-
-                            final String markerID = marker.getId();
-                            JourneyModel mJourney = null;
-                            int j = 0;
-                            for(int i=0; i<allJourneys.size(); i++)
-                            {
-                                 mJourney = allJourneys.get(i);
-
-                                if(mJourney.annotationModel.getMarkerID().equals(markerID))
-                                {
-                                    //markerImage = markerImageGlob;
-//                                    markerImage = mJourney.annotationModel.markerIcon;
-                                    mJourney.annotationModel.setMarker(marker);
-                                    j=i;
-                                    break;
-                                }
-                            }
-                            new AsyncAnimation().execute(allJourneys.get(j));
-
-
-                            return false;
-                        }
-                    });*/
-                    //==============================================================================
-                    //==================== New code with clustering ================================
-                    mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MarkerItem>() {
-                        @Override
-                        public boolean onClusterItemClick(MarkerItem markerItem) {
-                            //   Bitmap bmp = Bitmap.createBitmap((int)(60*scale),(int) (60*scale), conf);
-                            MarkerManager.Collection markerCollection = mClusterManager.getMarkerCollection();
-                            clickedMarker = markerItem;
-                           // Bitmap markerImage = null;
-                            String markerID = markerItem.getID();
-                            JourneyModel mJourney = null;
-                            int j = 0;
-                            for(int i=0; i<allJourneys.size(); i++)
-                            {
-                                mJourney = allJourneys.get(i);
-
-                                    if (mJourney.annotationModel.getMarkerID().equals(markerID)) {
-                                        //markerImage = markerImageGlob;
-//                                    markerImage = mJourney.annotationModel.markerIcon;
-                                        mJourney.annotationModel.setMarkerItem(markerItem);
-                                        j = i;
-                                        break;
-                                    }
-
-                            }
-                            new AsyncAnimation().execute(allJourneys.get(j));
-                            return false;
-                        }
-                    });
-                    //==============================================================================
-                    //==================== Old code without clustering =============================
-                /*    googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                        @Override
-                        public void onInfoWindowClick(Marker marker) {
-                            // ======================== Go to selected journey =====================
-                            final String markerID = marker.getId();
-                            JourneyModel mJourney = null;
-                            int j = 0;
-                            for(int i=0; i<allJourneys.size(); i++)
-                            {
-                                mJourney = allJourneys.get(i);
-
-                                if(mJourney.annotationModel.getMarkerID().equals(markerID))
-                                {
-                                    //markerImage = markerImageGlob;
-//                                    markerImage = mJourney.annotationModel.markerIcon;
-                                    j=i;
-                                    break;
-                                }
-                            }
-                            Intent toJourneyIntent = new Intent(getActivity(), JourneyView.class);
-                            toJourneyIntent.putExtra("ser_journey", allJourneys.get(j));
-                            getActivity().startActivity(toJourneyIntent);
-
-                        }
-                    });*/
-                    //==============================================================================
-                    //==================== New code with clustering ================================
-                    mClusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.OnClusterItemInfoWindowClickListener<MarkerItem>() {
-                        @Override
-                        public void onClusterItemInfoWindowClick(MarkerItem markerItem) {
-                            // ======================== Go to selected journey =====================
-                            final String markerID = markerItem.getID();
-                            JourneyModel mJourney = null;
-                            int j = 0;
-                            for(int i=0; i<allJourneys.size(); i++)
-                            {
-                                mJourney = allJourneys.get(i);
-
-                                if(mJourney.annotationModel.getMarkerID().equals(markerID))
-                                {
-                                    //markerImage = markerImageGlob;
-//                                    markerImage = mJourney.annotationModel.markerIcon;
-                                    j=i;
-                                    break;
-                                }
-                            }
-                            Intent toJourneyIntent = new Intent(getActivity(), JourneyView.class);
-                            toJourneyIntent.putExtra("ser_journey", allJourneys.get(j));
-                            getActivity().startActivity(toJourneyIntent);
-                        }
-                    });
-                    /*mClusterManager.getMarkerCollection().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener(){
-                        @Override
-                        public void onInfoWindowClick(Marker marker) {
-                            // ======================== Go to selected journey =====================
-                            final String markerID = marker.getId();
-                            JourneyModel mJourney = null;
-                            int j = 0;
-                            for(int i=0; i<allJourneys.size(); i++)
-                            {
-                                mJourney = allJourneys.get(i);
-
-                                if(mJourney.annotationModel.getMarkerID().equals(markerID))
-                                {
-                                    //markerImage = markerImageGlob;
-//                                    markerImage = mJourney.annotationModel.markerIcon;
-                                    j=i;
-                                    break;
-                                }
-                            }
-                            Intent toJourneyIntent = new Intent(getActivity(), JourneyView.class);
-                            toJourneyIntent.putExtra("ser_journey", allJourneys.get(j));
-                            getActivity().startActivity(toJourneyIntent);
-
-                        }
-                    });*/
-
-                    //==============================================================================
-                    //       googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_friends)));
-
-               /*Creating custom map markers here */
-
-                    // For zooming automatically to the location of the marker
-                    //CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
-                   // googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(showedCoord, 5);
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(showedCoord));
-                    googleMap.animateCamera(cameraUpdate);
-
-                }
-            });
-
 
         return rootView;
     }
@@ -519,7 +285,9 @@ public class ExploreFragment extends Fragment {
          }
          catch(Exception e) {
              e.printStackTrace();
-             markerImage = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_friends_green);
+             markerImage = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.com_facebook_profile_picture_blank_square);
+             Bitmap mutableBitmap = markerImage.copy(Bitmap.Config.ARGB_8888, true);
+             markerImageGlob = mutableBitmap;
          }
          return markerImage;
      }
@@ -556,6 +324,243 @@ public class ExploreFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        final float scale = getResources().getDisplayMetrics().density;
+        final Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+
+        if(!allJourneys.isEmpty())
+            clearGoogleMap();
+
+
+
+        // Get camera position from MainActivity
+        //     double showedLat = getArguments().getDouble("lat");
+        //     double showedLng = getArguments().getDouble("lng");
+        double showedLat = ((MainActivity)getActivity()).getShowedLat();
+        double showedLng = ((MainActivity)getActivity()).getShowedLng();
+        final LatLng showedCoord = new LatLng(showedLat, showedLng);
+
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+            } else {
+                if (Build.VERSION.SDK_INT >= 23)
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION}, locationPermission);
+
+            }
+        }
+        mMapView.onResume(); // needed to get the map to display immediately
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+
+            @Override
+            public void onMapReady(final GoogleMap mMap) {
+                googleMap = mMap;
+                initializeClusterer();
+                Bitmap bmp = Bitmap.createBitmap((int)(60*scale),(int) (60*scale), conf);
+                Canvas canvas1 = new Canvas(bmp);
+                circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale, circleBitmap, true);
+                DataHandler.getInstance().getJourneys(new DataHandlerListener() {
+                    @Override
+                    public void onJourneyData(final Map<String, Object> rawJourneyData, String journeyReference) {
+                        //addMapMarker(journeyModel, mMap);
+                        JourneyModel journeyModel = new JourneyModel(rawJourneyData, journeyReference, false);
+                        allJourneys.add(journeyModel);
+                        setUpClusterer(journeyModel, mMap);
+                    }
+
+                    @Override
+                    public void onUserData(Map<String, Object> rawUserData, String userID) {
+
+                    }
+
+                    @Override
+                    public void onCommentData(Map<String, Object> rawCommentData, String commentReference, String journeyIdent) {
+                        CommentModel commentModel = new CommentModel(rawCommentData, commentReference, journeyIdent);
+                    }
+                });
+                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                    @Override
+                    public void onMapClick(LatLng latLng) {
+                        chosenPlace = latLng;
+                        googleMap.clear();
+                        mClusterManager.clearItems();
+                        googleMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                        for(JourneyModel journeyModel: allJourneys) {
+                            setUpClusterer(journeyModel, mMap);
+                        }
+                    }
+                });
+                // For showing a move to my location button
+
+                //           googleMap.setMyLocationEnabled(true);
+
+                // For dropping a ,,marker at a point on the Map
+                //final LatLng sydney = new LatLng(-34, 151);
+                //==================== Old code without clustering =============================
+                    /*googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
+                         //   Bitmap bmp = Bitmap.createBitmap((int)(60*scale),(int) (60*scale), conf);
+                            Bitmap markerImage = null;
+
+                            final String markerID = marker.getId();
+                            JourneyModel mJourney = null;
+                            int j = 0;
+                            for(int i=0; i<allJourneys.size(); i++)
+                            {
+                                 mJourney = allJourneys.get(i);
+
+                                if(mJourney.annotationModel.getMarkerID().equals(markerID))
+                                {
+                                    //markerImage = markerImageGlob;
+//                                    markerImage = mJourney.annotationModel.markerIcon;
+                                    mJourney.annotationModel.setMarker(marker);
+                                    j=i;
+                                    break;
+                                }
+                            }
+                            new AsyncAnimation().execute(allJourneys.get(j));
+
+
+                            return false;
+                        }
+                    });*/
+                //==============================================================================
+                //==================== New code with clustering ================================
+                mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MarkerItem>() {
+                    @Override
+                    public boolean onClusterItemClick(MarkerItem markerItem) {
+                        //   Bitmap bmp = Bitmap.createBitmap((int)(60*scale),(int) (60*scale), conf);
+                        MarkerManager.Collection markerCollection = mClusterManager.getMarkerCollection();
+                        clickedMarker = markerItem;
+                        // Bitmap markerImage = null;
+                        String markerID = markerItem.getID();
+                        JourneyModel mJourney = null;
+                        int j = 0;
+                        for(int i=0; i<allJourneys.size(); i++)
+                        {
+                            mJourney = allJourneys.get(i);
+
+                            if (mJourney.annotationModel.getMarkerID().equals(markerID)) {
+                                //markerImage = markerImageGlob;
+//                                    markerImage = mJourney.annotationModel.markerIcon;
+                                mJourney.annotationModel.setMarkerItem(markerItem);
+                                j = i;
+                                break;
+                            }
+
+                        }
+                        new AsyncAnimation().execute(allJourneys.get(j));
+                        return false;
+                    }
+                });
+                //==============================================================================
+                //==================== Old code without clustering =============================
+                /*    googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                        @Override
+                        public void onInfoWindowClick(Marker marker) {
+                            // ======================== Go to selected journey =====================
+                            final String markerID = marker.getId();
+                            JourneyModel mJourney = null;
+                            int j = 0;
+                            for(int i=0; i<allJourneys.size(); i++)
+                            {
+                                mJourney = allJourneys.get(i);
+
+                                if(mJourney.annotationModel.getMarkerID().equals(markerID))
+                                {
+                                    //markerImage = markerImageGlob;
+//                                    markerImage = mJourney.annotationModel.markerIcon;
+                                    j=i;
+                                    break;
+                                }
+                            }
+                            Intent toJourneyIntent = new Intent(getActivity(), JourneyView.class);
+                            toJourneyIntent.putExtra("ser_journey", allJourneys.get(j));
+                            getActivity().startActivity(toJourneyIntent);
+
+                        }
+                    });*/
+                //==============================================================================
+                //==================== New code with clustering ================================
+                mClusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.OnClusterItemInfoWindowClickListener<MarkerItem>() {
+                    @Override
+                    public void onClusterItemInfoWindowClick(MarkerItem markerItem) {
+                        // ======================== Go to selected journey =====================
+                        final String markerID = markerItem.getID();
+                        JourneyModel mJourney = null;
+                        int j = 0;
+                        for(int i=0; i<allJourneys.size(); i++)
+                        {
+                            mJourney = allJourneys.get(i);
+
+                            if(mJourney.annotationModel.getMarkerID().equals(markerID))
+                            {
+                                //markerImage = markerImageGlob;
+//                                    markerImage = mJourney.annotationModel.markerIcon;
+                                j=i;
+                                break;
+                            }
+                        }
+                        Intent toJourneyIntent = new Intent(getActivity(), JourneyView.class);
+                        toJourneyIntent.putExtra("ser_journey", allJourneys.get(j));
+                        getActivity().startActivity(toJourneyIntent);
+                    }
+                });
+                    /*mClusterManager.getMarkerCollection().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener(){
+                        @Override
+                        public void onInfoWindowClick(Marker marker) {
+                            // ======================== Go to selected journey =====================
+                            final String markerID = marker.getId();
+                            JourneyModel mJourney = null;
+                            int j = 0;
+                            for(int i=0; i<allJourneys.size(); i++)
+                            {
+                                mJourney = allJourneys.get(i);
+
+                                if(mJourney.annotationModel.getMarkerID().equals(markerID))
+                                {
+                                    //markerImage = markerImageGlob;
+//                                    markerImage = mJourney.annotationModel.markerIcon;
+                                    j=i;
+                                    break;
+                                }
+                            }
+                            Intent toJourneyIntent = new Intent(getActivity(), JourneyView.class);
+                            toJourneyIntent.putExtra("ser_journey", allJourneys.get(j));
+                            getActivity().startActivity(toJourneyIntent);
+
+                        }
+                    });*/
+
+                //==============================================================================
+                //       googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_friends)));
+
+               /*Creating custom map markers here */
+
+                // For zooming automatically to the location of the marker
+                //CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
+                // googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(showedCoord, 5);
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(showedCoord));
+                googleMap.animateCamera(cameraUpdate);
+
+            }
+        });
+
         // Change statusbar color ===============================
         if (Build.VERSION.SDK_INT >= 21) {
 
@@ -568,7 +573,7 @@ public class ExploreFragment extends Fragment {
             window.setStatusBarColor(getActivity().getResources().getColor(R.color.colorPrimaryDark));
         }
         //========================================================
-        mMapView.onResume();
+      //  mMapView.onResume();
     }
 
     @Override
@@ -834,6 +839,20 @@ public class ExploreFragment extends Fragment {
 
             return mContentView;
         }
+    }
+
+    void clearGoogleMap()
+    {
+        googleMap.clear();
+        mClusterManager.clearItems();
+        myMarkerItem2 = null;
+        myMarkerItem4 = null;
+        myMarkerItem5 = null;
+        clickedMarker = null;
+        myMarker4 = null;
+        myMarker5 = null;
+        allJourneys.clear();
+
     }
 
  }
