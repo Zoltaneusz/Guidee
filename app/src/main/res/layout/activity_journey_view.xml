@@ -230,6 +230,20 @@
         app:layout_anchorGravity="bottom|right|end">
     </android.support.design.widget.FloatingActionButton>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Zsombor and 11 friends like this"
+        android:fontFamily="sans-serif-regular"
+        android:textColor="@color/Link"
+        android:textSize="14sp"
+        android:id="@+id/journey_love_list"
+        app:layout_anchor="@+id/journey_love_icon"
+        app:layout_anchorGravity="center_horizontal|top"
+        android:paddingBottom="18dp"
+
+        />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/journey_edit_FAB"
         android:layout_width="wrap_content"

@@ -37,6 +37,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.Profile;
+import com.facebook.ProfileTracker;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -46,10 +54,15 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.vision.text.Text;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -89,6 +102,9 @@ public class JourneyView extends AppCompatActivity{
     FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser(); // Should be in onResume() with almost every other method.
     JourneyModel mJourney = null;
     RecyclerView.ItemDecoration itemDecoration = null;
+    Profile faceUser = Profile.getCurrentProfile();
+    CallbackManager callbackManager;
+    ProfileTracker profileTracker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +113,17 @@ public class JourneyView extends AppCompatActivity{
                 DividerItemDecoration(this, zollie.travelblogger.guidee.utils.DividerItemDecoration.VERTICAL_LIST);
         setContentView(R.layout.activity_journey_view);
 
+        FacebookSdk.sdkInitialize(this.getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+        profileTracker = new ProfileTracker() {
+            @Override
+            protected void onCurrentProfileChanged(
+                    Profile oldProfile,
+                    Profile currentProfile) {
+                // App code
+                faceUser = currentProfile;
+            }
+        };
 
         mMapView = (MapView) findViewById(R.id.journey_Map);
         mMapView.onCreate(savedInstanceState);
@@ -131,6 +158,16 @@ public class JourneyView extends AppCompatActivity{
         });
 
 
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        profileTracker.stopTracking();
     }
 
     @Override
@@ -302,6 +339,31 @@ public class JourneyView extends AppCompatActivity{
 
             }
         }
+        // ===================================== Get Facebook User Friends List ====================
+        final TextView journeyLoveList = (TextView) findViewById(R.id.journey_love_list);
+        /* make the API call */
+        new GraphRequest(
+                AccessToken.getCurrentAccessToken(),
+                "/" + faceUser.getId() + "/friends",
+                null,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+            /* handle the result */
+                JSONObject friendsJSON = response.getJSONObject();
+                        try {
+                            JSONArray friendsArray = (JSONArray) friendsJSON.get("data");
+                            JSONObject friendObject = (JSONObject) friendsArray.get(0);
+                            String friendName = (String) friendObject.get("name");
+                            journeyLoveList.setText(friendName);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+        ).executeAsync();
+        // =========================================================================================
     }
 
     @Override
