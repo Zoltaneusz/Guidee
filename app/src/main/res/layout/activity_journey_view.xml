@@ -233,7 +233,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Zsombor and 11 friends like this"
+        android:text="Zsombor Fuszenecker and 11 friends like this"
         android:fontFamily="sans-serif-regular"
         android:textColor="@color/Link"
         android:textSize="14sp"
