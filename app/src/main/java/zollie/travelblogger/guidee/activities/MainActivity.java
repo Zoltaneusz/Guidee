@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity  {
     private FaceLoginFragment _loginFrag = new FaceLoginFragment();
     double showedLat = 39.43681513892361;
     double showedLng = 3.224011088360298;
+    String previousFragment = new String("0");
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,11 +100,22 @@ public class MainActivity extends AppCompatActivity  {
 
 
     }
+    public Fragment getLoginFrag(){return _loginFrag;}
+    public Fragment getProfileFrag(){return _profileFrag;}
     public double getShowedLat(){
         return  showedLat;
     }
     public double getShowedLng(){
         return  showedLng;
+    }
+    public boolean previousFragmentEquals(String prevFrag){
+        if(prevFrag.equals(previousFragment))
+            return true;
+        else return false;
+    }
+    public String setPreviousFragment(String prevFrag){
+        previousFragment = prevFrag;
+        return previousFragment;
     }
 
     public void printHashKey(){

@@ -46,6 +46,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.io.IOException;
 
 import zollie.travelblogger.guidee.R;
+import zollie.travelblogger.guidee.activities.MainActivity;
 import zollie.travelblogger.guidee.adapters.DataHandler;
 
 import static com.facebook.GraphRequest.TAG;
@@ -136,6 +137,7 @@ public class FaceLoginFragment extends Fragment {
                 AccessToken accessToken = loginResult.getAccessToken();
                 faceToken = accessToken;
                 handleFacebookAccessToken(accessToken);
+                ((MainActivity)getActivity()).setPreviousFragment("0");  // Set this to handle login after a logout
             }
 
             @Override
@@ -155,19 +157,21 @@ public class FaceLoginFragment extends Fragment {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    //Getting Firebase user ID
-                    // ======================== Go to Profile Fragment ============================
-                    Profile profile = Profile.getCurrentProfile();
-                    FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
-                    if(faceToken != null)
-                    DataHandler.getInstance().createUserInFIR(firUser, faceToken);
+                    if(((MainActivity)getActivity()).previousFragmentEquals("0")) { // Coming from MainActivity --> ExploreFragment
+                        // User is signed in
+                        Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                        //Getting Firebase user ID
+                        // ======================== Go to Profile Fragment ============================
+                        Profile profile = Profile.getCurrentProfile();
+                        FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser();
+                        if (faceToken != null)
+                            DataHandler.getInstance().createUserInFIR(firUser, faceToken);
 
-                    FragmentManager fm;
-                    fm = getFragmentManager();
-                    fm.beginTransaction().replace(R.id.contentContainer, _profileFrag).commit();
-                    // ============================================================================
+                        FragmentManager fm;
+                        fm = getFragmentManager();
+                        fm.beginTransaction().replace(R.id.contentContainer, (((MainActivity) getActivity()).getProfileFrag())).commit();
+                        // ============================================================================
+                    }
                 }
                 else {
                     // User is signed out

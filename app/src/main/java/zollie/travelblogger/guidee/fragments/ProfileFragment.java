@@ -1,6 +1,7 @@
 package zollie.travelblogger.guidee.fragments;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -32,6 +33,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.facebook.Profile;
+import com.facebook.login.widget.LoginButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -43,6 +45,7 @@ import java.util.concurrent.ExecutionException;
 
 import zollie.travelblogger.guidee.activities.EditJourneyView;
 import zollie.travelblogger.guidee.activities.JourneyView;
+import zollie.travelblogger.guidee.activities.MainActivity;
 import zollie.travelblogger.guidee.adapters.DataHandler;
 import zollie.travelblogger.guidee.adapters.DataHandlerListener;
 import zollie.travelblogger.guidee.adapters.FollowedAdapter;
@@ -205,8 +208,17 @@ public class ProfileFragment extends Fragment {
             }
         });
         journeyEdit(firUserID);
-        // Change statusbar color ===============================
-
+        // ================= Allow logging out of the app ===============================
+        LoginButton loginButton = (LoginButton) getActivity().findViewById(R.id.profile_login_button);
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity)getActivity()).setPreviousFragment("profile");
+                FragmentManager fm;
+                fm = getFragmentManager();
+                fm.beginTransaction().replace(R.id.contentContainer, (((MainActivity) getActivity()).getLoginFrag())).commit();
+            }
+        });
 
     }
 
