@@ -61,10 +61,10 @@ import zollie.travelblogger.guidee.models.UserModel;
  */
 
 public class ProfileFragment extends Fragment {
-    ArrayList<JourneyModel> allJourneys = new ArrayList<JourneyModel>();
-    ArrayList<JourneyModel> allFavorites = new ArrayList<JourneyModel>();
+    ArrayList<JourneyModel> allJourneys = new ArrayList<JourneyModel>(30);
+    ArrayList<JourneyModel> allFavorites = new ArrayList<JourneyModel>(30);
  //   ArrayList<JourneyModel> allPlans = new ArrayList<JourneyModel>();
-    ArrayList<UserModel> allFollowers = new ArrayList<UserModel>();
+    ArrayList<UserModel> allFollowers = new ArrayList<UserModel>(30);
     Bitmap userAvatarGlobal = null;
     ImageProcessor imageProcessor = new ImageProcessor(getActivity());
 

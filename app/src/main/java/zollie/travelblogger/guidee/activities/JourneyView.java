@@ -2,6 +2,9 @@ package zollie.travelblogger.guidee.activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -69,6 +72,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -78,6 +82,7 @@ import zollie.travelblogger.guidee.adapters.DataHandler;
 import zollie.travelblogger.guidee.adapters.DataHandlerListener;
 import zollie.travelblogger.guidee.adapters.EventAdapter;
 import zollie.travelblogger.guidee.adapters.JourneyAdapter;
+import zollie.travelblogger.guidee.fragments.LikeListDialogFragment;
 import zollie.travelblogger.guidee.models.CommentModel;
 import zollie.travelblogger.guidee.models.EventModel;
 import zollie.travelblogger.guidee.models.JourneyModel;
@@ -94,7 +99,7 @@ public class JourneyView extends AppCompatActivity{
     final int locationPermission = 0;
     MapView mMapView;
     public GoogleMap googleMap;
-    ArrayList<CommentModel> allComments = new ArrayList<CommentModel>();
+    ArrayList<CommentModel> allComments = new ArrayList<CommentModel>(30);
     boolean userEditRight = false;
     public Context mContext;
     Bitmap userAvatarGlobal = null;
@@ -364,6 +369,31 @@ public class JourneyView extends AppCompatActivity{
                 }
         ).executeAsync();
         // =========================================================================================
+        // TODO: Collect the list of all likers and put their data into an ArrayList<HashMap<String, String>>
+        journeyLoveList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Go to Fragment that shows likers list
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                Fragment prev = getFragmentManager().findFragmentByTag("likersViewer");
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                final HashMap<String, String> personHash = new HashMap<String, String>(4) {{
+                    put("nickname", "aaa");
+                    put("fullname", "bbb");
+                    put("imgURL", "ddd");
+                }};
+                DialogFragment newFragment = LikeListDialogFragment.newInstance(new ArrayList<HashMap<String,String>>(30){
+                    {
+                        add(personHash);
+                        add(personHash);
+                        add(personHash);
+
+                    }});
+                newFragment.show(ft, "likersViewer");
+            }
+        });
     }
 
     @Override

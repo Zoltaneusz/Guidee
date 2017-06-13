@@ -33,7 +33,7 @@ import zollie.travelblogger.guidee.models.CarouselModel;
  */
 
 public class ContentViewerDialogFragment extends DialogFragment {
-    ArrayList<CarouselModel> allCarousels = new ArrayList<CarouselModel>();
+    ArrayList<CarouselModel> allCarousels = new ArrayList<CarouselModel>(30);
     PhotoViewAttacher mAttacher;
 
     public static ContentViewerDialogFragment newInstance(ArrayList<CarouselModel> carousels){

@@ -50,9 +50,9 @@ import zollie.travelblogger.guidee.utils.ImageProcessor;
  */
 
 public class ProfileView extends AppCompatActivity {
-    ArrayList<JourneyModel> allJourneys = new ArrayList<JourneyModel>();
-    ArrayList<JourneyModel> allFavorites = new ArrayList<JourneyModel>();
-    ArrayList<UserModel> allFollowers = new ArrayList<UserModel>();
+    ArrayList<JourneyModel> allJourneys = new ArrayList<JourneyModel>(30);
+    ArrayList<JourneyModel> allFavorites = new ArrayList<JourneyModel>(30);
+    ArrayList<UserModel> allFollowers = new ArrayList<UserModel>(30);
     Bitmap userAvatarGlobal = null;
     ImageProcessor imageProcessor = new ImageProcessor(this);
     String userAvatarUrl = new String();

@@ -76,11 +76,11 @@ public class EditJourneyView extends Activity{
     MapView mMapView;
     public GoogleMap googleMap;
     LatLng updatedLatLng = new LatLng(19,46);
-    ArrayList<String> photoPaths = new ArrayList<String>();
-    ArrayList<CommentModel> allComments = new ArrayList<CommentModel>();
+    ArrayList<String> photoPaths = new ArrayList<String>(30);
+    ArrayList<CommentModel> allComments = new ArrayList<CommentModel>(30);
     public static final int READ_EXTERNAL_STORAGE_PERMISSION = 1;
     boolean storagePermission = false;
-    ArrayList<String> imageUrls = new ArrayList<String>();
+    ArrayList<String> imageUrls = new ArrayList<String>(30);
     int saveVisible = 0;
     boolean userEditEight = false;
     Context mContext;

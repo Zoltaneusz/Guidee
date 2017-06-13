@@ -17,5 +17,19 @@
             />
 
 
+
     </ScrollView>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:id="@+id/like_list_recycle_placeholder"
+        android:orientation="vertical"
+        android:layout_alignTop="@+id/like_list_recycler"
+        android:layout_alignBottom="@+id/like_list_recycler"
+        android:layout_alignEnd="@+id/like_list_recycler"
+        android:layout_alignRight="@+id/like_list_recycler"
+        android:layout_alignLeft="@+id/like_list_recycler"
+        android:layout_alignStart="@+id/like_list_recycler">
+    </LinearLayout>
 </LinearLayout>

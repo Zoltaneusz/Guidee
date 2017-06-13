@@ -372,7 +372,7 @@ public class EditEventView extends YouTubeBaseActivity {
             progressbar.setVisibility(View.VISIBLE);
             final Uri file = Uri.fromFile(new File(photoPath));
             StorageReference pictureRef = storageRef.child("images/" + file.getLastPathSegment());
-            UploadTask uploadTask = pictureRef.putFile(file);
+            UploadTask uploadTask = pictureRef.putFile(file); // uploaded image will be uncompressed!
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
