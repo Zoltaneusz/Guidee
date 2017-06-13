@@ -653,7 +653,7 @@ public class ExploreFragment extends Fragment {
         final String markerTitle = markerItem.getTitle();
         final float scale = getResources().getDisplayMetrics().density;
         markerImageGlob = bmp;
-        mClusterManager.removeItem(markerItem);
+      //  mClusterManager.removeItem(markerItem);
         circleBitmap = null;
         // Animating marker implementation =================================================
         circleBitmap = imageProcessor.pulseMarker(4, bmp, canvas1, scale, circleBitmap, true);
@@ -717,7 +717,7 @@ public class ExploreFragment extends Fragment {
         },500);
         //==================================================================================
 
-        myMarkerItem2 = addMapMarker(mJourney, mMap, 4, false);
+       // myMarkerItem2 = addMapMarker(mJourney, mMap, 4, false);
 
 //        circleBitmap = null;
 //        markerImageGlob = null;

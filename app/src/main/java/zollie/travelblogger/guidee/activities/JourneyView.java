@@ -107,7 +107,7 @@ public class JourneyView extends AppCompatActivity{
     FirebaseUser firUser = FirebaseAuth.getInstance().getCurrentUser(); // Should be in onResume() with almost every other method.
     JourneyModel mJourney = null;
     RecyclerView.ItemDecoration itemDecoration = null;
-    Profile faceUser = Profile.getCurrentProfile();
+    Profile faceUser = null;
     CallbackManager callbackManager;
     ProfileTracker profileTracker;
     @Override
@@ -119,6 +119,7 @@ public class JourneyView extends AppCompatActivity{
         setContentView(R.layout.activity_journey_view);
 
         FacebookSdk.sdkInitialize(this.getApplicationContext());
+
         callbackManager = CallbackManager.Factory.create();
         profileTracker = new ProfileTracker() {
             @Override
@@ -203,6 +204,7 @@ public class JourneyView extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
+        faceUser = Profile.getCurrentProfile();
         Bundle intentData = getIntent().getExtras();
         mJourney  = (JourneyModel) intentData.getParcelable("ser_journey");
 
