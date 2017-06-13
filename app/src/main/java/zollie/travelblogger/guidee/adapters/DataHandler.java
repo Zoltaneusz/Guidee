@@ -593,7 +593,7 @@ public class DataHandler {
                     if(followedValue){ // Logged in user already following the selected one and is removing follow now
                         Map<String, Object> userUpdates = new HashMap<String, Object>();
                          userUpdates.put("followedByCount", followedUser.followedByCount);
-                        userUpdates.put("followedBy/" + FIRUID, false);
+                        userUpdates.put("followedBy/" + FIRUID, false);  // remove instead of setting false
                         followedUserRef.updateChildren(userUpdates);
 
                         DatabaseReference mUserRef = mDatabaseReference.child(FIRUID);
