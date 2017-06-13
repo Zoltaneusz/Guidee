@@ -390,7 +390,7 @@ public class DataHandler {
         DatabaseReference mDatabaseReference = mRootRef.child("Journeys");
         final DatabaseReference journeyReference = mDatabaseReference.child(journeyModel.ID);
         final String FIRUID = FIRUser.getUid();
-        DatabaseReference userReference = journeyReference.child("loved").child(FIRUID);
+        final DatabaseReference userReference = journeyReference.child("loved").child(FIRUID);
         userReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -416,19 +416,19 @@ public class DataHandler {
                     if (likeValue) {
                         // User is removing his like from this journey
                         Map<String, Object> journeyUpdates = new HashMap<String, Object>();
-                        journeyUpdates.put("annotationModel/likes", journeyModel.annotationModel.markerLikes);
-                        journeyUpdates.put("loved/" + FIRUID, false);
-                        journeyUpdates.put("lovedCount", journeyModel.annotationModel.markerLikes);
+                        journeyUpdates.put("annotationModel/likes", journeyModel.annotationModel.markerLikes-1);
+                        userReference.removeValue();
+                        journeyUpdates.put("lovedCount", journeyModel.annotationModel.markerLikes-1);
                         journeyReference.updateChildren(journeyUpdates);
 
                         DatabaseReference mUserRef = mRootRef.child("Users").child(FIRUID);
 
                         Map<String, Object> userUpdates = new HashMap<String, Object>();
-                        userUpdates.put("loved/" + journeyModel.ID, null);
+                        mUserRef.child("loved").child(journeyModel.ID).removeValue();
                         mUserRef.updateChildren(userUpdates);
                         FABImage.setImageResource(R.drawable.hearth_stroke);
 
-                    } else { // User like this journey again, after clearing the like once
+                    } else { // User like this journey again, after clearing the like once // OBSOLETE
                         Map<String, Object> journeyUpdates = new HashMap<String, Object>();
                         journeyUpdates.put("annotationModel/likes", journeyModel.annotationModel.markerLikes + 1);
                         journeyUpdates.put("loved/" + FIRUID, true);
