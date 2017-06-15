@@ -592,14 +592,16 @@ public class DataHandler {
                 finally{
                     if(followedValue){ // Logged in user already following the selected one and is removing follow now
                         Map<String, Object> userUpdates = new HashMap<String, Object>();
-                         userUpdates.put("followedByCount", followedUser.followedByCount);
-                        userUpdates.put("followedBy/" + FIRUID, false);  // remove instead of setting false
+                        userUpdates.put("followedByCount", followedUser.followedByCount-1);
+                        //userUpdates.put("followedBy/" + FIRUID, false);
+                        followedUserRef.child("followedBy").child(FIRUID).removeValue(); // userReference-en is meg lehetne hívni?
                         followedUserRef.updateChildren(userUpdates);
 
                         DatabaseReference mUserRef = mDatabaseReference.child(FIRUID);
 
                         Map<String, Object> loggedUserUpdates = new HashMap<String, Object>();
-                        loggedUserUpdates.put("following/" + followedUser.userFIRId, null);
+                        //loggedUserUpdates.put("following/" + followedUser.userFIRId, null);
+                        mUserRef.child("following").child(followedUser.userFIRId).removeValue();
                         mUserRef.updateChildren(loggedUserUpdates);
                         fabImage.setImageResource(R.drawable.ic_person_outline_black_36px);
                         Toast.makeText(context, "Unfollowed", Toast.LENGTH_SHORT).show();

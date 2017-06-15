@@ -446,7 +446,14 @@ public class ExploreFragment extends Fragment {
                         MarkerManager.Collection markerCollection = mClusterManager.getMarkerCollection();
                         clickedMarker = markerItem;
                         // Bitmap markerImage = null;
-                        String markerID = markerItem.getID();
+                        String markerID = null;
+                        try {
+                            markerID = markerItem.getID();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return false;
+                        }
+
                         JourneyModel mJourney = null;
                         int j = 0;
                         for(int i=0; i<allJourneys.size(); i++)
