@@ -454,15 +454,16 @@ public class JourneyView extends AppCompatActivity{
                                 mJourney.userEligible = true;
                                 mJourney.setEventsEligibility();
                                 if(mJourney.userEligible) {
-                                    FloatingActionButton editEventFAB = (FloatingActionButton) findViewById(R.id.journey_edit_FAB);
-                                    editEventFAB.setVisibility(View.VISIBLE);
+                                    FloatingActionButton editJourneyFAB = (FloatingActionButton) findViewById(R.id.journey_edit_FAB);
+                                    editJourneyFAB.setVisibility(View.VISIBLE);
     //                                ImageView ownerIcon = (ImageView) findViewById(R.id.journey_owner_icon);
     //                                ownerIcon.setVisibility(View.INVISIBLE);
-                                    editEventFAB.setOnClickListener(new View.OnClickListener() {
+                                    editJourneyFAB.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
                                             Intent toJourneyIntent = new Intent(mContext, EditJourneyView.class);
                                             toJourneyIntent.putExtra("ser_journey", mJourney);
+                                            toJourneyIntent.putExtra("parent", "JourneyView");
                                             mContext.startActivity(toJourneyIntent);
                                         }
                                     });
