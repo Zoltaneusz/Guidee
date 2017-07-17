@@ -172,6 +172,7 @@ public class EditEventView extends YouTubeBaseActivity {
                     JourneyModel parentJourney = (JourneyModel) intentData.getParcelable("ser_journey");
                     parentJourney.eventModels.add(updatedEvent);
                     toJourneyIntent.putExtra("ser_journey", parentJourney);
+                    toJourneyIntent.putExtra("parent", "EditEventView");
                     mContext.startActivity(toJourneyIntent);
 
                 }else {

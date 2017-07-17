@@ -23,9 +23,9 @@ public class JourneyModel implements Parcelable {
     public String summary;
     public String coverImageUrl;
     public String userAvatarUrl;
-    public String identifier;
+    public String identifier;   //FIR field: identifier
     public String ownerID;
-    public String ID;
+    public String ID;           // FIR ID / reference
     public boolean toDelete = false;
     public int deletedIndexes = 0;
     public boolean userEligible;

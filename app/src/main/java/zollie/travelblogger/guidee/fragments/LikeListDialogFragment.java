@@ -10,10 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import zollie.travelblogger.guidee.R;
+import zollie.travelblogger.guidee.adapters.DataHandler;
+import zollie.travelblogger.guidee.adapters.DataHandlerListener;
 import zollie.travelblogger.guidee.adapters.LikeListAdapter;
 
 /**
@@ -21,15 +25,16 @@ import zollie.travelblogger.guidee.adapters.LikeListAdapter;
  */
 
 public class LikeListDialogFragment extends DialogFragment {
+    Map<String, Object> allLikersRaw = null;
     ArrayList<HashMap<String, String>> allLikers = new ArrayList<HashMap<String, String>>(30);
     RecyclerView.ItemDecoration itemDecoration = null;
 
-    public static LikeListDialogFragment newInstance(ArrayList<HashMap<String, String>> likeList)
+    public static LikeListDialogFragment newInstance(Map<String, Object> likeList)
     {
         LikeListDialogFragment frag = new LikeListDialogFragment();
 
         Bundle args = new Bundle();
-        args.putSerializable("like_list", likeList);
+        args.putSerializable("like_list", (Serializable) likeList);
         frag.setArguments(args);
 
         return frag;
@@ -38,12 +43,10 @@ public class LikeListDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        allLikers = (ArrayList<HashMap<String, String>>) getArguments().getSerializable("like_list");
+        allLikersRaw = (Map<String, Object>) getArguments().getSerializable("like_list");
         setStyle(STYLE_NORMAL, R.style.AppTheme);
         itemDecoration = new
                 DividerItemDecoration(getActivity(), zollie.travelblogger.guidee.utils.DividerItemDecoration.VERTICAL_LIST);
-
-
     }
 
     @Nullable
@@ -52,10 +55,37 @@ public class LikeListDialogFragment extends DialogFragment {
 
         View v = inflater.inflate(R.layout.dialogfragment_like_list, container, false);
 
-        RecyclerView rvLikes = (RecyclerView) v.findViewById(R.id.like_list_recycler);
-        LikeListAdapter adapter = new LikeListAdapter(getActivity(), allLikers);
-        rvLikes.setAdapter(adapter);
-        rvLikes.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        final RecyclerView rvLikes = (RecyclerView) v.findViewById(R.id.like_list_recycler);
+
+        for (Map.Entry<String, Object> rawLoverID : allLikersRaw.entrySet()) {
+            if ((boolean) rawLoverID.getValue()) {    // only get "true" lovers
+                DataHandler.getInstance().getUserWithId((String) rawLoverID.getKey(), new DataHandlerListener() {
+                    @Override
+                    public void onJourneyData(Map<String, Object> rawJourneyData, String journeyID) {
+
+                    }
+
+                    @Override
+                    public void onUserData(final Map<String, Object> rawUserData, String userID) {
+                        HashMap<String, String> personHash = new HashMap<String, String>(3) {{
+                            put("name", (String) rawUserData.get("name"));
+                            put("imgURL", (String) rawUserData.get("avatarUrl"));
+                        }};
+                        allLikers.add(personHash);
+                        LikeListAdapter adapter = new LikeListAdapter(getActivity(), allLikers);
+                        rvLikes.setAdapter(adapter);
+                        rvLikes.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+                    }
+
+                    @Override
+                    public void onCommentData(Map<String, Object> rawCommentData, String commentID, String journeyIdent) {
+
+                    }
+                });
+            }
+        }
+
+
 
         rvLikes.addItemDecoration(itemDecoration);
         return v;

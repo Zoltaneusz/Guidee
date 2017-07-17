@@ -666,4 +666,50 @@ public class DataHandler {
         myProfPic = value;
     }
 
+        public void getJourneyLovers(JourneyModel mJourney, final LovedListener lovedListener) {
+            DatabaseReference mJourneyReference = mRootRef.child("Journeys").child(mJourney.ID);
+            DatabaseReference mLovedReference = null;
+            try {
+                mLovedReference = mJourneyReference.child("loved");
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                mLovedReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Map<String, Object> rawLoverIDs = null;
+                        rawLoverIDs = (Map<String, Object>) dataSnapshot.getValue();
+                        lovedListener.onLoved(rawLoverIDs);
+                        /*for(Map.Entry<String, Object> rawLoverID : rawLoverIDs.entrySet())
+                        {
+                            if((boolean) rawLoverID.getValue()){
+                                DataHandler.getInstance().getUserWithId((String) rawLoverID.getKey(), new DataHandlerListener() {
+                                    @Override
+                                    public void onJourneyData(Map<String, Object> rawJourneyData, String journeyID) {
+
+                                    }
+
+                                    @Override
+                                    public void onUserData(Map<String, Object> rawUserData, String userID) {
+                                        lovedListener.onLoved(rawUserData);
+                                    }
+
+                                    @Override
+                                    public void onCommentData(Map<String, Object> rawCommentData, String commentID, String journeyIdent) {
+
+                                    }
+                                });
+                            }
+                        }*/
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        }
+
+
 }

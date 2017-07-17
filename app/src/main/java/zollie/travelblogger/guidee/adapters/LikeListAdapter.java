@@ -30,15 +30,15 @@ public class LikeListAdapter extends RecyclerView.Adapter<LikeListAdapter.ViewHo
 
 
         private final ImageView mAvatarImage;
-        private final TextView mNickName;
-        private final TextView mFullName;
+        private final TextView mName;
+       // private final TextView mFullName;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             mAvatarImage = (ImageView) itemView.findViewById(R.id.liker_avatar);
-            mNickName = (TextView) itemView.findViewById(R.id.likers_nickname);
-            mFullName = (TextView) itemView.findViewById(R.id.likers_full_name);
+            mName = (TextView) itemView.findViewById(R.id.likers_name);
+            //mFullName = (TextView) itemView.findViewById(R.id.likers_full_name);
         }
     }
 
@@ -59,13 +59,13 @@ public class LikeListAdapter extends RecyclerView.Adapter<LikeListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final HashMap<String, String> personHash = allLikers.get(0);
-        TextView fullName = holder.mFullName;
-        TextView nickname = holder.mNickName;
+        final HashMap<String, String> personHash = allLikers.get(position);
+     //   TextView fullName = holder.mFullName;
+        TextView name = holder.mName;
         ImageView avatarPic = holder.mAvatarImage;
 
-        fullName.setText(personHash.get("fullname"));
-        nickname.setText((personHash.get("nickname")));
+        name.setText(personHash.get("name"));
+ //       nickname.setText((personHash.get("nickname")));
         //===================== Adding Image to to Horizontal Slide via Glide =========
         Glide
                 .with(mContext)

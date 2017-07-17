@@ -82,6 +82,7 @@ import zollie.travelblogger.guidee.adapters.DataHandler;
 import zollie.travelblogger.guidee.adapters.DataHandlerListener;
 import zollie.travelblogger.guidee.adapters.EventAdapter;
 import zollie.travelblogger.guidee.adapters.JourneyAdapter;
+import zollie.travelblogger.guidee.adapters.LovedListener;
 import zollie.travelblogger.guidee.fragments.LikeListDialogFragment;
 import zollie.travelblogger.guidee.models.CommentModel;
 import zollie.travelblogger.guidee.models.EventModel;
@@ -375,28 +376,24 @@ public class JourneyView extends AppCompatActivity{
         journeyLoveList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Go to Fragment that shows likers list
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                Fragment prev = getFragmentManager().findFragmentByTag("likersViewer");
-                if (prev != null) {
-                    ft.remove(prev);
-                }
-                final HashMap<String, String> personHash = new HashMap<String, String>(4) {{
-                    put("nickname", "aaa");
-                    put("fullname", "bbb");
-                    put("imgURL", "ddd");
-                }};
-                DialogFragment newFragment = LikeListDialogFragment.newInstance(new ArrayList<HashMap<String,String>>(30){
-                    {
-                        add(personHash);
-                        add(personHash);
-                        add(personHash);
+                DataHandler.getInstance().getJourneyLovers(mJourney, new LovedListener() {
+                    @Override
+                    public void onLoved(final Map<String, Object> rawUserData) {
 
-                    }});
-                newFragment.show(ft, "likersViewer");
+                        // Go to Fragment that shows likers list
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        Fragment prev = getFragmentManager().findFragmentByTag("likersViewer");
+                        if (prev != null) {
+                            ft.remove(prev);
+                        }
+                        DialogFragment newFragment = LikeListDialogFragment.newInstance(rawUserData);
+                        newFragment.show(ft, "likersViewer");
+                    }
+                });
             }
         });
     }
+
 
     @Override
     protected void onPause() {

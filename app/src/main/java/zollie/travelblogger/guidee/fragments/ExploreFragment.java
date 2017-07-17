@@ -840,9 +840,13 @@ public class ExploreFragment extends Fragment {
             TextView infoSummary = (TextView) mContentView.findViewById(R.id.info_window_summary);
             TextView infoLikes = (TextView) mContentView.findViewById(R.id.info_window_likes);
 
-            infoTitle.setText(clickedMarker.getTitle());
-            infoSummary.setText(clickedMarker.getSnippet());
-            infoLikes.setText(String.valueOf(clickedMarker.getLikes()));
+            try {
+                infoTitle.setText(clickedMarker.getTitle());
+                infoSummary.setText(clickedMarker.getSnippet());
+                infoLikes.setText(String.valueOf(clickedMarker.getLikes()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             return mContentView;
         }
