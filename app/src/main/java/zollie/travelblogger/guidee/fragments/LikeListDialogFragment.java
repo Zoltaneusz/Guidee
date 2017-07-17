@@ -19,6 +19,7 @@ import zollie.travelblogger.guidee.R;
 import zollie.travelblogger.guidee.adapters.DataHandler;
 import zollie.travelblogger.guidee.adapters.DataHandlerListener;
 import zollie.travelblogger.guidee.adapters.LikeListAdapter;
+import zollie.travelblogger.guidee.models.UserModel;
 
 /**
  * Created by FuszeneckerZ on 2017. 06. 03..
@@ -26,7 +27,7 @@ import zollie.travelblogger.guidee.adapters.LikeListAdapter;
 
 public class LikeListDialogFragment extends DialogFragment {
     Map<String, Object> allLikersRaw = null;
-    ArrayList<HashMap<String, String>> allLikers = new ArrayList<HashMap<String, String>>(30);
+    ArrayList<UserModel> allLikers = new ArrayList<UserModel>(30);
     RecyclerView.ItemDecoration itemDecoration = null;
 
     public static LikeListDialogFragment newInstance(Map<String, Object> likeList)
@@ -57,7 +58,7 @@ public class LikeListDialogFragment extends DialogFragment {
 
         final RecyclerView rvLikes = (RecyclerView) v.findViewById(R.id.like_list_recycler);
 
-        for (Map.Entry<String, Object> rawLoverID : allLikersRaw.entrySet()) {
+        for (final Map.Entry<String, Object> rawLoverID : allLikersRaw.entrySet()) {
             if ((boolean) rawLoverID.getValue()) {    // only get "true" lovers
                 DataHandler.getInstance().getUserWithId((String) rawLoverID.getKey(), new DataHandlerListener() {
                     @Override
@@ -67,11 +68,9 @@ public class LikeListDialogFragment extends DialogFragment {
 
                     @Override
                     public void onUserData(final Map<String, Object> rawUserData, String userID) {
-                        HashMap<String, String> personHash = new HashMap<String, String>(3) {{
-                            put("name", (String) rawUserData.get("name"));
-                            put("imgURL", (String) rawUserData.get("avatarUrl"));
-                        }};
-                        allLikers.add(personHash);
+
+                        UserModel userModel = new UserModel(rawUserData, userID);
+                        allLikers.add(userModel);
                         LikeListAdapter adapter = new LikeListAdapter(getActivity(), allLikers);
                         rvLikes.setAdapter(adapter);
                         rvLikes.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));

@@ -43,7 +43,7 @@
         android:layout_toRightOf="@+id/likers_frame"
         android:allowUndo="true"
         android:paddingRight="16dp"
-        android:layout_below="@+id/likers_nickname"
+
         android:paddingLeft="8dp"
         android:shadowColor="#000000"
         android:textColor="#000000"
@@ -58,6 +58,6 @@
         android:textOff="Follow"
         android:textOn="Unfollow"
         android:paddingRight="16dp"
-        android:id="@+id/likers_imageView" />
+        android:id="@+id/likers_button" />
 
 </RelativeLayout>

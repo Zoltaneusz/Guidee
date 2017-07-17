@@ -563,6 +563,7 @@ public class DataHandler {
         }
     }
 
+
     public void followUserInFIR(final UserModel followedUser, FirebaseUser loggedInUser, final FloatingActionButton fabImage, final Context context){
         final DatabaseReference mDatabaseReference = mRootRef.child("Users");
         final DatabaseReference followedUserRef = mDatabaseReference.child(followedUser.userFIRId);
@@ -619,6 +620,68 @@ public class DataHandler {
                         mUserRef.updateChildren(loggedUserUpdates);
                         fabImage.setImageResource(R.drawable.ic_person_black_36px);
                         Toast.makeText(context, "Followed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    public void followUserInFIR(final UserModel followedUser, FirebaseUser loggedInUser){
+        final DatabaseReference mDatabaseReference = mRootRef.child("Users");
+        final DatabaseReference followedUserRef = mDatabaseReference.child(followedUser.userFIRId);
+        final String FIRUID = loggedInUser.getUid();
+        final DatabaseReference userReference = followedUserRef.child("followedBy").child(FIRUID);
+        userReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean followedValue = false;
+                try {
+                    followedValue = (boolean) dataSnapshot.getValue();
+                } catch (Exception e) { // Selected user is not yet followed by logged in user
+                    Map<String, Object> userUpdates = new HashMap<String, Object>();
+                    userUpdates.put("followedByCount", followedUser.followedByCount + 1);
+                    userUpdates.put("followedBy/" + FIRUID, true);
+                    followedUserRef.updateChildren(userUpdates);
+
+                    DatabaseReference mUserRef = mDatabaseReference.child(FIRUID);
+
+                    Map<String, Object> loggedUserUpdates = new HashMap<String, Object>();
+                    loggedUserUpdates.put("following/" + followedUser.userFIRId, followedUser.userFIRId);
+                    mUserRef.updateChildren(loggedUserUpdates);
+                    e.printStackTrace();
+                }
+                finally{
+                    if(followedValue){ // Logged in user already following the selected one and is removing follow now
+                        Map<String, Object> userUpdates = new HashMap<String, Object>();
+                        userUpdates.put("followedByCount", followedUser.followedByCount-1);
+                        //userUpdates.put("followedBy/" + FIRUID, false);
+                        followedUserRef.child("followedBy").child(FIRUID).removeValue(); // userReference-en is meg lehetne hívni?
+                        followedUserRef.updateChildren(userUpdates);
+
+                        DatabaseReference mUserRef = mDatabaseReference.child(FIRUID);
+
+                        Map<String, Object> loggedUserUpdates = new HashMap<String, Object>();
+                        //loggedUserUpdates.put("following/" + followedUser.userFIRId, null);
+                        mUserRef.child("following").child(followedUser.userFIRId).removeValue();
+                        mUserRef.updateChildren(loggedUserUpdates);
+                    }
+                    else{ // Logged in user is following the selected user again
+                        Map<String, Object> userUpdates = new HashMap<String, Object>();
+                        userUpdates.put("followedByCount", followedUser.followedByCount + 1);
+                        userUpdates.put("followedBy/" + FIRUID, true);
+                        followedUserRef.updateChildren(userUpdates);
+
+                        DatabaseReference mUserRef = mDatabaseReference.child(FIRUID);
+
+                        Map<String, Object> loggedUserUpdates = new HashMap<String, Object>();
+                        loggedUserUpdates.put("following/" + followedUser.userFIRId, followedUser.userFIRId);
+                        mUserRef.updateChildren(loggedUserUpdates);
                     }
                 }
             }
