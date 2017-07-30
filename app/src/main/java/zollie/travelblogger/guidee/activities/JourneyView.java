@@ -350,29 +350,55 @@ public class JourneyView extends AppCompatActivity{
         // ===================================== Get Facebook User Friends List ====================
         final TextView journeyLoveList = (TextView) findViewById(R.id.journey_love_list);
         /* make the API call */
-        new GraphRequest(
-                AccessToken.getCurrentAccessToken(),
-                "/" + faceUser.getId() + "/friends",
-                null,
-                HttpMethod.GET,
-                new GraphRequest.Callback() {
-                    public void onCompleted(GraphResponse response) {
-            /* handle the result */
-                JSONObject friendsJSON = response.getJSONObject();
-                        try {
-                            JSONArray friendsArray = (JSONArray) friendsJSON.get("data");
-                            JSONObject friendObject = (JSONObject) friendsArray.get(0);
-                            String friendName = (String) friendObject.get("name");
-                            journeyLoveList.setText(friendName);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+//        new GraphRequest(
+//                AccessToken.getCurrentAccessToken(),
+//                "/" + faceUser.getId() + "/friends",
+//            //    "/{friend-list-id}",
+//                null,
+//                HttpMethod.GET,
+//                new GraphRequest.Callback() {
+//                    public void onCompleted(GraphResponse response) {
+//            /* handle the result */
+//            // TODO: compare friends array from FIR with Facebook friends
+//                JSONObject friendsJSON = response.getJSONObject();
+//                        try {
+//                       //     JSONObject friends = friendsJSON.getJSONObject("friends");
+//                            JSONArray friendsArray = (JSONArray) friendsJSON.get("data");
+//                            JSONObject friendObject = (JSONObject) friendsArray.get(0);
+//                            String friendName = (String) friendObject.get("name");
+//                            journeyLoveList.setText(friendName + " loves this");
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                    }
+//                }
+//        ).executeAsync();
+        // Alternative
+        AccessToken token = AccessToken.getCurrentAccessToken();
+        GraphRequest graphRequest = GraphRequest.newMeRequest(token, new GraphRequest.GraphJSONObjectCallback() {
+            @Override
+            public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
+                try {
+                    JSONArray jsonArrayFriends = jsonObject.getJSONObject("friendlist").getJSONArray("data");
+                    JSONObject friendlistObject = jsonArrayFriends.getJSONObject(0);
+                    String friendListID = friendlistObject.getString("id");
+                    myNewGraphReq(friendListID);
 
-                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-        ).executeAsync();
+            }
+        });
+        Bundle param = new Bundle();
+    //    param.putString("fields", "friendlist", "members");
+        graphRequest.setParameters(param);
+        graphRequest.executeAsync();
+
+
+
         // =========================================================================================
-        // TODO: Collect the list of all likers and put their data into an ArrayList<HashMap<String, String>>
+
         journeyLoveList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -398,6 +424,30 @@ public class JourneyView extends AppCompatActivity{
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    private void myNewGraphReq(String friendlistId) {
+        final String graphPath = "/"+friendlistId+"/members/";
+        AccessToken token = AccessToken.getCurrentAccessToken();
+        GraphRequest request = new GraphRequest(token, graphPath, null, HttpMethod.GET, new GraphRequest.Callback() {
+            @Override
+            public void onCompleted(GraphResponse graphResponse) {
+                JSONObject object = graphResponse.getJSONObject();
+                try {
+                    JSONArray arrayOfUsersInFriendList= object.getJSONArray("data");
+                /* Do something with the user list */
+                /* ex: get first user in list, "name" */
+                    JSONObject user = arrayOfUsersInFriendList.getJSONObject(0);
+                    String usersName = user.getString("name");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        Bundle param = new Bundle();
+        param.putString("fields", "name");
+        request.setParameters(param);
+        request.executeAsync();
     }
 
     public void fillRecyclerView(int primaryResource, int emptyResource, ArrayList<EventModel> eventModels){

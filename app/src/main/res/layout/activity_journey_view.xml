@@ -234,13 +234,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Zsombor Fuszenecker and 11 friends like this"
+
         android:fontFamily="sans-serif-regular"
         android:textColor="@color/Link"
         android:textSize="14sp"
         android:id="@+id/journey_love_list"
         app:layout_anchor="@+id/journey_love_icon"
-        app:layout_anchorGravity="center_horizontal|top"
-        android:paddingBottom="18dp"
+        app:layout_anchorGravity="center|right|end"
+        android:paddingBottom="22dp"
+        android:paddingRight="54dp"
 
         />
 

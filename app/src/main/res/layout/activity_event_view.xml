@@ -83,7 +83,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:layout_below="@+id/event_frameLayout"
+
                 android:textSize="20sp"
                 android:paddingTop="10dp"
                 android:paddingLeft="10dp"/>
