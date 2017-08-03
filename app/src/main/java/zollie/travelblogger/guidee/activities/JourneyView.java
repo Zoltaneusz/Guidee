@@ -29,6 +29,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -44,6 +45,7 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
+import com.facebook.GraphRequestAsyncTask;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.Profile;
@@ -375,12 +377,13 @@ public class JourneyView extends AppCompatActivity{
 //                }
 //        ).executeAsync();
         // Alternative
-        AccessToken token = AccessToken.getCurrentAccessToken();
+   /*     AccessToken token = AccessToken.getCurrentAccessToken();
         GraphRequest graphRequest = GraphRequest.newMeRequest(token, new GraphRequest.GraphJSONObjectCallback() {
             @Override
             public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
                 try {
-                    JSONArray jsonArrayFriends = jsonObject.getJSONObject("friendlist").getJSONArray("data");
+                    JSONArray jsonArrayFriends = jsonObject.getJSONObject("friendlist").getJSONArray("name");
+                  //  JSONArray jsonArrayFriends = jsonObject.getJSONArray("name");
                     JSONObject friendlistObject = jsonArrayFriends.getJSONObject(0);
                     String friendListID = friendlistObject.getString("id");
                     myNewGraphReq(friendListID);
@@ -395,7 +398,39 @@ public class JourneyView extends AppCompatActivity{
         graphRequest.setParameters(param);
         graphRequest.executeAsync();
 
+*/
+        // Alternative  2
+        GraphRequestAsyncTask graphRequestAsyncTask = new GraphRequest(AccessToken.getCurrentAccessToken(),"/me/friends",null, HttpMethod.GET,new GraphRequest.Callback() {
+            public void onCompleted(GraphResponse response) {
 
+                try {
+                    JSONArray rawName = response.getJSONObject().getJSONArray("data");
+
+                    String friendList = "{\"friendlist\":" + rawName.getJSONObject(0).get("name") + "}";
+                    //String friendlist =  rawName.toString() ;
+                    Log.d("TAG","response of friendlist is : " + friendList);
+                    if(rawName.length()>1)
+                        journeyLoveList.setText(rawName.getJSONObject(0).get("name") + " " + Integer.toString(rawName.length()) + "love this");
+                    else
+                        journeyLoveList.setText(rawName.getJSONObject(0).get("name") + "loves this");
+                       /* //coding for insert data in db.
+
+                        String result = JSONUtils.insertUserprofile(imagePath, name, fbid, friendList);
+
+                        Log.d("TAG", "Result of fb is : " + result);
+
+                        if (result.toLowerCase().contains("success")) {
+
+                            myPreferences.setFBUserId(Constant.PREFERENCE_LOGIN_FB, fbid);
+                            //LoginManager.getInstance().logOut();
+                        }*/
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).executeAsync();
 
         // =========================================================================================
 

@@ -390,12 +390,14 @@ public class ExploreFragment extends Fragment {
                         CommentModel commentModel = new CommentModel(rawCommentData, commentReference, journeyIdent);
                     }
                 });
+                // Method for putting a marker on user click and calculate journeys around that place within a chosen distance
                 googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                     @Override
                     public void onMapClick(LatLng latLng) {
                         chosenPlace = latLng;
                         googleMap.clear();
                         mClusterManager.clearItems();
+
                         googleMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                         for(JourneyModel journeyModel: allJourneys) {
                             setUpClusterer(journeyModel, mMap);

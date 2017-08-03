@@ -234,7 +234,7 @@ public class ProfileView extends AppCompatActivity {
         JourneyAdapter adapter = new JourneyAdapter(this, journeyModels);
         rvJourneys.setAdapter(adapter);
         rvJourneys.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
+        rvJourneys.removeItemDecoration(itemDecoration);
         rvJourneys.addItemDecoration(itemDecoration);
         if(journeyModels.isEmpty() == true ) showPlaceholderCards(emptyResource);
         //     rvJourneys.setVisibility(View.INVISIBLE);
@@ -245,7 +245,7 @@ public class ProfileView extends AppCompatActivity {
         FollowedAdapter adapter = new FollowedAdapter(this, users);
         rvFollows.setAdapter(adapter);
         rvFollows.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
+        rvFollows.removeItemDecoration(itemDecoration);
         rvFollows.addItemDecoration(itemDecoration);
         if(users.isEmpty() == true ) showPlaceholderCards(emptyResource);
 
