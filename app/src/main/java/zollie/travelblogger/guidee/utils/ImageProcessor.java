@@ -48,8 +48,10 @@ public class ImageProcessor {
         bitm = scaleDown(bitm, 100, true);
 
         // Check for square images
-        if(bitm.getHeight() != bitm.getWidth())
+        if(bitm.getHeight() > bitm.getWidth())  // portrait image
             bitm = Bitmap.createBitmap(bitm, 0, 0, bitm.getWidth(), bitm.getHeight()-(bitm.getHeight()-bitm.getWidth()));
+        else if (bitm.getHeight() < bitm.getWidth())  // landstace image
+            bitm = Bitmap.createBitmap(bitm, 0, 0, bitm.getWidth()-(bitm.getWidth()-bitm.getHeight()), bitm.getHeight());
 
         Bitmap bitmap = bitm;
         circleBitmap = Bitmap.createBitmap(bitmap.getWidth()+5, bitmap.getHeight()+5, Bitmap.Config.ARGB_8888);

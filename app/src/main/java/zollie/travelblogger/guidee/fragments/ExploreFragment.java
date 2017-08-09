@@ -143,6 +143,7 @@ public class ExploreFragment extends Fragment {
                     public void setMarkerId(MarkerItem markerItem) {
                         //journeyModel.annotationModel.setMarkerID(markerItem.getID());
                         //mMarkerItem.setID(markerItem.getID());
+                        // Update journeyModel with markerID
                         for(int j = 0; j<allJourneys.size(); j++){
                             JourneyModel mJourney = allJourneys.get(j);
                             if(mJourney.ID == markerItem.getJourneyID()){
@@ -443,7 +444,7 @@ public class ExploreFragment extends Fragment {
                 //==================== New code with clustering ================================
                 mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MarkerItem>() {
                     @Override
-                    public boolean onClusterItemClick(MarkerItem markerItem) {
+                    public boolean onClusterItemClick(MarkerItem markerItem) {  // TODO: Sometimes this markerItem is null....
                         //   Bitmap bmp = Bitmap.createBitmap((int)(60*scale),(int) (60*scale), conf);
                         MarkerManager.Collection markerCollection = mClusterManager.getMarkerCollection();
                         clickedMarker = markerItem;
@@ -508,24 +509,28 @@ public class ExploreFragment extends Fragment {
                     @Override
                     public void onClusterItemInfoWindowClick(MarkerItem markerItem) {
                         // ======================== Go to selected journey =====================
-                        final String markerID = markerItem.getID();
-                        JourneyModel mJourney = null;
-                        int j = 0;
-                        for(int i=0; i<allJourneys.size(); i++)
-                        {
-                            mJourney = allJourneys.get(i);
-
-                            if(mJourney.annotationModel.getMarkerID().equals(markerID))
+                        try {
+                            final String markerID = markerItem.getID();
+                            JourneyModel mJourney = null;
+                            int j = 0;
+                            for(int i=0; i<allJourneys.size(); i++)
                             {
-                                //markerImage = markerImageGlob;
-//                                    markerImage = mJourney.annotationModel.markerIcon;
-                                j=i;
-                                break;
+                                mJourney = allJourneys.get(i);
+
+                                if(mJourney.annotationModel.getMarkerID().equals(markerID))
+                                {
+                                    //markerImage = markerImageGlob;
+    //                                    markerImage = mJourney.annotationModel.markerIcon;
+                                    j=i;
+                                    break;
+                                }
                             }
+                            Intent toJourneyIntent = new Intent(getActivity(), JourneyView.class);
+                            toJourneyIntent.putExtra("ser_journey", allJourneys.get(j));
+                            getActivity().startActivity(toJourneyIntent);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                        Intent toJourneyIntent = new Intent(getActivity(), JourneyView.class);
-                        toJourneyIntent.putExtra("ser_journey", allJourneys.get(j));
-                        getActivity().startActivity(toJourneyIntent);
                     }
                 });
                     /*mClusterManager.getMarkerCollection().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener(){
