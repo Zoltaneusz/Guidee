@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -66,12 +68,14 @@ public class FollowedAdapter extends RecyclerView.Adapter<FollowedAdapter.ViewHo
         textView.setText(userModel.userName);
         final ImageView imageView = holder.userAvatar;
         //===================== Adding Image to to Horizontal Slide via Glide =========
+        RequestOptions options = new RequestOptions();
+        options.centerCrop();
+        options.override(80, 80);
         Glide
                 .with(mContext)
                 .load(userModel.avatarUrl)
-                .centerCrop()
-                .override(80, 80)
-                .crossFade()
+                .apply(options)
+                .transition(new DrawableTransitionOptions().crossFade())
                 .into(imageView);
         //=============================================================================
         //============================= Intent to journey owner ===========================

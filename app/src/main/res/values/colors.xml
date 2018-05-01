@@ -18,6 +18,7 @@
     <color name="colorAccent">#1565C0</color>
 
     <color name="tabColor">#FFFFFF</color>
+    <color name="colorError">#F50057</color>
 
     <color name="colorSecondary">#CDDC39</color>
     <color name="colorSecondary100">#F0F4C3</color>

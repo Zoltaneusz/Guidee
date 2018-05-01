@@ -28,7 +28,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.ads.formats.NativeAd;
+
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -100,7 +101,7 @@ public class EditJourneyView extends Activity{
             Glide
                     .with(this)
                     .load(mJourney.coverImageUrl)
-                    .crossFade()
+                    .transition(new DrawableTransitionOptions().crossFade())
                     .into(coverImage);
             //=============================================================================
 
@@ -455,7 +456,7 @@ public class EditJourneyView extends Activity{
                 if(resultCode== Activity.RESULT_OK && data!=null)
                 {
                     //photoPaths = new ArrayList<>();
-                    photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_PHOTOS));
+                    photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
                 }
                 break;
             case FilePickerConst.REQUEST_CODE_DOC:

@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
-import com.google.android.gms.fitness.data.Value;
+
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;

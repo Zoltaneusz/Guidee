@@ -34,7 +34,7 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.vision.face.Face;
+
 
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;

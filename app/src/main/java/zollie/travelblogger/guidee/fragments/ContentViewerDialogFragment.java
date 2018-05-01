@@ -4,6 +4,7 @@ import android.app.DialogFragment;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,6 +28,7 @@ import zollie.travelblogger.guidee.R;
 import zollie.travelblogger.guidee.adapters.CarouselAdapter;
 import zollie.travelblogger.guidee.adapters.DialogFragmentAdapter;
 import zollie.travelblogger.guidee.models.CarouselModel;
+import zollie.travelblogger.guidee.utils.ImageProcessor;
 
 /**
  * Created by FuszeneckerZ on 2017.01.16..
@@ -35,6 +37,7 @@ import zollie.travelblogger.guidee.models.CarouselModel;
 public class ContentViewerDialogFragment extends DialogFragment {
     ArrayList<CarouselModel> allCarousels = new ArrayList<CarouselModel>(30);
     PhotoViewAttacher mAttacher;
+    ImageProcessor imageProcessor = new ImageProcessor(getActivity());
 
     public static ContentViewerDialogFragment newInstance(ArrayList<CarouselModel> carousels){
         ContentViewerDialogFragment frag = new ContentViewerDialogFragment();
@@ -70,6 +73,13 @@ public class ContentViewerDialogFragment extends DialogFragment {
         RecyclerView.ItemDecoration itemDecoration = new
                 DividerItemDecoration(getActivity(), zollie.travelblogger.guidee.utils.DividerItemDecoration.HORIZONTAL_LIST);
         rvCarousels.addItemDecoration(itemDecoration);
+        FloatingActionButton shareButton = (FloatingActionButton) getActivity().findViewById(R.id.picture_share_FAB);
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               // imageProcessor.shareContent(allCarousels[1]);
+            }
+        });
 
         return v;
     }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:attr/activatedBackgroundIndicator"
@@ -12,5 +13,14 @@
         android:background="?android:attr/activatedBackgroundIndicator"
         android:src="@drawable/placeholder2"
         />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/picture_share_FAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_marginRight="8dp"
+
+        app:backgroundTint="@color/colorTransparent"
+        android:src="@drawable/ic_share_white_36dp" />
 
 </FrameLayout>

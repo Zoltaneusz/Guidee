@@ -154,8 +154,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             //===================== Adding Image to to Horizontal Slide via Glide =========
             try {
                 userAvatarGlobal= Glide.with(mContext)
-                        .load(mComment.avatarURL)
                         .asBitmap()
+                        .load(mComment.avatarURL)
                         .into(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL).get();
             } catch (InterruptedException e) {
                 e.printStackTrace();

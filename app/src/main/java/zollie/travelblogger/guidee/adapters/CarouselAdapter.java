@@ -17,6 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerFragment;
@@ -88,12 +90,14 @@ public class CarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 if(!mCarousel.imageUrl.equals("empty")) {
                     final ImageView mCarouselImage = ((ViewHolderImage) holder).getmImage();
                     //===================== Adding Image to to Horizontal Slide via Glide =========
+                    RequestOptions options = new RequestOptions();
+                    options.centerCrop();
+                    options.override(160, 160);
                     Glide
                             .with(mContext)
                             .load(mCarousel.imageUrl)
-                            .centerCrop()
-                            .override(160, 160)
-                            .crossFade()
+                            .apply(options)
+                            .transition(new DrawableTransitionOptions().crossFade())
                             .into(mCarouselImage);
                     //=============================================================================
                     ((ViewHolderImage) holder).mCarousel.setOnClickListener(new View.OnClickListener() {

@@ -27,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.target.Target;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -273,8 +274,8 @@ public class ProfileView extends AppCompatActivity {
             //===================== Adding Image to to Horizontal Slide via Glide =========
             try {
                 userAvatarGlobal= Glide.with(mContext)
-                        .load(mUser.avatarUrl)
                         .asBitmap()
+                        .load(mUser.avatarUrl)
                         .into(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL).get();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -321,7 +322,7 @@ public class ProfileView extends AppCompatActivity {
                 Glide
                         .with(this)
                         .load(allJourneys.get(0).coverImageUrl)
-                        .crossFade()
+                        .transition(new DrawableTransitionOptions().crossFade())
                         .into(appBarImage);
             }
         }

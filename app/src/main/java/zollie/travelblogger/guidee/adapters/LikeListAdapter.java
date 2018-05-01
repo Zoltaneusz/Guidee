@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -75,12 +77,14 @@ public class LikeListAdapter extends RecyclerView.Adapter<LikeListAdapter.ViewHo
         name.setText(likerUser.userName);
  //       nickname.setText((personHash.get("nickname")));
         //===================== Adding Image to to Horizontal Slide via Glide =========
+        RequestOptions options = new RequestOptions();
+        options.centerCrop();
+        options.override(50, 50);
         Glide
                 .with(mContext)
                 .load(likerUser.avatarUrl)
-                .centerCrop()
-                .override(50, 50)
-                .crossFade()
+                .apply(options)
+                .transition(new DrawableTransitionOptions().crossFade())
                 .into(avatarPic);
         //=============================================================================
         ToggleButton followButton = holder.mFollowButton;

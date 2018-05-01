@@ -26,6 +26,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -277,7 +278,7 @@ public class EventView extends AppCompatActivity{
                     Glide
                             .with(this)
                             .load(eventModel.carouselModels.get(0).imageUrl)
-                            .crossFade()
+                            .transition(new DrawableTransitionOptions().crossFade())
                             .into(coverImage);
                     //=============================================================================
                 }

@@ -275,8 +275,8 @@ public class ExploreFragment extends Fragment {
              //============= Downloadding marker image via Glide ================
              markerImage = Glide
                      .with(getActivity())
-                     .load(markerImageSource)
                      .asBitmap()
+                     .load(markerImageSource)
                      .into(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL).get();
 
              //==================================================================
@@ -447,7 +447,7 @@ public class ExploreFragment extends Fragment {
                     public boolean onClusterItemClick(MarkerItem markerItem) {  // TODO: Sometimes this markerItem is null....
                         //   Bitmap bmp = Bitmap.createBitmap((int)(60*scale),(int) (60*scale), conf);
                         if(markerItem == null){
-                            
+
 
                         }
                         MarkerManager.Collection markerCollection = mClusterManager.getMarkerCollection();

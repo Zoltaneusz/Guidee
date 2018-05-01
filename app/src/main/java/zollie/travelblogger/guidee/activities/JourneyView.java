@@ -40,6 +40,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.target.Target;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -58,7 +59,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.vision.text.Text;
+
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -97,10 +98,11 @@ import zollie.travelblogger.guidee.utils.ProfileHandlerUtility;
  * Created by FuszeneckerZ on 2016.12.31..
  */
 
-public class JourneyView extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback{
+public class JourneyView extends AppCompatActivity{
 
     final int locationPermission = 0;
     final int writeStoragePermission = 1;
+    int storagePermission = 0;
     MapView mMapView;
     public GoogleMap googleMap;
     ArrayList<CommentModel> allComments = new ArrayList<CommentModel>(30);
@@ -165,7 +167,16 @@ public class JourneyView extends AppCompatActivity implements ActivityCompat.OnR
                         return true;
                 }
             }
+
         });
+        if(Build.VERSION.SDK_INT>22) {
+            if (mContext.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                Log.v("Write storage", "Permission is granted");
+                storagePermission = 1;
+
+            }
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, writeStoragePermission);
+        }
 
 
     }
@@ -203,7 +214,7 @@ public class JourneyView extends AppCompatActivity implements ActivityCompat.OnR
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+                    storagePermission = 1;
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
 
@@ -230,7 +241,7 @@ public class JourneyView extends AppCompatActivity implements ActivityCompat.OnR
         mJourney  = (JourneyModel) intentData.getParcelable("ser_journey");
 
         // Change App Toolbar
-        changeAppBar(mJourney);
+     //   changeAppBar(mJourney);
 
         //============================= Intent to journey owner ===========================
         ImageView journeyOwnerView = (ImageView) findViewById(R.id.journey_owner_icon);
@@ -272,19 +283,14 @@ public class JourneyView extends AppCompatActivity implements ActivityCompat.OnR
         //==========================================================================================
         //===================== Journey SHARE method ===============================================
         final FloatingActionButton shareButton = (FloatingActionButton) findViewById(R.id.journey_share_FAB);
-        if(Build.VERSION.SDK_INT>22) {
-            if (mContext.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                Log.v("Write storage", "Permission is granted");
-                //File write logic here
-                return ;
-            }
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, writeStoragePermission);
-        }
+
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                imageProcessor.shareImage(mJourney);
+                if (storagePermission == 1) {
+                    imageProcessor.shareContent(mJourney);
+                }
             }
         });
 
@@ -675,8 +681,8 @@ public class JourneyView extends AppCompatActivity implements ActivityCompat.OnR
             //===================== Adding Image to to Horizontal Slide via Glide =========
             try {
                 userAvatarGlobal= Glide.with(mContext)
-                        .load(mJourney.userAvatarUrl)
                         .asBitmap()
+                        .load(mJourney.userAvatarUrl)
                         .into(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL).get();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -725,7 +731,7 @@ public class JourneyView extends AppCompatActivity implements ActivityCompat.OnR
             Glide
                     .with(this)
                     .load(journeyModel.coverImageUrl)
-                    .crossFade()
+                    .transition(new DrawableTransitionOptions().crossFade())
                     .into(coverImage);
             //=============================================================================
 

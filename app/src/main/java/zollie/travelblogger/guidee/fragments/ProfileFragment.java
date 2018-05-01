@@ -31,6 +31,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.target.Target;
 import com.facebook.Profile;
 import com.facebook.login.widget.LoginButton;
@@ -299,8 +300,8 @@ public class ProfileFragment extends Fragment {
             //===================== Adding Image to to Horizontal Slide via Glide =========
             try {
                 userAvatarGlobal= Glide.with((AppCompatActivity)getActivity())
-                        .load(mUser.avatarUrl)
                         .asBitmap()
+                        .load(mUser.avatarUrl)
                         .into(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL).get();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -395,7 +396,7 @@ public class ProfileFragment extends Fragment {
                 Glide
                         .with(this)
                         .load(allJourneys.get(0).coverImageUrl)
-                        .crossFade()
+                        .transition(new DrawableTransitionOptions().crossFade())
                         .into(appBarImage);
             }
         }

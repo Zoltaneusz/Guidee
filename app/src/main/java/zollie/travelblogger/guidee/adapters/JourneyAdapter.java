@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
@@ -79,12 +81,14 @@ public class JourneyAdapter extends RecyclerView.Adapter<JourneyAdapter.ViewHold
         textView.setText(mJourney.title);
         final ImageView imageView = holder.mCoverImage;
         //===================== Adding Image to to Horizontal Slide via Glide =========
+        RequestOptions options = new RequestOptions();
+        options.centerCrop();
+        options.override(160, 160);
         Glide
                 .with(mContext)
                 .load(mJourney.coverImageUrl)
-                .centerCrop()
-                .override(160, 160)
-                .crossFade()
+                .apply(options)
+                .transition(new DrawableTransitionOptions().crossFade())
                 .into(imageView);
         //=============================================================================
         holder.mJourney.setOnClickListener(new View.OnClickListener() {

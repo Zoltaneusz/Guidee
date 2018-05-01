@@ -94,8 +94,8 @@ public class ImageProcessor {
         Bitmap sharedImage = null;
         try {
             sharedImage= Glide.with(this.mContext)
-                    .load(mJourney.coverImageUrl)
                     .asBitmap()
+                    .load(mJourney.coverImageUrl)
                     .into(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -106,7 +106,7 @@ public class ImageProcessor {
         return sharedImage;
     }
 
-    public void shareImage(JourneyModel mJourney){
+    public void shareContent(JourneyModel mJourney){
 
         new AsyncImageToBitmap().execute(mJourney);
 

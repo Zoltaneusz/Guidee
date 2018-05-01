@@ -17,6 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -89,11 +91,14 @@ public class DialogFragmentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 if(!mCarousel.imageUrl.equals("empty")) {
                     final PhotoView mCarouselImage = ((DialogViewHolderImage) holder).getmImage();
                     //===================== Adding Image to to Horizontal Slide via Glide =========
+                    RequestOptions options = new RequestOptions();
+                    options.centerCrop();
+
                     Glide
                             .with(mContext)
                             .load(mCarousel.imageUrl)
-                            .fitCenter()
-                            .crossFade()
+                            .apply(options)
+                            .transition(new DrawableTransitionOptions().crossFade())
                             .into(mCarouselImage);
                     //=============================================================================
                   /*  ((DialogViewHolderImage) holder).mCarousel.setOnClickListener(new View.OnClickListener() {

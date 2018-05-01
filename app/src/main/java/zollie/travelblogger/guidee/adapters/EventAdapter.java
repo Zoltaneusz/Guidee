@@ -13,6 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
@@ -79,12 +81,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder>{
             if (mEvent.carouselModels.get(0).carouselType == CarouselModel.CarouselType.IMAGE) {
                 if (mEvent.carouselModels.get(0).imageUrl != null) {
                     //===================== Adding Image to to Horizontal Slide via Glide =========
+                    RequestOptions options = new RequestOptions();
+                    options.centerCrop();
+                    options.override(160, 160);
                     Glide
                             .with(mContext)
                             .load(mEvent.carouselModels.get(0).imageUrl)
-                            .centerCrop()
-                            .override(160, 160)
-                            .crossFade()
+                            .apply(options)
+                            .transition(new DrawableTransitionOptions().crossFade())
                             .into(imageView);
                     //=============================================================================
                 }

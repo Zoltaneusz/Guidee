@@ -27,6 +27,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -92,7 +93,7 @@ public class EditEventView extends YouTubeBaseActivity {
                     Glide
                             .with(this)
                             .load(mEvent.carouselModels.get(0).imageUrl)
-                            .crossFade()
+                            .transition(new DrawableTransitionOptions().crossFade())
                             .into(coverImage);
                     //=============================================================================
                 }
@@ -352,7 +353,7 @@ public class EditEventView extends YouTubeBaseActivity {
                 if(resultCode== Activity.RESULT_OK && data!=null)
                 {
                     //photoPaths = new ArrayList<>();
-                    photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_PHOTOS));
+                    photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
                 }
                 break;
             case FilePickerConst.REQUEST_CODE_DOC:

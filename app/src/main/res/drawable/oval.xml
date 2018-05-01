@@ -7,6 +7,6 @@
 
     <stroke
         android:width="15dp"
-        android:color="@color/cast_intro_overlay_background_color" />
+        android:color="@color/LightGreen" />
 
 </shape>
