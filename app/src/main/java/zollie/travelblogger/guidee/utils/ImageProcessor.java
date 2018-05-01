@@ -1,7 +1,9 @@
 package zollie.travelblogger.guidee.utils;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
@@ -12,8 +14,11 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
@@ -25,6 +30,8 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import zollie.travelblogger.guidee.models.JourneyModel;
+
+import static android.support.v4.app.ActivityCompat.requestPermissions;
 
 /**
  * Created by FuszeneckerZ on 2016.12.30..
@@ -100,8 +107,13 @@ public class ImageProcessor {
     }
 
     public void shareImage(JourneyModel mJourney){
+
         new AsyncImageToBitmap().execute(mJourney);
+
+
     }
+
+
 
     public class AsyncImageToBitmap extends AsyncTask<Object, Void, Bitmap> {
         @Override
@@ -119,7 +131,7 @@ public class ImageProcessor {
             shareIntent.setType("image/*");
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            File sharedImageFile = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "shared_image.jpg");
+            File sharedImageFile = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "shared_image1.jpg");
             FileOutputStream fileOut = null;
             try {
                 sharedImageFile.createNewFile();
@@ -130,13 +142,15 @@ public class ImageProcessor {
 
             }
             finally{
-                try {
-                    fileOut.close();
-                } catch (IOException e) {
-                    e.printStackTrace(); // Closing output stream could not be done!!
+                if(fileOut != null) {
+                    try {
+                        fileOut.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///storage/emulated/0/shared_image.jpg"));
+            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///storage/emulated/0/shared_image1.jpg"));
             mContext.startActivity(Intent.createChooser(shareIntent, "Share Journey"));
         }
     }

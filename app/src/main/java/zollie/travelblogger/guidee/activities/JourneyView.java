@@ -97,9 +97,10 @@ import zollie.travelblogger.guidee.utils.ProfileHandlerUtility;
  * Created by FuszeneckerZ on 2016.12.31..
  */
 
-public class JourneyView extends AppCompatActivity{
+public class JourneyView extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback{
 
     final int locationPermission = 0;
+    final int writeStoragePermission = 1;
     MapView mMapView;
     public GoogleMap googleMap;
     ArrayList<CommentModel> allComments = new ArrayList<CommentModel>(30);
@@ -198,6 +199,22 @@ public class JourneyView extends AppCompatActivity{
                 }
                 return;
             }
+            case writeStoragePermission: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+
+            }
 
             // other 'case' lines to check for other
             // permissions this app might request
@@ -207,6 +224,7 @@ public class JourneyView extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
+
         faceUser = Profile.getCurrentProfile();
         Bundle intentData = getIntent().getExtras();
         mJourney  = (JourneyModel) intentData.getParcelable("ser_journey");
@@ -254,6 +272,14 @@ public class JourneyView extends AppCompatActivity{
         //==========================================================================================
         //===================== Journey SHARE method ===============================================
         final FloatingActionButton shareButton = (FloatingActionButton) findViewById(R.id.journey_share_FAB);
+        if(Build.VERSION.SDK_INT>22) {
+            if (mContext.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                Log.v("Write storage", "Permission is granted");
+                //File write logic here
+                return ;
+            }
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, writeStoragePermission);
+        }
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -261,6 +287,7 @@ public class JourneyView extends AppCompatActivity{
                 imageProcessor.shareImage(mJourney);
             }
         });
+
 
         //==========================================================================================
         TextView addComment = (TextView) findViewById(R.id.journey_comments_add);
@@ -454,7 +481,6 @@ public class JourneyView extends AppCompatActivity{
             }
         });
     }
-
 
     @Override
     protected void onPause() {

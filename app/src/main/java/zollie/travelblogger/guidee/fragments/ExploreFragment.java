@@ -446,6 +446,10 @@ public class ExploreFragment extends Fragment {
                     @Override
                     public boolean onClusterItemClick(MarkerItem markerItem) {  // TODO: Sometimes this markerItem is null....
                         //   Bitmap bmp = Bitmap.createBitmap((int)(60*scale),(int) (60*scale), conf);
+                        if(markerItem == null){
+                            
+
+                        }
                         MarkerManager.Collection markerCollection = mClusterManager.getMarkerCollection();
                         clickedMarker = markerItem;
                         // Bitmap markerImage = null;

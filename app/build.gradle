@@ -3,9 +3,15 @@ apply plugin: 'com.android.application'
 android {
 
     compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    buildToolsVersion '27.0.3'
     repositories {
         mavenCentral()
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
     }
     defaultConfig {
         applicationId "zollie.travelblogger.guidee"
