@@ -73,13 +73,6 @@ public class ContentViewerDialogFragment extends DialogFragment {
         RecyclerView.ItemDecoration itemDecoration = new
                 DividerItemDecoration(getActivity(), zollie.travelblogger.guidee.utils.DividerItemDecoration.HORIZONTAL_LIST);
         rvCarousels.addItemDecoration(itemDecoration);
-        FloatingActionButton shareButton = (FloatingActionButton) getActivity().findViewById(R.id.picture_share_FAB);
-        shareButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               // imageProcessor.shareContent(allCarousels[1]);
-            }
-        });
 
         return v;
     }

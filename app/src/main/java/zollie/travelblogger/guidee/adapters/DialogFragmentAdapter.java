@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Color;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 import zollie.travelblogger.guidee.R;
 import zollie.travelblogger.guidee.fragments.ContentViewerDialogFragment;
 import zollie.travelblogger.guidee.models.CarouselModel;
+import zollie.travelblogger.guidee.utils.ImageProcessor;
 
 /**
  * Created by FuszeneckerZ on 2017.01.14..
@@ -45,9 +47,11 @@ public class DialogFragmentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private final int VIDEO = 0, IMAGE = 1;
     private YouTubePlayer player;
     private YouTubeThumbnailLoader mThumbnailLoader;
+    ImageProcessor imageProcessor;
     public DialogFragmentAdapter(Context context, ArrayList<CarouselModel> allCarouselList) {
         allCarousels = allCarouselList;
         mContext = context;
+
     }
 
     //Returns the view type of the item at position for the purposes of view recycling.
@@ -100,6 +104,16 @@ public class DialogFragmentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                             .apply(options)
                             .transition(new DrawableTransitionOptions().crossFade())
                             .into(mCarouselImage);
+                    //=============================================================================
+                    //===================== Share Image Functionality =============================
+                    FloatingActionButton mShareButton = ((DialogViewHolderImage) holder).getmShareButton();
+                    mShareButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            imageProcessor = new ImageProcessor(mContext);
+                            imageProcessor.shareContent(mCarousel.imageUrl);
+                        }
+                    });
                     //=============================================================================
                   /*  ((DialogViewHolderImage) holder).mCarousel.setOnClickListener(new View.OnClickListener() {
 

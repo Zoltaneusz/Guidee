@@ -241,7 +241,7 @@ public class JourneyView extends AppCompatActivity{
         mJourney  = (JourneyModel) intentData.getParcelable("ser_journey");
 
         // Change App Toolbar
-     //   changeAppBar(mJourney);
+        changeAppBar(mJourney);
 
         //============================= Intent to journey owner ===========================
         ImageView journeyOwnerView = (ImageView) findViewById(R.id.journey_owner_icon);

@@ -1,5 +1,6 @@
 package zollie.travelblogger.guidee.adapters;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -17,6 +18,16 @@ public class DialogViewHolderImage extends RecyclerView.ViewHolder{
 
     public PhotoView mImage;
     public FrameLayout mCarousel;
+
+    public FloatingActionButton getmShareButton() {
+        return mShareButton;
+    }
+
+    public void setmShareButton(FloatingActionButton mShareButton) {
+        this.mShareButton = mShareButton;
+    }
+
+    public FloatingActionButton mShareButton;
 
     public PhotoView getmImage() {
         return mImage;
@@ -39,5 +50,7 @@ public class DialogViewHolderImage extends RecyclerView.ViewHolder{
 
         mImage = (PhotoView) itemView.findViewById(R.id.mDialogImage);
         mCarousel = (FrameLayout) itemView.findViewById(R.id.mDialogImageCard);
+        mShareButton = (FloatingActionButton) itemView.findViewById(R.id.picture_share_FAB);
+
     }
 }

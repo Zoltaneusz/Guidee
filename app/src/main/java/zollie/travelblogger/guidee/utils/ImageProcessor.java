@@ -1,9 +1,7 @@
 package zollie.travelblogger.guidee.utils;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
@@ -14,14 +12,15 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -29,9 +28,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
+import zollie.travelblogger.guidee.models.CarouselModel;
 import zollie.travelblogger.guidee.models.JourneyModel;
-
-import static android.support.v4.app.ActivityCompat.requestPermissions;
 
 /**
  * Created by FuszeneckerZ on 2016.12.30..
@@ -90,12 +88,27 @@ public class ImageProcessor {
 
     }
 
-    public Bitmap loadImgToBitmap(JourneyModel mJourney){
+    public Bitmap loadImgToBitmap(Object objectToShare){
+        String imageToShare;
+        if(objectToShare instanceof JourneyModel){
+            JourneyModel journeyToShare = (JourneyModel) objectToShare;
+            imageToShare = journeyToShare.coverImageUrl;}
+
+        else if(objectToShare instanceof String){
+            imageToShare = (String) objectToShare;
+        }
+        else if(objectToShare instanceof CarouselModel){
+            CarouselModel carouselToShare = (CarouselModel) objectToShare;
+            imageToShare = carouselToShare.imageUrl;
+        }
+        else imageToShare = null;
+
         Bitmap sharedImage = null;
+
         try {
             sharedImage= Glide.with(this.mContext)
                     .asBitmap()
-                    .load(mJourney.coverImageUrl)
+                    .load(imageToShare)
                     .into(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -106,9 +119,9 @@ public class ImageProcessor {
         return sharedImage;
     }
 
-    public void shareContent(JourneyModel mJourney){
+    public void shareContent(Object objectToShare){
 
-        new AsyncImageToBitmap().execute(mJourney);
+        new AsyncImageToBitmap().execute(objectToShare);
 
 
     }
@@ -118,9 +131,9 @@ public class ImageProcessor {
     public class AsyncImageToBitmap extends AsyncTask<Object, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(Object... params) {
-            JourneyModel mJourney = (JourneyModel) params[0];
+
             Bitmap mBitmap = null;
-            mBitmap = loadImgToBitmap(mJourney);
+            mBitmap = loadImgToBitmap(params[0]);
             return mBitmap;
         }
 
