@@ -25,15 +25,32 @@
             android:layout_alignStart="@+id/login_video"
             android:src="#2200CCCC"/>
 
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/login_button"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="300dp"
-            android:layout_marginBottom="300dp"
             android:layout_gravity="center"
-            />
+            android:layout_centerInParent="true">
+
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/facebook_login_button"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                />
+
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/google_login_button"
+                android:layout_width="wrap_content"
+                android:layout_alignStart="@id/facebook_login_button"
+                android:layout_alignEnd="@id/facebook_login_button"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_below="@id/facebook_login_button"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true">
+
+            </com.google.android.gms.common.SignInButton>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

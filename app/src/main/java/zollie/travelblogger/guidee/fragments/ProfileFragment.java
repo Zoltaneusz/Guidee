@@ -35,8 +35,10 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.target.Target;
 import com.facebook.Profile;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.common.SignInButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
@@ -107,6 +109,9 @@ public class ProfileFragment extends Fragment {
             // finally change the color
             window.setStatusBarColor(getActivity().getResources().getColor(R.color.colorPrimaryDark));
         }
+
+
+        //=================================================================================
         //================= Getting data of 1 profile =====================================
         DataHandler.getInstance().getUserWithId(new String(firUserID), new DataHandlerListener() {
             @Override
@@ -209,17 +214,47 @@ public class ProfileFragment extends Fragment {
             }
         });
         journeyEdit(firUserID);
+
         // ================= Allow logging out of the app ===============================
-        LoginButton loginButton = (LoginButton) getActivity().findViewById(R.id.profile_login_button);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((MainActivity)getActivity()).setPreviousFragment("profile");
-                FragmentManager fm;
-                fm = getFragmentManager();
-                fm.beginTransaction().replace(R.id.contentContainer, (((MainActivity) getActivity()).getLoginFrag())).commit();
+        LoginButton faceLoginButton = (LoginButton) getActivity().findViewById(R.id.prof_face_login_button);
+        SignInButton googleSignInButton = (SignInButton) getActivity().findViewById(R.id.prof_google_login_button);
+        //====================== Check sign-in method =====================================
+        for (UserInfo user: FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
+            if (user.getProviderId().equals("facebook.com")) {
+                System.out.println("User is signed in with Facebook");
+            faceLoginButton.setVisibility(View.VISIBLE);
+            googleSignInButton.setVisibility(View.INVISIBLE);
+            faceLoginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //((MainActivity)getActivity()).setGoogleSignOut(false);
+                    ((MainActivity)getActivity()).setPreviousFragment("profile");
+                    FragmentManager fm;
+                    fm = getFragmentManager();
+                    fm.beginTransaction().replace(R.id.contentContainer, (((MainActivity) getActivity()).getLoginFrag())).commit();
+                }
+            });
+
+        } else if (user.getProviderId().equals("google.com")) {
+                System.out.println("User is signed in with Google");
+                googleSignInButton.setVisibility(View.VISIBLE);
+                faceLoginButton.setVisibility(View.INVISIBLE);
+                googleSignInButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //((MainActivity)getActivity()).setGoogleSignOut(true);
+                        FirebaseAuth.getInstance().signOut();
+                        ((MainActivity) getActivity()).setPreviousFragment("profile");
+                        FragmentManager fm;
+                        fm = getFragmentManager();
+                        fm.beginTransaction().replace(R.id.contentContainer, (((MainActivity) getActivity()).getLoginFrag())).commit();
+                    }
+                });
             }
-        });
+
+
+
+        }
 
     }
 

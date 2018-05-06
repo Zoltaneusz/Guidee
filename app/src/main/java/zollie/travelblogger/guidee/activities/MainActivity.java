@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity  {
     private FaceLoginFragment _loginFrag = new FaceLoginFragment();
     double showedLat = 39.43681513892361;
     double showedLng = 3.224011088360298;
+    public boolean googleSignOut = false;
     String previousFragment = new String("0");
 
     @Override
@@ -110,6 +111,12 @@ public class MainActivity extends AppCompatActivity  {
     }
     public double getShowedLng(){
         return  showedLng;
+    }
+    public void setGoogleSignOut(boolean inp){
+        this.googleSignOut = inp;
+    }
+    public boolean getGoogleSignOut(){
+        return this.googleSignOut;
     }
     public boolean previousFragmentEquals(String prevFrag){
         if(prevFrag.equals(previousFragment))
