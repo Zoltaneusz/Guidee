@@ -54,11 +54,14 @@ public class MainActivity extends AppCompatActivity  {
             intentData = getIntent().getExtras();
             showedLat = intentData.getDouble("lat");
             showedLng = intentData.getDouble("lng");
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
 
         }
+        showedLat = (showedLat == 0) ? 47.49801 : showedLat;
+        showedLng = (showedLng == 0) ? 19.03991 : showedLng;
 
 
         // Pushing MapView Fragment
