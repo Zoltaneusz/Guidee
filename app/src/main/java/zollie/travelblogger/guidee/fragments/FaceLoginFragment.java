@@ -211,6 +211,7 @@ public class FaceLoginFragment extends Fragment implements GoogleApiClient.Conne
                 }
             }
         };
+
     }
 
     @Override
@@ -253,6 +254,7 @@ public class FaceLoginFragment extends Fragment implements GoogleApiClient.Conne
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
@@ -262,6 +264,13 @@ public class FaceLoginFragment extends Fragment implements GoogleApiClient.Conne
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
+
+                        FirebaseUser user = task.getResult().getUser();
+                        FragmentManager fm;
+                        fm = getFragmentManager();
+                        fm.beginTransaction().replace(R.id.contentContainer, (((MainActivity) getActivity()).getProfileFrag())).commit();
+
+
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(getActivity(), "Authentication failed.",
@@ -271,6 +280,28 @@ public class FaceLoginFragment extends Fragment implements GoogleApiClient.Conne
                         // ...
                     }
                 });
+        mAuth.getCurrentUser().linkWithCredential(credential)
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "linkWithCredential:success");
+                            FirebaseUser user = task.getResult().getUser();
+                            FragmentManager fm;
+                            fm = getFragmentManager();
+                            fm.beginTransaction().replace(R.id.contentContainer, (((MainActivity) getActivity()).getProfileFrag())).commit();
+
+                        } else {
+                            Log.w(TAG, "linkWithCredential:failure", task.getException());
+                            Toast.makeText(getActivity(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+
+                        }
+
+                        // ...
+                    }
+                });
+
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
@@ -285,11 +316,38 @@ public class FaceLoginFragment extends Fragment implements GoogleApiClient.Conne
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
+
+                        FirebaseUser user = task.getResult().getUser();
+                        FragmentManager fm;
+                        fm = getFragmentManager();
+                        fm.beginTransaction().replace(R.id.contentContainer, (((MainActivity) getActivity()).getProfileFrag())).commit();
+
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(getActivity(), "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
+                    }
+                });
+        mAuth.getCurrentUser().linkWithCredential(credential)
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "linkWithCredential:success");
+                            FirebaseUser user = task.getResult().getUser();
+                            FragmentManager fm;
+                            fm = getFragmentManager();
+                            fm.beginTransaction().replace(R.id.contentContainer, (((MainActivity) getActivity()).getProfileFrag())).commit();
+
+                        } else {
+                            Log.w(TAG, "linkWithCredential:failure", task.getException());
+                            Toast.makeText(getActivity(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+
+                        }
+
+                        // ...
                     }
                 });
     }
@@ -332,6 +390,7 @@ public class FaceLoginFragment extends Fragment implements GoogleApiClient.Conne
         view.setVideoURI(Uri.parse(path));
         view.start();
     }
+
 
 
     @Override

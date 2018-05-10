@@ -243,7 +243,7 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         //((MainActivity)getActivity()).setGoogleSignOut(true);
-                        FirebaseAuth.getInstance().signOut();
+//                        FirebaseAuth.getInstance().signOut();
                         ((MainActivity) getActivity()).setPreviousFragment("profile");
                         FragmentManager fm;
                         fm = getFragmentManager();
