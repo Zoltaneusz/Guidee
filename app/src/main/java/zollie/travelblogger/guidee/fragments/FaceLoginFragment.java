@@ -280,7 +280,7 @@ public class FaceLoginFragment extends Fragment implements GoogleApiClient.Conne
                         // ...
                     }
                 });
-        mAuth.getCurrentUser().linkWithCredential(credential)
+   /*     mAuth.getCurrentUser().linkWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -300,7 +300,7 @@ public class FaceLoginFragment extends Fragment implements GoogleApiClient.Conne
 
                         // ...
                     }
-                });
+                });*/
 
     }
 
@@ -329,7 +329,7 @@ public class FaceLoginFragment extends Fragment implements GoogleApiClient.Conne
                         }
                     }
                 });
-        mAuth.getCurrentUser().linkWithCredential(credential)
+  /*      mAuth.getCurrentUser().linkWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -349,7 +349,7 @@ public class FaceLoginFragment extends Fragment implements GoogleApiClient.Conne
 
                         // ...
                     }
-                });
+                });*/
     }
 
     @Override

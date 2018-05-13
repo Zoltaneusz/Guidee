@@ -195,32 +195,15 @@
                 android:layout_below="@+id/my_followed_users_title"
                 android:paddingBottom="10dp">
                 </LinearLayout>
-            <RelativeLayout
+            <android.support.design.widget.FloatingActionButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/log_out_button"
                 android:layout_gravity="center"
                 android:layout_below="@+id/followed_users_recycle"
-                android:layout_centerHorizontal="true">
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/outline_subdirectory_arrow_left_black_24dp"/>
 
-                <com.facebook.login.widget.LoginButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:id="@+id/prof_face_login_button"
-                    />
-
-                <com.google.android.gms.common.SignInButton
-                    android:id="@+id/prof_google_login_button"
-                    android:layout_width="wrap_content"
-                    android:layout_alignStart="@id/prof_face_login_button"
-                    android:layout_alignEnd="@id/prof_face_login_button"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_below="@id/prof_face_login_button"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true">
-
-                </com.google.android.gms.common.SignInButton>
-            </RelativeLayout>
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
 

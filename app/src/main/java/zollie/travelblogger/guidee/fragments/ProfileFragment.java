@@ -34,6 +34,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.target.Target;
 import com.facebook.Profile;
+import com.facebook.login.LoginManager;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.SignInButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -216,14 +217,29 @@ public class ProfileFragment extends Fragment {
         journeyEdit(firUserID);
 
         // ================= Allow logging out of the app ===============================
-        LoginButton faceLoginButton = (LoginButton) getActivity().findViewById(R.id.prof_face_login_button);
-        SignInButton googleSignInButton = (SignInButton) getActivity().findViewById(R.id.prof_google_login_button);
+
+        FloatingActionButton logOutButton = (FloatingActionButton) getActivity().findViewById(R.id.log_out_button);
+        logOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                LoginManager.getInstance().logOut();
+                ((MainActivity)getActivity()).setPreviousFragment("profile");
+                FragmentManager fm;
+                fm = getFragmentManager();
+                fm.beginTransaction().replace(R.id.contentContainer, (((MainActivity) getActivity()).getLoginFrag())).commit();
+            }
+        });
+
+
+        //LoginButton faceLoginButton = (LoginButton) getActivity().findViewById(R.id.prof_face_login_button);
+        //SignInButton googleSignInButton = (SignInButton) getActivity().findViewById(R.id.prof_google_login_button);
         //====================== Check sign-in method =====================================
-        for (UserInfo user: FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
+        /*for (UserInfo user: FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
             if (user.getProviderId().equals("facebook.com")) {
                 System.out.println("User is signed in with Facebook");
-            faceLoginButton.setVisibility(View.VISIBLE);
-            googleSignInButton.setVisibility(View.INVISIBLE);
+     //       faceLoginButton.setVisibility(View.VISIBLE);
+    //        googleSignInButton.setVisibility(View.INVISIBLE);
             faceLoginButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -237,8 +253,8 @@ public class ProfileFragment extends Fragment {
 
         } else if (user.getProviderId().equals("google.com")) {
                 System.out.println("User is signed in with Google");
-                googleSignInButton.setVisibility(View.VISIBLE);
-                faceLoginButton.setVisibility(View.INVISIBLE);
+        //        googleSignInButton.setVisibility(View.VISIBLE);
+        //        faceLoginButton.setVisibility(View.INVISIBLE);
                 googleSignInButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -255,7 +271,7 @@ public class ProfileFragment extends Fragment {
 
 
         }
-
+*/
     }
 
     public ArrayList<String> getUserJourneys(UserModel userModel) {
